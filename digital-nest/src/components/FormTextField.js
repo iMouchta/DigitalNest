@@ -2,7 +2,12 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 
-export default function FormTextField({ label, placeholder }) {
+export default function FormTextField({ label, placeholder, onChange }) {
+
+  const handleChange = (event) => {
+    onChange(event.target.value);
+  }
+
   return (
     <div>
       <Box
@@ -16,6 +21,7 @@ export default function FormTextField({ label, placeholder }) {
           label={label}
           placeholder={placeholder}
           multiline
+          onChange={handleChange}
         />
       </Box>
     </div>

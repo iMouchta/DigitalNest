@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Desplegable from "./Desplegable";
 import FormSelector from "./FormSelector";
 import FormMultipleSelector from "./FormMultipleSelector";
 import FormTextField from "./FormTextField";
@@ -7,53 +6,40 @@ import Box from "@mui/material/Box";
 import SendFormButton from "./SendFormButton";
 
 function FormSolicitudRapida() {
-  const [selectedOptionA, setSelectedOptionA] = useState("");
-  const [selectedOptionB, setSelectedOptionB] = useState("");
-  const [selectedOptionC, setSelectedOptionC] = useState("");
+  //* Form fields
+  const [selectedOption1, setSelectedOption1] = useState("");
+  const [selectedOption2, setSelectedOption2] = useState("");
+  const [selectedMultipleOptions1, setSelectedMultipleOptions1] = useState([]);
+  const [textFieldValue1, setTextFieldValue1] = useState("");
 
-  const optionsA = ["Opcion A1", "Opcion A2", "Opcion A3", "Opcion A4"];
-  const optionsB = ["Opcion B1", "Opcion B2", "Opcion B3", "Opcion B4"];
-  const optionsC = ["Opcion C1", "Opcion C2", "Opcion C3", "Opcion C4"];
+  //* Error Handling
+  const [errorOption1, setErrorOption1] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const handleSelectChangeA = (event) => {
-    setSelectedOptionA(event.target.value);
-  };
+  const handleSubmit = (event) => {
+    event.preventDefault();
 
-  const handleSelectChangeB = (event) => {
-    setSelectedOptionB(event.target.value);
-  };
+    setErrorOption1(!selectedOption1);
 
-  const handleSelectChangeC = (event) => {
-    setSelectedOptionC(event.target.value);
+    if (
+      !selectedOption1 ||
+      !selectedOption2 ||
+      !selectedMultipleOptions1.length ||
+      !textFieldValue1
+    ) {
+      setErrorMessage("Todos los campos son obligatorios");
+      console.log("Error:", errorMessage);
+      return;
+    }
+
+    console.log("Selected option 1:", selectedOption1);
+    console.log("Selected option 2:", selectedOption2);
+    console.log("Selected multiple options 1:", selectedMultipleOptions1);
+    console.log("Text field value:", textFieldValue1);
   };
 
   return (
     <form>
-      <label>
-        Selecciona una opción:
-        <Desplegable
-          options={optionsA}
-          selectedOption={selectedOptionA}
-          handleSelectChange={handleSelectChangeA}
-        />
-        <Desplegable
-          options={optionsB}
-          selectedOption={selectedOptionB}
-          handleSelectChange={handleSelectChangeB}
-        />
-        <Desplegable
-          options={optionsC}
-          selectedOption={selectedOptionC}
-          handleSelectChange={handleSelectChangeC}
-        />
-        <div className="form-text-field">
-          <label>Nombre: </label>
-          <input type="text" placeholder="Nombre" />
-        </div>
-        <div className="form-solicitud-button">
-          <button type="submit">Enviar</button>
-        </div>
-      </label>
       <Box sx={{ p: 2, border: "1px solid grey", borderRadius: "4px" }}>
         <FormSelector
           label="Selecciona una opción"
@@ -63,6 +49,8 @@ function FormSolicitudRapida() {
             { value: 3, label: "Test 3" },
             // ... más opciones
           ]}
+          onChange={setSelectedOption1}
+          error={errorOption1}
         />
         <FormSelector
           label="Selecciona una opción"
@@ -72,6 +60,7 @@ function FormSolicitudRapida() {
             { value: 3, label: "Test 3" },
             // ... más opciones
           ]}
+          onChange={setSelectedOption2}
         />
         <FormMultipleSelector
           label="Selecciona opciones"
@@ -81,9 +70,14 @@ function FormSolicitudRapida() {
             { value: 3, label: "Test 3" },
             // ... más opciones
           ]}
+          onChange={setSelectedMultipleOptions1}
         />
-        <FormTextField label="Campo de texto" placeholder="Placeholder" />
-        <SendFormButton />
+        <FormTextField
+          label="Campo de texto"
+          placeholder="Placeholder"
+          onChange={setTextFieldValue1}
+        />
+        <SendFormButton onClick={handleSubmit} />
       </Box>
     </form>
   );

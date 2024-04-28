@@ -9,14 +9,17 @@ import Select from "@mui/material/Select";
 import Chip from "@mui/material/Chip";
 import { FormHelperText } from "@mui/material";
 
-export default function FormMultipleSelector({ label, options }) {
+export default function FormMultipleSelector({ label, options, onChange }) {
   const [value, setValue] = React.useState([]);
 
   const handleChange = (event) => {
     const {
       target: { value },
     } = event;
-    setValue(typeof value === "string" ? value.split(",") : value);
+    const valueArray = typeof value === "string" ? value.split(",") : value;
+    setValue(valueArray);
+    onChange(valueArray);
+
   };
 
   return (
