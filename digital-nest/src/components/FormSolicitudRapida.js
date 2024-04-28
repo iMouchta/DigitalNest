@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import Desplegable from "./Desplegable";
-import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import FormSelector from "./FormSelector";
 import FormMultipleSelector from "./FormMultipleSelector";
+import FormTextField from "./FormTextField";
+import Box from "@mui/material/Box";
+import SendFormButton from "./SendFormButton";
 
 function FormSolicitudRapida() {
   const [selectedOptionA, setSelectedOptionA] = useState("");
@@ -52,33 +54,37 @@ function FormSolicitudRapida() {
           <button type="submit">Enviar</button>
         </div>
       </label>
-      <FormSelector
-        label="Selecciona una opción"
-        options={[
-          { value: "Test 1", label: "Test 1" },
-          { value: 2, label: "Test 2" },
-          { value: 3, label: "Test 3" },
-          // ... más opciones
-        ]}
-      />
-      <FormSelector
-        label="Selecciona una opción"
-        options={[
-          { value: 1, label: "Test 1" },
-          { value: 2, label: "Test 2" },
-          { value: 3, label: "Test 3" },
-          // ... más opciones
-        ]}
-      />
-      <FormMultipleSelector 
-        label="Selecciona opciones"
-        options={[
-          { value: "Test 1", label: "Test 1" },
-          { value: 2, label: "Test 2" },
-          { value: 3, label: "Test 3" },
-          // ... más opciones
-        ]}
-      />
+      <Box sx={{ p: 2, border: "1px solid grey", borderRadius: "4px" }}>
+        <FormSelector
+          label="Selecciona una opción"
+          options={[
+            { value: "Test 1", label: "Test 1" },
+            { value: 2, label: "Test 2" },
+            { value: 3, label: "Test 3" },
+            // ... más opciones
+          ]}
+        />
+        <FormSelector
+          label="Selecciona una opción"
+          options={[
+            { value: 1, label: "Test 1" },
+            { value: 2, label: "Test 2" },
+            { value: 3, label: "Test 3" },
+            // ... más opciones
+          ]}
+        />
+        <FormMultipleSelector
+          label="Selecciona opciones"
+          options={[
+            { value: "Test 1", label: "Test 1" },
+            { value: 2, label: "Test 2" },
+            { value: 3, label: "Test 3" },
+            // ... más opciones
+          ]}
+        />
+        <FormTextField label="Campo de texto" placeholder="Placeholder" />
+        <SendFormButton />
+      </Box>
     </form>
   );
 }
