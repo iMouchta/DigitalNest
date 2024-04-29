@@ -4,6 +4,7 @@ import FormMultipleSelector from "./FormMultipleSelector";
 import FormTextField from "./FormTextField";
 import Box from "@mui/material/Box";
 import SendFormButton from "./SendFormButton";
+import FormDateSelector from "./FormDateSelector";
 
 export default function FormSolicitudRapida() {
   //* Form fields
@@ -42,41 +43,117 @@ export default function FormSolicitudRapida() {
     <form>
       <Box sx={{ p: 2, border: "1px solid grey", borderRadius: "4px" }}>
         <FormSelector
-          label="Selecciona una opción"
+          label="Nombre del docente *"
           options={[
-            { value: "Test 1", label: "Test 1" },
-            { value: 2, label: "Test 2" },
-            { value: 3, label: "Test 3" },
-            // ... más opciones
+            { value: "Leticia Coca Blanco", label: "Leticia Coca Blanco" },
           ]}
           onChange={setSelectedOption1}
           error={errorOption1}
         />
         <FormSelector
-          label="Selecciona una opción"
+          label="Materia *"
           options={[
-            { value: 1, label: "Test 1" },
-            { value: 2, label: "Test 2" },
+            { value: "Carla Salazar Serrudo", label: "Carla Salazar Serrudo" },
+            {
+              value: "Vladimir Abel Costas Jauregui",
+              label: "Vladimir Abel Costas Jauregui",
+            },
             { value: 3, label: "Test 3" },
             // ... más opciones
           ]}
           onChange={setSelectedOption2}
         />
+
         <FormMultipleSelector
-          label="Selecciona opciones"
+          label="Docentes adicionales"
           options={[
-            { value: "Test 1", label: "Test 1" },
-            { value: 2, label: "Test 2" },
-            { value: 3, label: "Test 3" },
-            // ... más opciones
+            { value: "Carla Salazar Serrudo", label: "Carla Salazar Serrudo" },
+            {
+              value: "Vladimir Abel Costas Jauregui",
+              label: "Vladimir Abel Costas Jauregui",
+            },
+            { value: "Hernan Ustariz Vargas", label: "Hernan Ustariz Vargas" },
+            {
+              value: "Henry Frank Villarroel Tapia",
+              label: "Henry Frank Villarroel Tapia",
+            },
+            {
+              value: "Victor Hugo Quiroga Montano",
+              label: "Victor Hugo Quiroga Montano",
+            },
           ]}
           onChange={setSelectedMultipleOptions1}
         />
-        <FormTextField
-          label="Campo de texto"
-          placeholder="Placeholder"
+        <FormSelector
+          label="Grupo *"
+          options={[
+            {
+              value: "6:45",
+              label: "6:45",
+            },
+            {
+              value: "8:15",
+              label: "8:15",
+            },
+          ]}
           onChange={setTextFieldValue1}
         />
+        <FormSelector
+          label="Capacidad *"
+          options={[
+            {
+              value: "6:45",
+              label: "6:45",
+            },
+            {
+              value: "8:15",
+              label: "8:15",
+            },
+          ]}
+          onChange={setTextFieldValue1}
+        />
+        <FormDateSelector label="Fecha *" onChange={setTextFieldValue1} />
+        <FormSelector
+          label="Hora de inicio *"
+          options={[
+            {
+              value: "6:45",
+              label: "6:45",
+            },
+            {
+              value: "8:15",
+              label: "8:15",
+            },
+          ]}
+          onChange={setTextFieldValue1}
+        />
+        <FormSelector
+          label="Hora de fin *"
+          options={[
+            {
+              value: "6:45",
+              label: "6:45",
+            },
+            {
+              value: "8:15",
+              label: "8:15",
+            },
+          ]}
+          onChange={setTextFieldValue1}
+        />
+        <FormSelector
+          label="Motivo *"
+          options={[
+            {
+              label: "6:45",
+            },
+            {
+              label: "8:15",
+            },
+          ]}
+          onChange={setTextFieldValue1}
+        />
+
         <SendFormButton onClick={handleSubmit} />
       </Box>
     </form>
