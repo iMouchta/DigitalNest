@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\solicitud;
+use App\Models\reserva;
 use Illuminate\Http\Request;
 
-class SolicitudController extends Controller
+class ReservaController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -41,10 +41,10 @@ class SolicitudController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\solicitud  $reserva
+     * @param  \App\Models\reserva  $reserva
      * @return \Illuminate\Http\Response
      */
-    public function show(solicitud $solicitud)
+    public function show(reserva $reserva)
     {
         //
     }
@@ -52,10 +52,10 @@ class SolicitudController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\solicitud  $solicitud
+     * @param  \App\Models\reserva  $reserva
      * @return \Illuminate\Http\Response
      */
-    public function edit(solicitud $solicitud)
+    public function edit(reserva $reserva)
     {
         //
     }
@@ -64,10 +64,10 @@ class SolicitudController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\solicitud  $solcitud
+     * @param  \App\Models\reserva  $reserva
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, solicitud $solicitud)
+    public function update(Request $request, reserva $reserva)
     {
         //
     }
@@ -75,10 +75,10 @@ class SolicitudController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\solicitud  $solicitud
+     * @param  \App\Models\reserva  $reserva
      * @return \Illuminate\Http\Response
      */
-    public function destroy(solicitud $solicitud)
+    public function destroy(reserva $reserva)
     {
         //
     }
