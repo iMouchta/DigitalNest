@@ -10,6 +10,7 @@ import PrimarySearchAppBar from "./components/AppBar";
 import HomePage from "./pages/HomePage.js";
 import SolicitudRapidaPage from "./pages/SolicitudRapidaPage.js";
 import SolicitudEspecialPage from "./pages/SolicitudEspecialPage.js";
+import ResponderSolicitudPage from "./pages/ResponderSolicitudPage.js";
 
 function App() {
   return (
@@ -19,14 +20,28 @@ function App() {
         <Routes>
           {/* Remplazar la ruta inicial */}
           <Route path="/" element={<HomePage />} />
+          <Route path="*" element={<h1>Not Found</h1>} />
           {/* Reservador para la pagina de login */}
           {/* <Route path="/login" element={<LoginPage />} /> */}
-          <Route path="/app" element={<AppLayout />}>
+          <Route path="/docente" element={<AppLayout />}>
+            <Route path="*" element={<h1>Not Found</h1>} />
             <Route path="home" element={<HomePage />} />
             <Route path="solicitudRapida" element={<SolicitudRapidaPage />} />
             <Route
               path="solicitudEspecial"
               element={<SolicitudEspecialPage />}
+            />
+            <Route
+              path="responderSolicitud"
+              element={<ResponderSolicitudPage />}
+            />
+          </Route>
+          <Route path="/administrador" element={<HomePage />}>
+            <Route path="*" element={<h1>Not Found</h1>} />
+            <Route path="home" element={<HomePage />} />
+            <Route
+              path="responderSolicitud"
+              element={<ResponderSolicitudPage />}
             />
           </Route>
         </Routes>
