@@ -5,7 +5,7 @@ import FormTextField from "./FormTextField";
 import Box from "@mui/material/Box";
 import SendFormButton from "./SendFormButton";
 
-function FormSolicitudRapida() {
+export default function FormSolicitudRapida() {
   //* Form fields
   const [selectedOption1, setSelectedOption1] = useState("");
   const [selectedOption2, setSelectedOption2] = useState("");
@@ -82,5 +82,3 @@ function FormSolicitudRapida() {
     </form>
   );
 }
-
-export default FormSolicitudRapida;

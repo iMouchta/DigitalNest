@@ -1,15 +1,13 @@
 import React from "react";
-import Formulario from "../components/FormSolicitudRapida.js";
+import FormSolicitudEspecial from "../components/FormSolicitudEspecial.js";
 
-function SolicitudEspecialPage() {
+export default function SolicitudEspecialPage() {
   return (
     <div>
       <h1>Solicitud Especial</h1>
       <div className="recuadro-formulario">
-        <Formulario />
+        <FormSolicitudEspecial />
       </div>
     </div>
   );
 }
-
-export default SolicitudEspecialPage;

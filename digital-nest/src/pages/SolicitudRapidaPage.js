@@ -1,12 +1,12 @@
 import React from "react";
-import Formulario from "../components/FormSolicitudRapida.js";
+import FormSolicitudRapida from "../components/FormSolicitudRapida.js";
 
 function SolicitudRapidaPage() {
   return (
     <div>
       <h1>Solicitud Rápida</h1>
       <div className="recuadro-formulario">
-        <Formulario />
+        <FormSolicitudRapida />
       </div>
     </div>
   );
