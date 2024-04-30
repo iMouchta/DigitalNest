@@ -11,6 +11,7 @@ import HomePage from "./pages/HomePage.js";
 import SolicitudRapidaPage from "./pages/SolicitudRapidaPage.js";
 import SolicitudEspecialPage from "./pages/SolicitudEspecialPage.js";
 import ResponderSolicitudPage from "./pages/ResponderSolicitudPage.js";
+import VisualizarSolicitudPage from "./pages/VisualizarSolicitudPage.js";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
               path="responderSolicitud"
               element={<ResponderSolicitudPage />}
             />
+            <Route path="visualizarSolicitud" element={<VisualizarSolicitudPage />}/>
           </Route>
           <Route path="/administrador" element={<HomePage />}>
             <Route path="*" element={<h1>Not Found</h1>} />
