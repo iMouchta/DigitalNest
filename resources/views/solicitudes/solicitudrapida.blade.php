@@ -1,5 +1,5 @@
 <form action="{{ url('/solicitud') }}" method="post">
-@csrf
+<!-- @csrf -->
     <label for="nombredocente"> Nombre del docente </label>
     <input type="text" name="nombredocente" id="nombredocente">
     <br>

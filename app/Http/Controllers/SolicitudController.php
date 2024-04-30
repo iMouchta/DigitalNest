@@ -43,8 +43,8 @@ class SolicitudController extends Controller
     public function store(Request $request)
     {
         $datosSolicitudFormulario = request()->except('_token');
-        $nombreDocente = $request->input('nombredocente');
-        $nombreMateria = $request->input('materia');
+        $nombreDocente = $datosSolicitudFormulario['nombredocente'];
+        $nombreMateria = $datosSolicitudFormulario['materia'];
 
         $docente = docente::where('nombredocente', $nombreDocente)->first();
         if ($docente) {
@@ -70,6 +70,7 @@ class SolicitudController extends Controller
                 
                 if($solicitudIngresada) {
                     return response()->json(['subida' => true]);
+                    // return response()->json($request);
                 } else {
                     return response()->json(['subida' => false]);
                 }
