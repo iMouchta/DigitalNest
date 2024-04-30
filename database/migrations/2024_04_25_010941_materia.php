@@ -12,9 +12,14 @@ class Materia extends Migration
             $table->id('idmateria');
             $table->unsignedBigInteger('iddocente');
             $table->string('nombremateria', 255)->nullable();
-            $table->timestamps();
+            $table->integer('cuporeserva')->default(4);
+            $table->string('grupo', 20)->nullable();
 
-            $table->foreign('iddocente')->references('iddocente')->on('docente');
+            $table->foreign('iddocente')
+                  ->references('iddocente')
+                  ->on('docente')
+                  ->onDelete('NO ACTION')
+                  ->onUpdate('NO ACTION');
         });
     }
 

@@ -12,10 +12,13 @@ class Ambiente extends Migration
             $table->id('idambiente');
             $table->unsignedBigInteger('idubicacion');
             $table->string('nombreambiente', 20)->nullable();
-            $table->integer('capacidadambiente')->nullable();
-            $table->timestamps();
+            $table->unsignedInteger('capacidadambiente')->nullable();
 
-            $table->foreign('idubicacion')->references('idubicacion')->on('ubicacion');
+            $table->foreign('idubicacion')
+                  ->references('idubicacion')
+                  ->on('ubicacion')
+                  ->onDelete('NO ACTION')
+                  ->onUpdate('NO ACTION');
         });
     }
 
