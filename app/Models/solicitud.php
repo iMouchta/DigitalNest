@@ -8,23 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class solicitud extends Model
 {
     use HasFactory;
-    // protected $table = 'solicitud';
+    protected $table = 'solicitud';
 
+    protected $fillable = ['idmateria', 'capacidadsolicitud', 'fechasolicitud', 'horainicialsolicitud', 'horafinalsolicitud', 'bitacorafechasolicitud', 'motivoespecial'];
 
-    // protected $fillable = [
-    //     'idambiente',
-    //     'capacidadsolicitud',
-    //     'fechasolicitud',
-    //     'horainicialsolicitud',
-    //     'horafinalsolicitud',
-    //     'revisionestapendiente',
-    //     'solicitudfueaceptada',
-    //     'esurgente',
-    //     'bitacorafechasolicitud'
-    // ];
-
-    // public function ambiente()
-    // {
-    //     return $this->belongsTo(Ambiente::class, 'idambiente');
-    // }
+    // Relación con las materias
+    public function reservas()
+    {
+        return $this->hasMany(reserva::class, 'idsolicitud');
+    }
+    
 }

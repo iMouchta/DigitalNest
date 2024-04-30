@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\solicitud;
 use App\Models\docente;
 use App\Models\materia;
+use App\Models\ambiente;
+use App\Models\periodonodisponible;
+use App\Models\reserva;
+
 use Illuminate\Http\Request;
 
 class SolicitudController extends Controller
@@ -46,7 +50,7 @@ class SolicitudController extends Controller
         if ($docente) {
             //obtiene el id del docente
             $docenteId = $docente->iddocente;
-            $materia = Materia::where('nombremateria', $nombreMateria)->where('iddocente', $docenteId)->first();
+            $materia = materia::where('nombremateria', $nombreMateria)->where('iddocente', $docenteId)->first();
 
             if($materia) {
                 //obten el id de la materia
@@ -59,9 +63,49 @@ class SolicitudController extends Controller
                     'fechasolicitud' => $request->input('fecha'),
                     'horainicialsolicitud' => $request->input('horainicial'),
                     'horafinalsolicitud' => $request->input('horafinal'),
-                    'motivosolicitud' => $request->input('motivo')
+                    'motivoespecial' => $request->input('motivo')
                 ];
-                return response()->json($datosSolicitud[]);
+
+                $solicitudIngresada = solicitud::insert($datosSolicitud);
+                
+                if($solicitudIngresada) {
+                    return response()->json(['subida' => true]);
+                } else {
+                    return response()->json(['subida' => false]);
+                }
+
+                //obtener ambiente tentativo
+                // $ambienteTentativo = $this->obtenerAmbienteTentativo($request);
+
+                // //verificar si existe u
+                // if($ambienteTentativo) {
+                //     //verificar si el ambiente esta disponible
+                //     $ambienteId = $ambienteTentativo['idambiente'];
+                //     $fecha = $request->input('fecha');
+                //     $horaInicial = $request->input('horainicial');
+                //     $horaFinal = $request->input('horafinal');
+                //     $periodoDisponible = $this->periodoEstaDisponible($ambienteId, $fecha, $horaInicial, $horaFinal);
+
+                //     if ($periodoDisponible) {
+                //         //crear solicitud
+                //         $solicitudId = solicitud::create($datosSolicitud)->idsolicitud;
+                //         //crear reserva
+                //         $reserva = reserva::create([
+                //             'idsolicitud' => $solicitudId,
+                //             'idambiente' => $ambienteId
+                //         ]);
+                //         return response()->json($reserva);
+                //     } else {
+                //         //el ambiente no esta disponible
+                //         return response()->json(['error' => 'El ambiente no esta disponible']);
+                //     }
+                // } else {
+                //     //no hay ambientes disponibles
+                //     return response()->json(['error' => 'No hay ambientes disponibles']);
+                // }
+
+
+
             } else {
                 //la materia no existe para este docente
                 return response()->json(['error' => 'La materia no existe para este docente']);
@@ -79,6 +123,42 @@ class SolicitudController extends Controller
 
         // return response()->json($datos);
     }
+    
+    private function obtenerAmbienteTentativo(Request $request)
+    {
+        //obtener ambiente
+        $ambiente = ambiente::where('capacidadambiente', '>=', $request->input('capacidad'))->first();
+        if ($ambiente) {
+            $datosambiente = [
+                'idambiente' => $ambiente->idambiente,
+                'nombre' => $ambiente->nombreambiente,
+                'capacidad' => $ambiente->capacidadambiente
+            ];
+            // return response()->json($datosambiente);
+            return $datosambiente;
+        } else {
+            $datosambiente = [
+                'idambiente' => null,
+                'nombre' => null,
+                'capacidad' => null
+            ];
+            return $datosambiente;
+        }
+    }
+
+    private function periodoEstaDisponible($ambienteId, $fecha, $horaInicial, $horaFinal)
+    {
+        $periodos = periodonodisponible::where('idambiente', $ambienteId)->where('fecha', $fecha)->get();
+        if ($periodos) {
+            foreach ($periodos as $periodo) {
+                if ($horaInicial >= $periodo->hora && $horaInicial <= $periodo->hora) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
 
     /**
      * Display the specified resource.

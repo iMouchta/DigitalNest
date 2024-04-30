@@ -5,16 +5,23 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Ambiente extends Model
+class ambiente extends Model
 {
     use HasFactory;
+    protected $table = 'ambiente';
 
-    // protected $table = 'ambiente';
+    protected $fillable = ['idubicacion, nombreambiente, capacidadambiente'];
 
-    // protected $fillable = ['idubicacion', 'nombreambiente', 'capacidadambiente'];
+    // Relacion con los periodos no disponibles
+    public function periodonodisponible()
+    {
+        return $this->hasMany(periodonodisponible::class, 'idambiente');
+    }
 
-    // public function ubicacion()
-    // {
-    //     return $this->belongsTo(Ubicacion::class, 'idubicacion');
-    // }
+    // Relacion con las reservas
+    public function reserva()
+    {
+        return $this->belongsTo(reserva::class, 'idreserva');
+    }
+    
 }
