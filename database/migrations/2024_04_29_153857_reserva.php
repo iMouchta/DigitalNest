@@ -19,7 +19,6 @@ class Reserva extends Migration
             $table->unsignedBigInteger('idsolicitud')->nullable();
             $table->unsignedBigInteger('idambiente')->nullable();
 
-            $table->timestamps();
 
             $table->foreign('idsolicitud')->references('idsolicitud')->on('solicitud');
             $table->foreign('idambiente')->references('idambiente')->on('ambiente');

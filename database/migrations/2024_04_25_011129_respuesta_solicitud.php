@@ -13,7 +13,6 @@ class RespuestaSolicitud extends Migration
             $table->unsignedBigInteger('idsolicitud');
             $table->string('motivodenoreserva', 45)->nullable();
             $table->date('fecharevision')->nullable();
-            $table->timestamps();
 
             // No necesitas definir una clave primaria compuesta aquí
 

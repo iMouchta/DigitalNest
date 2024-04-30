@@ -14,7 +14,6 @@ class Materia extends Migration
             $table->string('nombremateria', 255)->nullable();
             $table->integer('cuporeserva')->default(4);
             $table->integer('grupo')->nullable();
-            $table->timestamps();
 
             $table->foreign('iddocente')->references('iddocente')->on('docente');
         });

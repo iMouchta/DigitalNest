@@ -20,8 +20,6 @@ class Periodonodisponible extends Migration
             $table->date('fecha')->nullable();
             $table->time('hora')->nullable();
 
-            $table->timestamps();
-
             $table->foreign('idambiente')->references('idambiente')->on('ambiente');
         });
     }

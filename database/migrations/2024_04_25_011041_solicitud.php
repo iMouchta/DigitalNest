@@ -18,8 +18,9 @@ class Solicitud extends Migration
             $table->time('horainicialsolicitud')->nullable();
             $table->time('horafinalsolicitud')->nullable();
             $table->date('bitacorafechasolicitud')->nullable();
-            $table->string('motivoespecial', 1000)->nullable();
-            $table->timestamps();
+            $table->string('motivosolicitud', 1000)->nullable();
+            $table->string('ambientesolicitud', 250)->nullable();
+            $table->boolean('especial')->nullable();
 
             $table->foreign('idadministrador')->references('idadministrador')->on('administrador');
             $table->foreign('idmateria')->references('idmateria')->on('materia');
