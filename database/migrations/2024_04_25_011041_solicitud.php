@@ -24,6 +24,7 @@ class Solicitud extends Migration
 
             $table->foreign('idadministrador')->references('idadministrador')->on('administrador');
             $table->foreign('idmateria')->references('idmateria')->on('materia');
+            
         });
     }
 
