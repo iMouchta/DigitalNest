@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -16,8 +16,15 @@ export default function ViewSolicitudes() {
   const handleClick = (id) => {
     setOpen((prev) => ({ ...prev, [id]: !prev[id] }));
   };
+  const [data, setData] = useState([]);
 
-  const data = [
+  useEffect(() => {
+    fetch('http://localhost:8000/solicitudes')
+      .then(response => response.json())
+      .then(data => setData(data));
+  }, []);
+
+  const tmpData = [
     {
       id: 1,
       nombre: "Juan Perez",
@@ -49,7 +56,7 @@ export default function ViewSolicitudes() {
         "& ul": { padding: 0 },
       }}
     >
-      {data.map((item) => (
+      {tmpData.map((item) => (
         <div key={item.id}>
           <ListItemButton onClick={() => handleClick(item.id)}>
             <Card sx={{ width: "100%" }}>

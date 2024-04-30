@@ -60,7 +60,7 @@ export default function FormSolicitudRapida() {
     console.log("Motivo:", selectedMotivo);
 
     // Realizar la solicitud POST
-    fetch("http://localhost/public/solicitud", {
+    fetch("http://localhost:8000/solicitud", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
