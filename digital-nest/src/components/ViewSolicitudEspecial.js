@@ -17,7 +17,7 @@ export default function ViewSolicitudEspecial() {
     <List>
       {data.map((item) => (
         <ListItem key={item.id}>
-          <Card>
+          <Card sx={{ width: "25%"}}>
             <CardContent>
               <Typography variant="body1">Titular: {item.text}</Typography>
               <Typography variant="body1">Fecha: {item.text}</Typography>
