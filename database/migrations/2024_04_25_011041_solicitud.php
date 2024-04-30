@@ -12,7 +12,7 @@ class Solicitud extends Migration
             $table->id('idsolicitud');
 
             $table->unsignedBigInteger('idadministrador')->nullable();
-            $table->unsignedBigInteger('iddocentemotivo')->nullable();
+            $table->unsignedBigInteger('idmateria')->nullable();
             $table->integer('capacidadsolicitud')->nullable();
             $table->date('fechasolicitud')->nullable();
             $table->time('horainicialsolicitud')->nullable();
@@ -22,7 +22,7 @@ class Solicitud extends Migration
             $table->timestamps();
 
             $table->foreign('idadministrador')->references('idadministrador')->on('administrador');
-            $table->foreign('iddocentemotivo')->references('iddocentemotivo')->on('docente_motivo');
+            $table->foreign('idmateria')->references('idmateria')->on('materia');
         });
     }
 

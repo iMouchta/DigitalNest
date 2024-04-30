@@ -9,12 +9,12 @@ class Ambiente extends Model
 {
     use HasFactory;
 
-    protected $table = 'ambiente';
+    // protected $table = 'ambiente';
 
-    protected $fillable = ['idubicacion', 'nombreambiente', 'capacidadambiente'];
+    // protected $fillable = ['idubicacion', 'nombreambiente', 'capacidadambiente'];
 
-    public function ubicacion()
-    {
-        return $this->belongsTo(Ubicacion::class, 'idubicacion');
-    }
+    // public function ubicacion()
+    // {
+    //     return $this->belongsTo(Ubicacion::class, 'idubicacion');
+    // }
 }
