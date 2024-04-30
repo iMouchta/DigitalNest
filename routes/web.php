@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SolicitudController;
+use App\Http\Controllers\ReservaController;
 
 
 /*
@@ -18,6 +19,12 @@ use App\Http\Controllers\SolicitudController;
 Route::get('/', function () {
     return view('welcome');
 });
+
+// Route::get('/formularioSolicitud', function () {
+//     return view('solicitudes.solicitudrapida');
+// });
+
+Route::resource('reserva', ReservaController::class);
 // Route::get('/', [SolicitudController::class, 'create'])->name('solicitud.create');
 // Route::post('/', [SolicitudController::class, 'store'])->name('solicitud.store');
 
