@@ -12,7 +12,7 @@ class docente extends Model
 
     protected $fillable = ['nombredocente', 'correoelectronico', 'numcelular'];
 
-    // Relación con las materias
+
     public function materias()
     {
         return $this->hasMany(materia::class, 'iddocente');

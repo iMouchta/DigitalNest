@@ -21,11 +21,7 @@ class Solicitud extends Migration
             $table->string('motivosolicitud', 1000)->nullable();
             $table->string('ambientesolicitud', 250)->nullable();
             $table->boolean('especial')->nullable();
-
-            $table->foreign('idadministrador')->references('idadministrador')->on('administrador');
-            $table->foreign('idmateria')->references('idmateria')->on('materia');
-            
-            $table->text('motivoSolicitud')->nullable();
+           
             
             // Foreign key constraints
             $table->foreign('idadministrador')
