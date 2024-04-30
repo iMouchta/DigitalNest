@@ -63,7 +63,7 @@ class SolicitudController extends Controller
                     'fechasolicitud' => $request->input('fecha'),
                     'horainicialsolicitud' => $request->input('horainicial'),
                     'horafinalsolicitud' => $request->input('horafinal'),
-                    'motivoespecial' => $request->input('motivo')
+                    'motivosolicitud' => $request->input('motivo')
                 ];
 
                 $solicitudIngresada = solicitud::insert($datosSolicitud);

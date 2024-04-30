@@ -10,7 +10,7 @@ class solicitud extends Model
     use HasFactory;
     protected $table = 'solicitud';
 
-    protected $fillable = ['idmateria', 'capacidadsolicitud', 'fechasolicitud', 'horainicialsolicitud', 'horafinalsolicitud', 'bitacorafechasolicitud', 'motivoespecial'];
+    protected $fillable = ['idmateria', 'capacidadsolicitud', 'fechasolicitud', 'horainicialsolicitud', 'horafinalsolicitud', 'bitacorafechasolicitud', 'motivosolicitud'];
 
     // Relación con las materias
     public function reservas()
