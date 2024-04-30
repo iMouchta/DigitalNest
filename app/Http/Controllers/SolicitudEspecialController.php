@@ -27,6 +27,8 @@ class SolicitudEspecialController extends Controller
         'idmateria' => 'required|integer',
     ]);
 
+
+
     $solicitud = new Solicitud();
     $solicitud->fill($request->except('_token')); 
     $solicitud->idmateria = $request->idmateria; 
@@ -37,12 +39,12 @@ class SolicitudEspecialController extends Controller
 }
 
 
+
 public function index()
 {
     $solicitudes = Solicitud::all();
-    return view('solicitud', compact('solicitudes'));
+    return response()->json($solicitudes);
 }
-
 
 }
 
