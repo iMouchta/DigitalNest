@@ -12,7 +12,6 @@ class Motivo extends Migration
             $table->id('idmotivo');
             $table->unsignedBigInteger('idmateria');
             $table->string('motivosolicitud', 45)->nullable();
-            $table->timestamps();
 
             $table->foreign('idmateria')->references('idmateria')->on('materia');
         });

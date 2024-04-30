@@ -10,18 +10,21 @@ class Solicitud extends Migration
     {
         Schema::create('solicitud', function (Blueprint $table) {
             $table->id('idsolicitud');
-            $table->unsignedBigInteger('idambiente');
+
+            $table->unsignedBigInteger('idadministrador')->nullable();
+            $table->unsignedBigInteger('idmateria')->nullable();
             $table->integer('capacidadsolicitud')->nullable();
             $table->date('fechasolicitud')->nullable();
             $table->time('horainicialsolicitud')->nullable();
             $table->time('horafinalsolicitud')->nullable();
-            $table->boolean('revisionestapendiente')->nullable();
-            $table->boolean('solicitudfueaceptada')->nullable();
-            $table->boolean('esurgente')->nullable();
             $table->date('bitacorafechasolicitud')->nullable();
-            $table->timestamps();
+            $table->string('motivosolicitud', 1000)->nullable();
+            $table->string('ambientesolicitud', 250)->nullable();
+            $table->boolean('especial')->nullable();
 
-            $table->foreign('idambiente')->references('idambiente')->on('ambiente');
+            $table->foreign('idadministrador')->references('idadministrador')->on('administrador');
+            $table->foreign('idmateria')->references('idmateria')->on('materia');
+            
         });
     }
 
