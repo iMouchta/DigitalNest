@@ -11,17 +11,16 @@ class Solicitud extends Migration
         Schema::create('solicitud', function (Blueprint $table) {
             $table->id('idsolicitud');
             $table->unsignedBigInteger('idmateria');
-            $table->unsignedBigInteger('idambiente');
             $table->unsignedBigInteger('idadministrador')->nullable();
+            $table->string('ambientesolicitud', 250)->nullable();
+            $table->boolean('especial')->nullable();
             $table->unsignedInteger('capacidadsolicitud')->nullable();
             $table->date('fechasolicitud')->nullable();
             $table->time('horainicialsolicitud')->nullable();
             $table->time('horafinalsolicitud')->nullable();
             $table->date('bitacorafechasolicitud')->nullable();
             $table->string('motivosolicitud', 1000)->nullable();
-            $table->string('ambientesolicitud', 250)->nullable();
-            $table->boolean('especial')->nullable();
-           
+
             
             // Foreign key constraints
             $table->foreign('idadministrador')
@@ -35,12 +34,7 @@ class Solicitud extends Migration
                   ->on('materia')
                   ->onDelete('NO ACTION')
                   ->onUpdate('NO ACTION');
-                  
-            $table->foreign('idambiente')
-                  ->references('idambiente')
-                  ->on('ambiente')
-                  ->onDelete('NO ACTION')
-                  ->onUpdate('NO ACTION');
+
         });
     }
     public function down()
