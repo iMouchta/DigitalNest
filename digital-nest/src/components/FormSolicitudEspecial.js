@@ -145,25 +145,25 @@ export default function FormSolicitudEspecial() {
         />
 
         <FormSelector
-          label="Hora de inicio *"
+          label="Hora inicial *"
           options={horasInicio}
           onChange={setSelectedHoraInicio}
           error={errorHoraInicio}
         />
         <FormSelector
-          label="Hora de fin *"
+          label="Hora final *"
           options={horasFin}
           onChange={setSelectedHoraFin}
           error={errorHoraFin}
         />
         <FormTextField
-          label="Motivo de reserva"
+          label="Motivo de la reserva"
           placeholder="Ingrese el motivo de reserva"
           onChange={setTextFieldMotivo}
           error={errorMotivo}
         />
 
-        <SendFormButton onClick={handleSubmit} />
+        <SendFormButton onClick={handleSubmit} label={"Confirmar"} />
       </Box>
     </form>
   );

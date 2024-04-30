@@ -1,88 +1,90 @@
-import React, { useEffect, useState } from "react";
-import {
-  Button,
-  Card,
-  CardContent,
-  CardActions,
-  Typography,
-  List,
-  ListItem,
-} from "@mui/material";
+import React, { useState } from "react";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemText from "@mui/material/ListItemText";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
+import Collapse from "@mui/material/Collapse";
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
 
-const data = [
-  {
-    nombre: "Leticia Blanco Coca",
-    materia: "Taller de Software",
-    capacidad: "50",
-    fecha: "20-05-2024",
-    horaInicial: "6:45",
-    horaFinal: "8:15",
-    motivo: "Primer parcial",
-  },
-  {
-    nombre: "Luisa Fernanda",
-    materia: "Programacion",
-    capacidad: "50",
-    fecha: "20-05-2024",
-    horaInicial: "6:45",
-    horaFinal: "8:15",
-    motivo: "Primer parcial",
-  },
-  {
-    nombre: "Pablito Perez",
-    materia: "Programacion",
-    capacidad: "50",
-    fecha: "20-05-2024",
-    horaInicial: "6:45",
-    horaFinal: "8:15",
-    motivo: "Primer parcial",
-  },
-  {
-    nombre: "Jose Orosco",
-    materia: "Programacion",
-    capacidad: "50",
-    fecha: "20-05-2024",
-    horaInicial: "6:45",
-    horaFinal: "8:15",
-    motivo: "Primer parcial",
-  },
-];
+export default function ViewSolicitudes() {
+  const [open, setOpen] = useState({});
 
-export default function VisualizarSolicitudPage() {
-  const [solicitdData, setSolicitudData] = useState([]);
+  const handleClick = (id) => {
+    setOpen((prev) => ({ ...prev, [id]: !prev[id] }));
+  };
 
-  // useEffect(() => {
-  //   fetch('http://localhost:8000/api/ruta-a-tu-endpoint')
-  //     .then(response => response.json())
-  //     .then(data => setData(data));
-  // }, []);
+  const data = [
+    {
+      id: 1,
+      nombre: "Juan Perez",
+      materia: "Matematicas",
+      capacidad: 20,
+      fecha: "2021-10-10",
+      infoAdicional: "Información adicional 1",
+    },
+    {
+      id: 2,
+      nombre: "Maria Lopez",
+      materia: "Fisica",
+      capacidad: 15,
+      fecha: "2021-10-11",
+      infoAdicional: "Información adicional 2",
+    },
+    // ... más datos ...
+  ];
+
   return (
-    <div className="visualizar-solicitud-page">
-      <List>
-        {data.map((item) => (
-          <ListItem key={item.id}>
-            <Card>
+    <List
+      sx={{
+        width: "100%",
+        maxWidth: 450,
+        bgcolor: "background.paper",
+        position: "relative",
+        overflow: "auto",
+        maxHeight: 600,
+        "& ul": { padding: 0 },
+      }}
+    >
+      {data.map((item) => (
+        <div key={item.id}>
+          <ListItemButton onClick={() => handleClick(item.id)}>
+            <Card sx={{ width: "100%" }}>
               <CardContent>
                 <Typography variant="body1">
                   Nombre del docente: {item.nombre}
                 </Typography>
-                <Typography variant="body1">Materia: {item.materia}</Typography>
-                <Typography variant="body1">
-                  Capacidad: {item.capacidad}
-                </Typography>
+                <Typography variant="body1">Aula: {item.aula}</Typography>
                 <Typography variant="body1">Fecha: {item.fecha}</Typography>
-                <Typography variant="body1">
-                  Hora Inicial: {item.horaInicial}
-                </Typography>
-                <Typography variant="body1">
-                  Hora Final: {item.horaFinal}
-                </Typography>
-                <Typography variant="body1">Motivo: {item.motivo}</Typography>
+                {open[item.id] ? <ExpandLess /> : <ExpandMore />}
               </CardContent>
+              <Collapse in={open[item.id]} timeout="auto" unmountOnExit>
+                <CardContent>
+                  <Typography variant="body1">
+                    Capacidad: {item.capacidad}
+                  </Typography>
+                  <Typography variant="body1">Motivo: {item.motivo}</Typography>
+                  <Typography variant="body1">
+                    Hora inicial: {item.horaInicial}
+                  </Typography>
+                  <Typography variant="body1">
+                    Hora final: {item.horaFinal}
+                  </Typography>
+                  <Typography variant="body1">
+                    Fecha de solicitud: {item.fechaSolicitud}
+                  </Typography>
+                  <Typography variant="body1">
+                    Hora de solicitud: {item.horaSolicitud}
+                  </Typography>
+                </CardContent>
+              </Collapse>
             </Card>
-          </ListItem>
-        ))}
-      </List>
-    </div>
+          </ListItemButton>
+        </div>
+      ))}
+    </List>
   );
 }

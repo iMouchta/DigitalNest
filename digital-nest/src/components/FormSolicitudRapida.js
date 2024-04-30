@@ -93,9 +93,10 @@ export default function FormSolicitudRapida() {
   ];
 
   const capacidades = [
+    { value: "20" },
+    { value: "30" },
     { value: "50" },
     { value: "100" },
-    { value: "150" },
     { value: "200" },
     { value: "250" },
   ];
@@ -131,6 +132,7 @@ export default function FormSolicitudRapida() {
     { value: "Segundo Parcial" },
     { value: "Examen Final" },
     { value: "Segunda Instancia" },
+    { value: "Examen de Mesa"}
   ];
 
   return (
@@ -160,25 +162,25 @@ export default function FormSolicitudRapida() {
           error={errorFecha}
         />
         <FormSelector
-          label="Hora de inicio *"
+          label="Hora inicial *"
           options={horasIniciales}
           onChange={setSelectedHoraInicio}
           error={errorHoraInicio}
         />
         <FormSelector
-          label="Hora de fin *"
+          label="Hora final *"
           options={horasFinales}
           onChange={setSelectedHoraFin}
           error={errorHoraFin}
         />
         <FormSelector
-          label="Motivo *"
+          label="Motivo de la reserva *"
           options={motivos}
           onChange={setSelectedMotivo}
           error={errorMotivo}
         />
 
-        <SendFormButton onClick={handleSubmit} />
+        <SendFormButton onClick={handleSubmit} label={"SELECCIONAR AMBIENTE"} />
       </Box>
     </form>
   );
