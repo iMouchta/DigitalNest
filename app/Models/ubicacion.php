@@ -13,7 +13,6 @@ class Ubicacion extends Model
         'nombreubicacion'
     ];
 
-    // Relación con los ambientes
     public function ambientes()
     {
         return $this->hasMany(Ambiente::class, 'idubicacion');

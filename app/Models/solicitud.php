@@ -9,13 +9,35 @@ class solicitud extends Model
 {
     use HasFactory;
     protected $table = 'solicitud';
+    public $timestamps = false;
 
-    protected $fillable = ['idmateria', 'capacidadsolicitud', 'fechasolicitud', 'horainicialsolicitud', 'horafinalsolicitud', 'bitacorafechasolicitud', 'motivoespecial'];
 
-    // Relación con las materias
+    protected $fillable = [
+        'idambiente', 
+        'idmateria', 
+        'capacidadsolicitud',
+        'fechasolicitud',
+        'horainicialsolicitud',
+        'horafinalsolicitud',
+        'revisionestapendiente',
+        'solicitudfueaceptada',
+        'esurgente',
+        'bitacorafechasolicitud'
+    ];
+
+    public function ambiente()
+    {
+        return $this->belongsTo(Ambiente::class, 'idambiente');
+    }
+
     public function reservas()
     {
         return $this->hasMany(reserva::class, 'idsolicitud');
     }
     
+
+    public function materia()
+    {
+        return $this->belongsTo(Materia::class, 'idmateria');
+    }
 }
