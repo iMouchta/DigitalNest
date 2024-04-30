@@ -8,150 +8,174 @@ import FormDateSelector from "./FormDateSelector";
 
 export default function FormSolicitudRapida() {
   //* Form fields
-  const [selectedOption1, setSelectedOption1] = useState("");
-  const [selectedOption2, setSelectedOption2] = useState("");
-  const [selectedMultipleOptions1, setSelectedMultipleOptions1] = useState([]);
-  const [textFieldValue1, setTextFieldValue1] = useState("");
+  const [selectedNombreDocente, setSelectedNombreDocente] = useState("");
+  const [selectedMateria, setSelectedMateria] = useState("");
+  const [selectedCapacidad, setSelectedCapacidad] = useState("");
+  const [selectedFecha, setSelectedFecha] = useState("");
+  const [selectedHoraInicio, setSelectedHoraInicio] = useState("");
+  const [selectedHoraFin, setSelectedHoraFin] = useState("");
+  const [selectedMotivo, setSelectedMotivo] = useState("");
 
   //* Error Handling
-  const [errorOption1, setErrorOption1] = useState(false);
+  const [errorNombreDocente, setErrorNombreDocente] = useState(false);
+  const [errorMateria, setErrorMateria] = useState(false);
+  const [errorCapacidad, setErrorCapacidad] = useState(false);
+  const [errorFecha, setErrorFecha] = useState(false);
+  const [errorHoraInicio, setErrorHoraInicio] = useState(false);
+  const [errorHoraFin, setErrorHoraFin] = useState(false);
+  const [errorMotivo, setErrorMotivo] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    setErrorOption1(!selectedOption1);
+    setErrorNombreDocente(!selectedNombreDocente);
+    setErrorMateria(!selectedMateria);
+    setErrorCapacidad(!selectedCapacidad);
+    setErrorFecha(!selectedFecha);
+    setErrorHoraInicio(!selectedHoraInicio);
+    setErrorHoraFin(!selectedHoraFin);
+    setErrorMotivo(!selectedMotivo);
 
     if (
-      !selectedOption1 ||
-      !selectedOption2 ||
-      !selectedMultipleOptions1.length ||
-      !textFieldValue1
+      !selectedNombreDocente ||
+      !selectedMateria ||
+      !selectedCapacidad ||
+      !selectedFecha ||
+      !selectedHoraInicio ||
+      !selectedHoraFin ||
+      !selectedMotivo
     ) {
       setErrorMessage("Todos los campos son obligatorios");
       console.log("Error:", errorMessage);
       return;
     }
 
-    console.log("Selected option 1:", selectedOption1);
-    console.log("Selected option 2:", selectedOption2);
-    console.log("Selected multiple options 1:", selectedMultipleOptions1);
-    console.log("Text field value:", textFieldValue1);
+    console.log("Nombre del docente:", selectedNombreDocente);
+    console.log("Materia:", selectedMateria);
+    console.log("Capacidad:", selectedCapacidad);
+    console.log("Fecha:", selectedFecha.format('YYYY-MM-DD'));
+    console.log("Hora de inicio:", selectedHoraInicio);
+    console.log("Hora de fin:", selectedHoraFin);
+    console.log("Motivo:", selectedMotivo);
+
+    // Realizar la solicitud POST
+    fetch("http://localhost/public/solicitud", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        nombredocente: selectedNombreDocente,
+        materia: selectedMateria,
+        capacidad: selectedCapacidad,
+        fecha: selectedFecha.format('YYYY-MM-DD'),
+        horainicial: selectedHoraInicio,
+        horafinal: selectedHoraFin,
+        motivo: selectedMotivo,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => console.log(data))
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
+
+  const docentes = [{ value: "Leticia Blanco Coca" }];
+
+  const materias = [
+    { value: "Matemáticas" },
+    { value: "Física" },
+    { value: "Química" },
+    { value: "Biología" },
+    { value: "Historia" },
+  ];
+
+  const capacidades = [
+    { value: "50" },
+    { value: "100" },
+    { value: "150" },
+    { value: "200" },
+    { value: "250" },
+  ];
+
+  const horasIniciales = [
+    { value: "6:45" },
+    { value: "8:15" },
+    { value: "9:45" },
+    { value: "11:15" },
+    { value: "12:45" },
+    { value: "14:15" },
+    { value: "15:45" },
+    { value: "17:15" },
+    { value: "18:45" },
+    { value: "20:15" },
+  ];
+
+  const horasFinales = [
+    { value: "6:45" },
+    { value: "8:15" },
+    { value: "9:45" },
+    { value: "11:15" },
+    { value: "12:45" },
+    { value: "14:15" },
+    { value: "15:45" },
+    { value: "17:15" },
+    { value: "18:45" },
+    { value: "20:15" },
+  ];
+
+  const motivos = [
+    { value: "Primer Parcial" },
+    { value: "Segundo Parcial" },
+    { value: "Examen Final" },
+    { value: "Segunda Instancia" },
+  ];
 
   return (
     <form>
       <Box sx={{ p: 2, border: "1px solid grey", borderRadius: "4px" }}>
         <FormSelector
           label="Nombre del docente *"
-          options={[
-            { value: "Leticia Coca Blanco", label: "Leticia Coca Blanco" },
-          ]}
-          onChange={setSelectedOption1}
-          error={errorOption1}
+          options={docentes}
+          onChange={setSelectedNombreDocente}
+          error={errorNombreDocente}
         />
         <FormSelector
           label="Materia *"
-          options={[
-            { value: "Carla Salazar Serrudo", label: "Carla Salazar Serrudo" },
-            {
-              value: "Vladimir Abel Costas Jauregui",
-              label: "Vladimir Abel Costas Jauregui",
-            },
-            { value: 3, label: "Test 3" },
-            // ... más opciones
-          ]}
-          onChange={setSelectedOption2}
-        />
-
-        <FormMultipleSelector
-          label="Docentes adicionales"
-          options={[
-            { value: "Carla Salazar Serrudo", label: "Carla Salazar Serrudo" },
-            {
-              value: "Vladimir Abel Costas Jauregui",
-              label: "Vladimir Abel Costas Jauregui",
-            },
-            { value: "Hernan Ustariz Vargas", label: "Hernan Ustariz Vargas" },
-            {
-              value: "Henry Frank Villarroel Tapia",
-              label: "Henry Frank Villarroel Tapia",
-            },
-            {
-              value: "Victor Hugo Quiroga Montano",
-              label: "Victor Hugo Quiroga Montano",
-            },
-          ]}
-          onChange={setSelectedMultipleOptions1}
-        />
-        <FormSelector
-          label="Grupo *"
-          options={[
-            {
-              value: "6:45",
-              label: "6:45",
-            },
-            {
-              value: "8:15",
-              label: "8:15",
-            },
-          ]}
-          onChange={setTextFieldValue1}
+          options={materias}
+          onChange={setSelectedMateria}
+          error={errorMateria}
         />
         <FormSelector
           label="Capacidad *"
-          options={[
-            {
-              value: "6:45",
-              label: "6:45",
-            },
-            {
-              value: "8:15",
-              label: "8:15",
-            },
-          ]}
-          onChange={setTextFieldValue1}
+          options={capacidades}
+          onChange={setSelectedCapacidad}
+          error={errorCapacidad}
         />
-        <FormDateSelector label="Fecha *" onChange={setTextFieldValue1} />
+        <FormDateSelector
+          label="Fecha *"
+          onChange={setSelectedFecha}
+          error={errorFecha}
+        />
         <FormSelector
           label="Hora de inicio *"
-          options={[
-            {
-              value: "6:45",
-              label: "6:45",
-            },
-            {
-              value: "8:15",
-              label: "8:15",
-            },
-          ]}
-          onChange={setTextFieldValue1}
+          options={horasIniciales}
+          onChange={setSelectedHoraInicio}
+          error={errorHoraInicio}
         />
         <FormSelector
           label="Hora de fin *"
-          options={[
-            {
-              value: "6:45",
-              label: "6:45",
-            },
-            {
-              value: "8:15",
-              label: "8:15",
-            },
-          ]}
-          onChange={setTextFieldValue1}
+          options={horasFinales}
+          onChange={setSelectedHoraFin}
+          error={errorHoraFin}
         />
         <FormSelector
           label="Motivo *"
-          options={[
-            {
-              label: "6:45",
-            },
-            {
-              label: "8:15",
-            },
-          ]}
-          onChange={setTextFieldValue1}
+          options={motivos}
+          onChange={setSelectedMotivo}
+          error={errorMotivo}
         />
 
         <SendFormButton onClick={handleSubmit} />

@@ -23,7 +23,7 @@ export default function FormSelector({ label, options, onChange, error }) {
           </MenuItem>
           {options.map((option, index) => (
             <MenuItem key={index} value={option.value}>
-              {option.label}
+              {option.value}
             </MenuItem>
           ))}
         </Select>
