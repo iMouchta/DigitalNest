@@ -11,7 +11,6 @@ class Ubicacion extends Migration
         Schema::create('ubicacion', function (Blueprint $table) {
             $table->id('idubicacion');
             $table->string('nombreubicacion', 45)->nullable();
-            $table->timestamps();
         });
     }
 

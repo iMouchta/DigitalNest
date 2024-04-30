@@ -10,21 +10,43 @@ class Solicitud extends Migration
     {
         Schema::create('solicitud', function (Blueprint $table) {
             $table->id('idsolicitud');
+            $table->unsignedBigInteger('idmateria');
             $table->unsignedBigInteger('idambiente');
-            $table->integer('capacidadsolicitud')->nullable();
+            $table->unsignedBigInteger('idadministrador')->nullable();
+            $table->unsignedInteger('capacidadsolicitud')->nullable();
             $table->date('fechasolicitud')->nullable();
             $table->time('horainicialsolicitud')->nullable();
             $table->time('horafinalsolicitud')->nullable();
-            $table->boolean('revisionestapendiente')->nullable();
-            $table->boolean('solicitudfueaceptada')->nullable();
-            $table->boolean('esurgente')->nullable();
             $table->date('bitacorafechasolicitud')->nullable();
-            $table->timestamps();
+            $table->string('motivosolicitud', 1000)->nullable();
+            $table->string('ambientesolicitud', 250)->nullable();
+            $table->boolean('especial')->nullable();
 
-            $table->foreign('idambiente')->references('idambiente')->on('ambiente');
+            $table->foreign('idadministrador')->references('idadministrador')->on('administrador');
+            $table->foreign('idmateria')->references('idmateria')->on('materia');
+            
+            $table->text('motivoSolicitud')->nullable();
+            
+            // Foreign key constraints
+            $table->foreign('idadministrador')
+                  ->references('idadministrador')
+                  ->on('administrador')
+                  ->onDelete('NO ACTION')
+                  ->onUpdate('NO ACTION');
+
+            $table->foreign('idmateria')
+                  ->references('idmateria')
+                  ->on('materia')
+                  ->onDelete('NO ACTION')
+                  ->onUpdate('NO ACTION');
+                  
+            $table->foreign('idambiente')
+                  ->references('idambiente')
+                  ->on('ambiente')
+                  ->onDelete('NO ACTION')
+                  ->onUpdate('NO ACTION');
         });
     }
-
     public function down()
     {
         Schema::dropIfExists('solicitud');
