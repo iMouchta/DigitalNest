@@ -30,6 +30,12 @@ class solicitud extends Model
         return $this->belongsTo(Ambiente::class, 'idambiente');
     }
 
+    public function reservas()
+    {
+        return $this->hasMany(reserva::class, 'idsolicitud');
+    }
+    
+
     public function materia()
     {
         return $this->belongsTo(Materia::class, 'idmateria');

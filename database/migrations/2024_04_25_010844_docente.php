@@ -17,7 +17,7 @@ class Docente extends Migration
             $table->id('iddocente');
             $table->string('nombredocente', 20)->nullable();
             $table->string('correoelectronico', 45)->nullable();
-            $table->string('numcelular', 20)->nullable();
+            $table->string('numcelular', 20)->nullable(); 
         });
     }
 
