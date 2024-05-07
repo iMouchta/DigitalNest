@@ -15,7 +15,7 @@ class VerifyCsrfToken extends Middleware
 
         '/', // Ruta para crear y almacenar una solicitud
         '/solicitudes', // Ruta para obtener todas las solicitudes
-        '/solicitud/*', // Rutas generadas por el resource controller SolicitudController
+        'solicitud', // Rutas generadas por el resource controller SolicitudController
 
     ];
 }
