@@ -19,19 +19,18 @@ Route::get('/', function () {
 
 Route::get('/solicitudes', [SolicitudEspecialController::class, 'index'])->name('solicitud');
 
-
-// Route::get('/formularioSolicitud', function () {
-//     return view('solicitudes.solicitudrapida');
-// });
-
-Route::resource('reserva', ReservaController::class);
-// Route::get('/', [SolicitudController::class, 'create'])->name('solicitud.create');
-// Route::post('/', [SolicitudController::class, 'store'])->name('solicitud.store');
-
 Route::resource('solicitud', SolicitudController::class);
 
-// Route::get('/formularioSolicitudRapida',
-//      [SolicitudController::class, 'create'])->name('solicitud.create');
+Route::group(['middleware' => ['cors']], function () {
+    Route::get('/solicitudes', [SolicitudEspecialController::class, 'index'])->name('solicitud');
+    Route::resource('solicitud', SolicitudController::class);
+    
 
-// Route::post('/formularioSolicitudRapida',
-//      [SolicitudController::class, 'store'])->name('solicitud.store');
+    Route::get('/', function () {return view('welcome');});
+    Route::get('/', [SolicitudEspecialController::class, 'create'])->name('solicitud.create');
+    Route::post('/', [SolicitudEspecialController::class, 'store'])->name('solicitud.store');
+});
+
+
+Route::resource('reserva', ReservaController::class);
+Route::resource('solicitud', SolicitudController::class);
