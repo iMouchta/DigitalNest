@@ -32,9 +32,10 @@ class SolicitudEspecialController extends Controller
         $solicitud->save();
 
         if ($solicitud) {
-            return back()->with('success', 'Solicitud creada exitosamente.');
+            return response()->json(['subida' => true]);
+            // return back()->with('success', 'Solicitud creada exitosamente.');
         } else {
-            return back()->with('error', 'Hubo un error al crear la solicitud.');
+            return response()->json(['subida' => false]);
         }
     }
 
