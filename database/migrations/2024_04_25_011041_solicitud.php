@@ -10,24 +10,33 @@ class Solicitud extends Migration
     {
         Schema::create('solicitud', function (Blueprint $table) {
             $table->id('idsolicitud');
-
+            $table->unsignedBigInteger('idmateria');
             $table->unsignedBigInteger('idadministrador')->nullable();
-            $table->unsignedBigInteger('idmateria')->nullable();
-            $table->integer('capacidadsolicitud')->nullable();
+            $table->string('ambientesolicitud', 250)->nullable();
+            $table->boolean('especial')->nullable();
+            $table->unsignedInteger('capacidadsolicitud')->nullable();
             $table->date('fechasolicitud')->nullable();
             $table->time('horainicialsolicitud')->nullable();
             $table->time('horafinalsolicitud')->nullable();
             $table->date('bitacorafechasolicitud')->nullable();
             $table->string('motivosolicitud', 1000)->nullable();
-            $table->string('ambientesolicitud', 250)->nullable();
-            $table->boolean('especial')->nullable();
 
-            $table->foreign('idadministrador')->references('idadministrador')->on('administrador');
-            $table->foreign('idmateria')->references('idmateria')->on('materia');
             
+            // Foreign key constraints
+            $table->foreign('idadministrador')
+                  ->references('idadministrador')
+                  ->on('administrador')
+                  ->onDelete('NO ACTION')
+                  ->onUpdate('NO ACTION');
+
+            $table->foreign('idmateria')
+                  ->references('idmateria')
+                  ->on('materia')
+                  ->onDelete('NO ACTION')
+                  ->onUpdate('NO ACTION');
+
         });
     }
-
     public function down()
     {
         Schema::dropIfExists('solicitud');
