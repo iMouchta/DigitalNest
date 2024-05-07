@@ -75,38 +75,6 @@ class SolicitudController extends Controller
                     return response()->json(['subida' => false]);
                 }
 
-                //obtener ambiente tentativo
-                // $ambienteTentativo = $this->obtenerAmbienteTentativo($request);
-
-                // //verificar si existe u
-                // if($ambienteTentativo) {
-                //     //verificar si el ambiente esta disponible
-                //     $ambienteId = $ambienteTentativo['idambiente'];
-                //     $fecha = $request->input('fecha');
-                //     $horaInicial = $request->input('horainicial');
-                //     $horaFinal = $request->input('horafinal');
-                //     $periodoDisponible = $this->periodoEstaDisponible($ambienteId, $fecha, $horaInicial, $horaFinal);
-
-                //     if ($periodoDisponible) {
-                //         //crear solicitud
-                //         $solicitudId = solicitud::create($datosSolicitud)->idsolicitud;
-                //         //crear reserva
-                //         $reserva = reserva::create([
-                //             'idsolicitud' => $solicitudId,
-                //             'idambiente' => $ambienteId
-                //         ]);
-                //         return response()->json($reserva);
-                //     } else {
-                //         //el ambiente no esta disponible
-                //         return response()->json(['error' => 'El ambiente no esta disponible']);
-                //     }
-                // } else {
-                //     //no hay ambientes disponibles
-                //     return response()->json(['error' => 'No hay ambientes disponibles']);
-                // }
-
-
-
             } else {
                 //la materia no existe para este docente
                 return response()->json(['error' => 'La materia no existe para este docente']);
@@ -116,49 +84,21 @@ class SolicitudController extends Controller
             $docenteId = null;
             return response()->json(['error' => 'El docente no existe']);
         }	
-
-        // $datos = [
-        //     'docente_id' => $docenteId,
-        //     'materia_id' => $materiaId,
-        // ];
-
-        // return response()->json($datos);
     }
     
-    private function obtenerAmbienteTentativo(Request $request)
-    {
-        //obtener ambiente
-        $ambiente = ambiente::where('capacidadambiente', '>=', $request->input('capacidad'))->first();
-        if ($ambiente) {
-            $datosambiente = [
-                'idambiente' => $ambiente->idambiente,
-                'nombre' => $ambiente->nombreambiente,
-                'capacidad' => $ambiente->capacidadambiente
-            ];
-            // return response()->json($datosambiente);
-            return $datosambiente;
-        } else {
-            $datosambiente = [
-                'idambiente' => null,
-                'nombre' => null,
-                'capacidad' => null
-            ];
-            return $datosambiente;
-        }
-    }
 
-    private function periodoEstaDisponible($ambienteId, $fecha, $horaInicial, $horaFinal)
-    {
-        $periodos = periodonodisponible::where('idambiente', $ambienteId)->where('fecha', $fecha)->get();
-        if ($periodos) {
-            foreach ($periodos as $periodo) {
-                if ($horaInicial >= $periodo->hora && $horaInicial <= $periodo->hora) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
+    // private function periodoEstaDisponible($ambienteId, $fecha, $horaInicial, $horaFinal)
+    // {
+    //     $periodos = periodonodisponible::where('idambiente', $ambienteId)->where('fecha', $fecha)->get();
+    //     if ($periodos) {
+    //         foreach ($periodos as $periodo) {
+    //             if ($horaInicial >= $periodo->hora && $horaInicial <= $periodo->hora) {
+    //                 return false;
+    //             }
+    //         }
+    //     }
+    //     return true;
+    // }
     
 
     /**
