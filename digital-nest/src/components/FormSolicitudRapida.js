@@ -104,27 +104,15 @@ export default function FormSolicitudRapida() {
   const horasIniciales = [
     { value: "6:45" },
     { value: "8:15" },
-    { value: "9:45" },
-    { value: "11:15" },
-    { value: "12:45" },
+
     { value: "14:15" },
     { value: "15:45" },
-    { value: "17:15" },
-    { value: "18:45" },
     { value: "20:15" },
   ];
 
   const horasFinales = [
-    { value: "6:45" },
     { value: "8:15" },
-    { value: "9:45" },
-    { value: "11:15" },
-    { value: "12:45" },
-    { value: "14:15" },
-    { value: "15:45" },
-    { value: "17:15" },
-    { value: "18:45" },
-    { value: "20:15" },
+
   ];
 
   const motivos = [
