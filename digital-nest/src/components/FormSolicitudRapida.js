@@ -54,7 +54,7 @@ export default function FormSolicitudRapida() {
     console.log("Nombre del docente:", selectedNombreDocente);
     console.log("Materia:", selectedMateria);
     console.log("Capacidad:", selectedCapacidad);
-    console.log("Fecha:", selectedFecha.format('YYYY-MM-DD'));
+    console.log("Fecha:", selectedFecha.format("YYYY-MM-DD"));
     console.log("Hora de inicio:", selectedHoraInicio);
     console.log("Hora de fin:", selectedHoraFin);
     console.log("Motivo:", selectedMotivo);
@@ -69,7 +69,7 @@ export default function FormSolicitudRapida() {
         nombredocente: selectedNombreDocente,
         materia: selectedMateria,
         capacidad: selectedCapacidad,
-        fecha: selectedFecha.format('YYYY-MM-DD'),
+        fecha: selectedFecha.format("YYYY-MM-DD"),
         horainicial: selectedHoraInicio,
         horafinal: selectedHoraFin,
         motivo: selectedMotivo,
@@ -132,7 +132,7 @@ export default function FormSolicitudRapida() {
     { value: "Segundo Parcial" },
     { value: "Examen Final" },
     { value: "Segunda Instancia" },
-    { value: "Examen de Mesa"}
+    { value: "Examen de Mesa" },
   ];
 
   return (
