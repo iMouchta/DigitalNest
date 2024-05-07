@@ -1,11 +1,23 @@
 <!DOCTYPE html>
 <html lang="es">
 
-    <head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulario de Solicitud</title>
-    </head>
+</head>
+
+@if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
+@if (session('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
 
 <body>
     <h2>Formulario de Solicitud</h2>
@@ -16,8 +28,8 @@
                     <li>{{ $error }}</li>
                 @endforeach
             </ul>
-                </div>
-            @endif
+        </div>
+    @endif
     <form action="/" method="POST">
         @csrf
         <label for="capacidadsolicitud">Capacidad:</label>
@@ -32,18 +44,18 @@
         <label for="horafinalsolicitud">Hora Final:</label>
         <input type="time" id="horafinalsolicitud" name="horafinalsolicitud" required><br><br>
 
-        <label for="motivo">Motivo:</label>
-        <input type="text" id="motivo" name="motivo" required><br><br>
+        <label for="motivosolicitud">Motivo:</label>
+        <input type="text" id="motivosolicitud" name="motivosolicitud" required><br><br>
 
-        <label for="idambiente">Ambiente:</label>
-        <input type="number" id="idambiente" name="idambiente" required><br><br>
+        <label for="ambientesolicitud">Ambiente:</label>
+        <input type="text" id="ambientesolicitud" name="ambientesolicitud" required><br><br>
 
         <label for="idmateria">Materia:</label>
         <input type="number" id="idmateria" name="idmateria" required><br><br>
 
         <button type="submit">Enviar Solicitud</button>
     </form>
-    </body>
+</body>
 
 </html>
 

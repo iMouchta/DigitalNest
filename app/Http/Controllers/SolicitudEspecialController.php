@@ -16,35 +16,31 @@ class SolicitudEspecialController extends Controller
 
     public function store(Request $request)
     {
-    //dd($request->all());
-    $request->validate([
-        'capacidadsolicitud' => 'required|integer',
-        'fechasolicitud' => 'required|date',
-        'horainicialsolicitud' => 'required',
-        'horafinalsolicitud' => 'required',
-        'motivo' => 'required|string|max:255',
-        'idambiente' => 'required|integer',
-        'idmateria' => 'required|integer',
-    ]);
+        $request->validate([
+            'capacidadsolicitud' => 'required|integer',
+            'fechasolicitud' => 'required|date',
+            'horainicialsolicitud' => 'required',
+            'horafinalsolicitud' => 'required',
+            'motivosolicitud' => 'required|string|max:1000',
+            'ambientesolicitud' => 'required|string|max:250',
+            'idmateria' => 'required|integer',
+        ]);
 
+        $solicitud = new Solicitud();
+        $solicitud->fill($request->except('_token'));
+        $solicitud->idmateria = $request->idmateria;
+        $solicitud->save();
 
+        if ($solicitud) {
+            return back()->with('success', 'Solicitud creada exitosamente.');
+        } else {
+            return back()->with('error', 'Hubo un error al crear la solicitud.');
+        }
+    }
 
-    $solicitud = new Solicitud();
-    $solicitud->fill($request->except('_token')); 
-    $solicitud->idmateria = $request->idmateria; 
-    $solicitud->idambiente = $request->idambiente;
-    $solicitud->save();
-
-    return back()->with('success', 'Solicitud creada exitosamente.');
+    public function index()
+    {
+        $solicitudes = Solicitud::all();
+        return response()->json($solicitudes);
+    }
 }
-
-
-
-public function index()
-{
-    $solicitudes = Solicitud::all();
-    return response()->json($solicitudes);
-}
-
-}
-
