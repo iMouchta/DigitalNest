@@ -38,99 +38,78 @@ class ReservaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store()
+    public function store(Request $request)
     {
+        //mandar numero de solicitudes ateendidas
+        $reservasExitosas = [];
+        $reservasRechazadas = [];
+        
         $solicitudes = solicitud::all();
-        $periodoNoDisponibleSubido = false;
 
         foreach ($solicitudes as $solicitud) {
-            $idSolicitud = $solicitud->idsolicitud;
+
+            $idsolicitud = $solicitud->idsolicitud;
             $capacidad = $solicitud->capacidadsolicitud;
-            $fecha = $solicitud->fechasolicitud;
-            $horaInicialSolicitud = $solicitud->horainicialsolicitud;
-            $horaFinalSolicitud = $solicitud->horafinalsolicitud;
 
-            $periodosNoDisponibles = periodonodisponible::all();
-            if ($periodosNoDisponibles->isEmpty()) {
-                $datosAmbiente = $this->obtenerAmbienteTentativo($capacidad);
-                $idAmbienteTentativo = $datosAmbiente['idambiente'];
+            $ambienteTentativo = $this->obtenerAmbienteTentativo($capacidad);
 
-                $datosReserva = [
-                    'idsolicitud' => $idSolicitud,
-                    'idambiente' => $idAmbienteTentativo,
+            if ($ambienteTentativo) {
+                $idambiente = $ambienteTentativo['idambiente'];
+
+                $reserva = [
+                    'idsolicitud' => $idsolicitud,
+                    'idambiente' => $idambiente
                 ];
 
-                $reservaSubida = reserva::insert($datosReserva);
+                reserva::insert($reserva);
 
-
-                $listaHoras = $this->generarListaHoras($horaInicialSolicitud, $horaFinalSolicitud);
-
-
-                foreach ($listaHoras as $hora) {
-                    $horaOcupada = $hora;
-                    $datosPeriodoNoDisponible = [
-                        'idambiente' => $idAmbienteTentativo,
-                        'fecha' => $fecha,
-                        'hora' => $horaOcupada,
-                    ];
-                    $periodoNoDisponibleSubido = periodonodisponible::insert($datosPeriodoNoDisponible);
-                }
-
-
-                return response()->json($reservaSubida);
+                $reservasExitosas[] = $reserva;
             } else {
-                $datosAmbiente = $this->obtenerAmbienteTentativo($capacidad);
-                $idAmbienteTentativo = $datosAmbiente['idambiente'];
-
-                $datosReserva = [
-                    'idsolicitud' => $idSolicitud,
-                    'idambiente' => $idAmbienteTentativo,
-                ];
-
-                $estaDisponible = $this->periodoEstaDisponible($idAmbienteTentativo, $fecha, $horaInicialSolicitud, $horaFinalSolicitud);
-
-                if ($estaDisponible) {
-                    $reservaSubida = reserva::insert($datosReserva);
-
-                    $listaHoras = $this->generarListaHoras($horaInicialSolicitud, $horaFinalSolicitud);
-                    foreach ($listaHoras as $hora) {
-                        $horaOcupada = $hora;
-                        $datosPeriodoNoDisponible = [
-                            'idambiente' => $idAmbienteTentativo,
-                            'fecha' => $fecha,
-                            'hora' => $horaOcupada,
-                        ];
-                        $periodoNoDisponibleSubido = periodonodisponible::insert($datosPeriodoNoDisponible);
-                    }
-
-                    return response()->json($reservaSubida);
-                } else {
-                    return response()->json(false);
-                }
+                $reservasRechazadas[] = $solicitud;
             }
+            
+        }        
 
-
-        }
-        // return response()->json($periodosNoDisponibles);
+        return response()->json([
+            'reservas' => $reservasExitosas, 
+            'evaluadas' => true, 
+            'noAceptadas' => $reservasRechazadas]);
 
     }
 
+    //esto  fue lo ultimo que hiciste
+    // private function obtenerAmbienteTentativo($capacidad, $fecha, $horaInicial, $horaFinal)
+    // {
+    //     //obtener ambiente
+    //     $ambiente = ambiente::where('capacidadambiente', '>=', $capacidad)->first();
+    //     $estaDisponible = $this->ambienteEstaDisponible($ambiente->idambiente, $fecha, $horaInicial, $horaFinal);
+
+    //     if ($ambiente && $estaDisponible) {
+    //         $datosambiente = [
+    //             'idambiente' => $ambiente->idambiente,
+    //             'nombre' => $ambiente->nombreambiente,
+    //             'capacidad' => $ambiente->capacidadambiente
+    //         ];
+    //         // return response()->json($datosambiente);
+    //         return $datosambiente;
+    //     } else {
+    //         $datosambiente = null;
+    //         return $datosambiente;
+    //     }
+    // }
+
     private function obtenerAmbienteTentativo($capacidad)
     {
-        //obtener ambiente
         $ambiente = ambiente::where('capacidadambiente', '>=', $capacidad)->first();
+        
         if ($ambiente) {
-            $datosambiente = [
+            $datosAmbiente = [
                 'idambiente' => $ambiente->idambiente,
                 'nombre' => $ambiente->nombreambiente,
                 'capacidad' => $ambiente->capacidadambiente
             ];
-            // return response()->json($datosambiente);
-            return $datosambiente;
-        } else {
-            $datosambiente = null;
-            return $datosambiente;
-        }
+            return $datosAmbiente;
+        } 
     }
 
     private function generarListaHoras($horaInicial, $horaFinal)
@@ -148,14 +127,20 @@ class ReservaController extends Controller
         return $listaHoras;
     }
 
-    private function periodoEstaDisponible($ambienteId, $fecha, $horaInicial, $horaFinal)
+    private function ambienteEstaDisponible($idAmbiente, $fecha, $horaInicial, $horaFinal)
     {
-        $periodos = periodonodisponible::where('idambiente', $ambienteId)->where('fecha', $fecha)->where('hora', '>', $horaInicial)->where('hora', '<', $horaFinal)->get();
-        if ($periodos) {
-            return true;
-        } else {
-            return false;
-        }
+        $coincidencia = PeriodoNoDisponible::where('idambiente', $idAmbiente)
+            ->where('fecha', $fecha)
+            ->where(function ($query) use ($horaInicial, $horaFinal) {
+                $query->where('hora', '>=', $horaInicial)
+                      ->where('hora', '<', $horaFinal)
+                      ->orWhere('hora', '>', $horaInicial)
+                      ->where('hora', '<=', $horaFinal);
+            })
+            ->doesntExist();
+
+        // Si no hay coincidencia, devuelve true; de lo contrario, devuelve false
+        return $coincidencia;
     }
 
     /**

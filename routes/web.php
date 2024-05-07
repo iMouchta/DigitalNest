@@ -29,3 +29,9 @@ Route::resource('reserva', ReservaController::class);
 // Route::post('/', [SolicitudController::class, 'store'])->name('solicitud.store');
 
 Route::resource('solicitud', SolicitudController::class);
+
+// Route::get('/formularioSolicitudRapida',
+//      [SolicitudController::class, 'create'])->name('solicitud.create');
+
+// Route::post('/formularioSolicitudRapida',
+//      [SolicitudController::class, 'store'])->name('solicitud.store');
