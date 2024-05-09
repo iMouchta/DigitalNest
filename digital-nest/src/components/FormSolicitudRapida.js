@@ -60,7 +60,7 @@ export default function FormSolicitudRapida() {
     console.log("Motivo:", selectedMotivo);
 
     // Realizar la solicitud POST
-    fetch("http://localhost:8000/solicitud", {
+    fetch("http://localhost:8000/api/solicitud", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -110,10 +110,7 @@ export default function FormSolicitudRapida() {
     { value: "20:15" },
   ];
 
-  const horasFinales = [
-    { value: "8:15" },
-
-  ];
+  const horasFinales = [{ value: "8:15" }];
 
   const motivos = [
     { value: "Primer Parcial" },
