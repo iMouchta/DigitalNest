@@ -67,9 +67,25 @@ class SolicitudController extends Controller
                 ];
 
                 $solicitudIngresada = solicitud::insert($datosSolicitud);
+
+                $ambientes = ambiente::all();
+                $ambientesDisponibles = [];
+
+                foreach ($ambientes as $ambiente) {
+                    if ($ambiente->capacidadambiente >= $request->input('capacidad')) {
+
+                        $ambienteCandidato = [
+                            'idambiente' => $ambiente->idambiente,
+                            'nombre' => $ambiente->nombreambiente,
+                            'capacidad' => $ambiente->capacidadambiente
+                        ];
+
+                        $ambientesDisponibles[] = $ambienteCandidato;
+                    }
+                }
                 
                 if($solicitudIngresada) {
-                    return response()->json(['subida' => true]);
+                    return response()->json(['subida' => true, 'ambientes' => $ambientesDisponibles]);
                     // return response()->json($request);
                 } else {
                     return response()->json(['subida' => false]);
