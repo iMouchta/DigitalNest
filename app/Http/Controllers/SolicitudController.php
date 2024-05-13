@@ -43,80 +43,66 @@ class SolicitudController extends Controller
     public function store(Request $request)
     {
         $datosSolicitudFormulario = request()->except('_token');
-        $nombreDocente = $datosSolicitudFormulario['nombredocente'];
+        $nombresDocentes = $datosSolicitudFormulario['nombresdocentes'];
         $nombreMateria = $datosSolicitudFormulario['materia'];
+        $capacidad = $datosSolicitudFormulario['capacidad'];
+        $fecha = $datosSolicitudFormulario['fecha'];
+        $horaInicial = $datosSolicitudFormulario['horainicial'];
+        $horaFinal = $datosSolicitudFormulario['horafinal'];
+        $motivo = $datosSolicitudFormulario['motivo'];
 
-        $docente = docente::where('nombredocente', $nombreDocente)->first();
-        if ($docente) {
-            //obtiene el id del docente
-            $docenteId = $docente->iddocente;
-            $materia = materia::where('nombremateria', $nombreMateria)->where('iddocente', $docenteId)->first();
+        $solicitudesRealizadas = [];
+        $ambientesDisponibles = [];
+        $solicitudesSubidas = false;
 
-            if($materia) {
-                //obten el id de la materia
-                $materiaId = $materia->idmateria;
+        foreach ($nombresDocentes as $nombreDocente) {
+            $docente = docente::where('nombredocente', $nombreDocente)->first();
+            if ($docente) {
+                $idDocente = $docente->iddocente;
+                $materia = materia::where('nombremateria', $nombreMateria)->where('iddocente', $idDocente)->first();
 
-                //se crea mapa con los valores requeridos para la solicitud
-                $datosSolicitud = [
-                    'idmateria' => $materiaId,
-                    'capacidadsolicitud' => $request->input('capacidad'),
-                    'fechasolicitud' => $request->input('fecha'),
-                    'horainicialsolicitud' => $request->input('horainicial'),
-                    'horafinalsolicitud' => $request->input('horafinal'),
-                    'motivosolicitud' => $request->input('motivo')
-                ];
+                if($materia) {
+                    $idMateria = $materia->idmateria;
 
-                $solicitudIngresada = solicitud::insert($datosSolicitud);
+                    $datosSolicitud = [
+                        'idmateria' => $idMateria,
+                        'capacidadsolicitud' => $capacidad,
+                        'fechasolicitud' => $fecha,
+                        'horainicialsolicitud' => $horaInicial,
+                        'horafinalsolicitud' => $horaFinal,
+                        'motivosolicitud' => $motivo
+                    ];
 
-                $ambientes = ambiente::all();
-                $ambientesDisponibles = [];
+                    $solicitudIngresada = solicitud::insert($datosSolicitud);
+                    $solicitudesRealizadas[] = $datosSolicitud;
+                    $solicitudesSubidas = true;
 
-                foreach ($ambientes as $ambiente) {
-                    if ($ambiente->capacidadambiente >= $request->input('capacidad')) {
+                    $ambientes = ambiente::all();
+                    
 
-                        $ambienteCandidato = [
-                            'idambiente' => $ambiente->idambiente,
-                            'nombre' => $ambiente->nombreambiente,
-                            'capacidad' => $ambiente->capacidadambiente
-                        ];
+                    foreach ($ambientes as $ambiente) {
+                        if ($ambiente->capacidadambiente >= $capacidad) {
 
-                        $ambientesDisponibles[] = $ambienteCandidato;
+                            $ambienteCandidato = [
+                                'idambiente' => $ambiente->idambiente,
+                                'nombre' => $ambiente->nombreambiente,
+                                'capacidad' => $ambiente->capacidadambiente
+                            ];
+
+                            $ambientesDisponibles[] = $ambienteCandidato;
+                        }
                     }
-                }
-                
-                if($solicitudIngresada) {
-                    return response()->json(['subida' => true, 'ambientes' => $ambientesDisponibles]);
-                    // return response()->json($request);
-                } else {
-                    return response()->json(['subida' => false]);
-                }
 
-            } else {
-                //la materia no existe para este docente
-                return response()->json(['error' => 'La materia no existe para este docente']);
+                }
             }
-        } else {
-            //el docente no existe
-            $docenteId = null;
-            return response()->json(['error' => 'El docente no existe']);
-        }	
+        }
+
+
+
+        return response()->json(['nombresDocentes' => $nombresDocentes, 'solicitudesAceptadas' => $solicitudesRealizadas, 'ambientes' => $ambientesDisponibles]);
+	
     }
     
-
-    // private function periodoEstaDisponible($ambienteId, $fecha, $horaInicial, $horaFinal)
-    // {
-    //     $periodos = periodonodisponible::where('idambiente', $ambienteId)->where('fecha', $fecha)->get();
-    //     if ($periodos) {
-    //         foreach ($periodos as $periodo) {
-    //             if ($horaInicial >= $periodo->hora && $horaInicial <= $periodo->hora) {
-    //                 return false;
-    //             }
-    //         }
-    //     }
-    //     return true;
-    // }
-    
-
     /**
      * Display the specified resource.
      *
