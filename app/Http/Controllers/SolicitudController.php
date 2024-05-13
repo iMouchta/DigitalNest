@@ -75,25 +75,25 @@ class SolicitudController extends Controller
 
                     $solicitudIngresada = solicitud::insert($datosSolicitud);
                     $solicitudesRealizadas[] = $datosSolicitud;
-                    $solicitudesSubidas = true;
-
-                    $ambientes = ambiente::all();
-                    
-
-                    foreach ($ambientes as $ambiente) {
-                        if ($ambiente->capacidadambiente >= $capacidad) {
-
-                            $ambienteCandidato = [
-                                'idambiente' => $ambiente->idambiente,
-                                'nombre' => $ambiente->nombreambiente,
-                                'capacidad' => $ambiente->capacidadambiente
-                            ];
-
-                            $ambientesDisponibles[] = $ambienteCandidato;
-                        }
-                    }
+                    $solicitudesSubidas = true;                  
 
                 }
+            }
+        }
+
+        $ambientes = ambiente::all();
+                    
+
+        foreach ($ambientes as $ambiente) {
+            if ($ambiente->capacidadambiente >= $capacidad) {
+
+                $ambienteCandidato = [
+                    'idambiente' => $ambiente->idambiente,
+                    'nombre' => $ambiente->nombreambiente,
+                    'capacidad' => $ambiente->capacidadambiente
+                ];
+
+                $ambientesDisponibles[] = $ambienteCandidato;
             }
         }
 
