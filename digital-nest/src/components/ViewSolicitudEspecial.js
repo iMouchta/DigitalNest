@@ -16,6 +16,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
+import { toast, Toaster } from "react-hot-toast";
 
 export default function ViewSolicitudEspecial() {
   const [open, setOpen] = useState(false);
@@ -55,10 +56,14 @@ export default function ViewSolicitudEspecial() {
     })
       .then((response) => response.json())
       .then((data) => {
+        toast.success("Se aceptó la reserva con éxito", {
+          duration: 7000,
+        });
         console.log("Success:", data);
         fetchSolicitudes(); // Actualiza las solicitudes después de la petición POST
       })
       .catch((error) => {
+        toast.error("No se pudo aceptar la reserva");
         console.error("Error:", error);
       });
   };
@@ -133,6 +138,7 @@ export default function ViewSolicitudEspecial() {
             ))}
         </TableBody>
       </Table>
+      <Toaster />
     </TableContainer>
   );
 }

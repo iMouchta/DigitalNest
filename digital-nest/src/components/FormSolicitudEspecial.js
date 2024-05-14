@@ -12,6 +12,7 @@ import {
   DialogTitle,
 } from "@mui/material";
 import Button from "@mui/material/Button";
+import { toast, Toaster } from "react-hot-toast";
 
 export default function FormSolicitudEspecial() {
   //* Form fields
@@ -47,8 +48,9 @@ export default function FormSolicitudEspecial() {
     setOpen(false);
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleSubmit = () => {
+    
+    // event.preventDefault();
     setErrorNombre(!textFieldNombre);
     // setErrorCapacidad(!textFieldCapacidad);
     setErrorEdificio(!selectedEdificio);
@@ -81,6 +83,7 @@ export default function FormSolicitudEspecial() {
     console.log("Hora de inicio:", selectedHoraInicio);
     console.log("Hora de fin:", selectedHoraFin);
     console.log("Motivo:", textFieldMotivo);
+
 
     fetch("http://localhost:8000/api/", {
       method: "POST",
@@ -260,6 +263,7 @@ export default function FormSolicitudEspecial() {
           </DialogActions>
         </Dialog>
       </Box>
+      <Toaster />
     </form>
   );
 }
