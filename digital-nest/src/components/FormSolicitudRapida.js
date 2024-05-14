@@ -117,7 +117,7 @@ export default function FormSolicitudRapida() {
           return map;
         }, {});
 
-        setAmbientes(ambientesMap);       
+        setAmbientes(ambientesMap);
 
         handleOpenDialog();
       })
