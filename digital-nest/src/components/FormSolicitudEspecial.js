@@ -63,20 +63,23 @@ export default function FormSolicitudEspecial() {
     console.log("Hora de fin:", selectedHoraFin);
     console.log("Motivo:", textFieldMotivo);
 
-    fetch("http://localhost:8000/", {
+    fetch("http://localhost:8000/api/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        nombre: textFieldNombre,
+        idadministrador: textFieldNombre,
         // capacidad: textFieldCapacidad,
-        edificio: selectedEdificio,
-        ambientes: selectedAmbientes,
-        fecha: selectedFecha.format("YYYY-MM-DD"),
-        horaInicio: selectedHoraInicio,
-        horaFin: selectedHoraFin,
-        motivo: textFieldMotivo,
+        //* Lidiar con los ambientes
+        // edificio: selectedEdificio,
+        // ambientes: selectedAmbientes,
+        idambiente: 1,
+        fechasolicitud: selectedFecha.format("YYYY-MM-DD"),
+        horainicialsolicitud: selectedHoraInicio,
+        horafinalsolicitud: selectedHoraFin,
+        motivosolicitud: textFieldMotivo,
+        especial: 1,
       }),
     })
       .then((response) => response.json())
