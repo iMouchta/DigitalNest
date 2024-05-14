@@ -15,6 +15,7 @@ import SpecialIcon from "@mui/icons-material/Star";
 import ReplyIcon from "@mui/icons-material/Reply";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { Link as RouterLink } from "react-router-dom";
+import NotificationsIcon from '@mui/icons-material/Notifications';
 
 import PrimarySearchAppBar from "./components/AppBar";
 import HomePage from "./pages/HomePage.js";
@@ -22,6 +23,7 @@ import SolicitudRapidaPage from "./pages/SolicitudRapidaPage.js";
 import SolicitudEspecialPage from "./pages/SolicitudEspecialPage.js";
 import ResponderSolicitudPage from "./pages/ResponderSolicitudPage.js";
 import VisualizarSolicitudPage from "./pages/VisualizarSolicitudPage.js";
+import EnviarNotificacionPage from "./pages/EnviarNotificacionPage.js";
 
 function App() {
   return (
@@ -49,6 +51,10 @@ function App() {
             <Route
               path="visualizarSolicitud"
               element={<VisualizarSolicitudPage />}
+            />
+            <Route 
+              path="enviarNotificacion"
+              element={<EnviarNotificacionPage />}
             />
           </Route>
           <Route path="/administrador" element={<HomePage />}>
@@ -118,6 +124,16 @@ function AppLayout() {
                   <VisibilityIcon />
                 </ListItemIcon>
                 <ListItemText primary="Visualizar Reservas" />
+              </ListItem>
+              <ListItem
+                button
+                component={RouterLink}
+                to="/docente/enviarNotificacion"
+              >
+                <ListItemIcon>
+                  <NotificationsIcon />
+                </ListItemIcon>
+                <ListItemText primary="Escribir Notificación" />
               </ListItem>
             </List>
           </nav>
