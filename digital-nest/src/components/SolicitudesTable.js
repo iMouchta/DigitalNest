@@ -27,7 +27,13 @@ export default function SolicitudesTable({ solicitudes }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-  const rows = solicitudes.map((solicitud) => createData(solicitud.idsolicitud, solicitud.capacidadsolicitud, solicitud.fechasolicitud));
+  const rows = solicitudes.map((solicitud) =>
+    createData(
+      solicitud.idsolicitud,
+      solicitud.capacidadsolicitud,
+      solicitud.fechasolicitud
+    )
+  );
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -58,14 +64,14 @@ export default function SolicitudesTable({ solicitudes }) {
           <TableBody>
             {rows
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => {
+              .map((row, index) => {
                 return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+                  <TableRow hover role="checkbox" tabIndex={-1} key={index}>
                     {columns.map((column) => {
                       const value = row[column.id];
                       return (
                         <TableCell key={column.id} align={column.align}>
-                          {column.format && typeof valuce === "number"
+                          {column.format && typeof value === "number"
                             ? column.format(value)
                             : value}
                         </TableCell>
