@@ -59,28 +59,30 @@ export default function ViewSolicitudEspecial() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row.idsolicitud}>
-              <TableCell>{row.idsolicitud}</TableCell>
-              <TableCell>{row.nombreAmbiente}</TableCell>
-              <TableCell>{row.fechasolicitud}</TableCell>
-              <TableCell>
-                {row.horainicialsolicitud.split(":").slice(0, 2).join(":")}
-              </TableCell>
-              <TableCell>
-                {row.horafinalsolicitud.split(":").slice(0, 2).join(":")}
-              </TableCell>
-              <TableCell>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => handleAccept(row.idsolicitud)}
-                >
-                  Aceptar
-                </Button>
-              </TableCell>
-            </TableRow>
-          ))}
+          {rows
+            .filter((row) => !row.aceptada)
+            .map((row) => (
+              <TableRow key={row.idsolicitud}>
+                <TableCell>{row.idsolicitud}</TableCell>
+                <TableCell>{row.nombreAmbiente}</TableCell>
+                <TableCell>{row.fechasolicitud}</TableCell>
+                <TableCell>
+                  {row.horainicialsolicitud.split(":").slice(0, 2).join(":")}
+                </TableCell>
+                <TableCell>
+                  {row.horafinalsolicitud.split(":").slice(0, 2).join(":")}
+                </TableCell>
+                <TableCell>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => handleAccept(row.idsolicitud)}
+                  >
+                    Aceptar
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
         </TableBody>
       </Table>
     </TableContainer>
