@@ -125,7 +125,12 @@ export default function FormSolicitudRapida() {
 
   return (
     <form>
-      <Box sx={{ p: 2, border: "1px solid grey", borderRadius: "4px" }}>
+      <Box ml={4} sx={{ p: 2,
+      backgroundColor: 'white',
+      color: 'black',
+      width: '300px',
+      border: "2px solid grey",
+      borderRadius: "4px" }}>
         <FormSelector
           label="Nombre del docente *"
           options={docentes}
