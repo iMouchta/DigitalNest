@@ -123,6 +123,15 @@ export default function FormSolicitudRapida() {
   return (
     <form>
       <Box sx={{ p: 2, border: "1px solid grey", borderRadius: "4px" }}>
+        <FormMultipleSelector
+          label="Nombres"
+          options={[
+            { value: "Leticia Blanco Coca", label: "Leticia Blanco Coca" },
+            { value: "Vladimir Costas", label: "Vladimir Costas" },
+            { value: "Corina Flores", label: "Corina Flores" },
+          ]}
+          onChange={(value) => console.log(value)}
+        />
         <FormSelector
           label="Nombre del docente *"
           options={docentes}
