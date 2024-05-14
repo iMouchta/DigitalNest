@@ -5,7 +5,11 @@ import {
   Routes,
   Outlet,
 } from "react-router-dom";
-import { Link } from "react-router-dom";
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import { Link as RouterLink } from 'react-router-dom';
+
 import PrimarySearchAppBar from "./components/AppBar";
 import HomePage from "./pages/HomePage.js";
 import SolicitudRapidaPage from "./pages/SolicitudRapidaPage.js";
@@ -59,26 +63,26 @@ function AppLayout() {
   return (
     <div className="app-layout">
       <div className="contenido-principal">
-        <div className="barra-lateral">
+      <div className="barra-lateral">
           <h1>Menú</h1>
           <nav>
-            <ul>
-              <li>
-                <Link to="/">Inicio</Link>
-              </li>
-              <li>
-                <Link to="/docente/solicitudRapida">Solicitud Rápida</Link>
-              </li>
-              <li>
-                <Link to="/docente/solicitudEspecial">Solicitud Especial</Link>
-              </li>
-              <li>
-                <Link to="/docente/responderSolicitud">Responder Solicitud</Link>
-              </li>
-              <li>
-                <Link to="/docente/visualizarSolicitud">Visualizar Solicitud</Link>
-              </li>
-            </ul>
+            <List component="nav">
+              <ListItem button component={RouterLink} to="/">
+                <ListItemText primary="Inicio" />
+              </ListItem>
+              <ListItem button component={RouterLink} to="/docente/solicitudRapida">
+                <ListItemText primary="Solicitud Rápida" />
+              </ListItem>
+              <ListItem button component={RouterLink} to="/docente/solicitudEspecial">
+                <ListItemText primary="Solicitud Especial" />
+              </ListItem>
+              <ListItem button component={RouterLink} to="/docente/responderSolicitud">
+                <ListItemText primary="Responder Solicitud" />
+              </ListItem>
+              <ListItem button component={RouterLink} to="/docente/visualizarSolicitud">
+                <ListItemText primary="Visualizar Solicitud" />
+              </ListItem>
+            </List>
           </nav>
         </div>
         <div className="contenido">
