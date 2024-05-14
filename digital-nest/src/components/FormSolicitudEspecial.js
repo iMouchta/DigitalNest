@@ -8,7 +8,7 @@ import FormDateSelector from "./FormDateSelector";
 export default function FormSolicitudEspecial() {
   //* Form fields
   const [textFieldNombre, setTextFieldNombre] = useState("");
-  const [textFieldCapacidad, setTextFieldCapacidad] = useState("");
+  // const [textFieldCapacidad, setTextFieldCapacidad] = useState("");
   const [selectedEdificio, setSelectedEdificio] = useState("");
   const [selectedAmbientes, setSelectedAmbientes] = useState("");
   const [selectedFecha, setSelectedFecha] = useState("");
@@ -18,7 +18,7 @@ export default function FormSolicitudEspecial() {
 
   //* Error Handling
   const [errorNombre, setErrorNombre] = useState(false);
-  const [errorCapacidad, setErrorCapacidad] = useState(false);
+  // const [errorCapacidad, setErrorCapacidad] = useState(false);
   const [errorEdificio, setErrorEdificio] = useState(false);
   const [errorAmbientes, setErrorAmbientes] = useState(false);
   const [errorFecha, setErrorFecha] = useState(false);
@@ -31,7 +31,7 @@ export default function FormSolicitudEspecial() {
   const handleSubmit = (event) => {
     event.preventDefault();
     setErrorNombre(!textFieldNombre);
-    setErrorCapacidad(!textFieldCapacidad);
+    // setErrorCapacidad(!textFieldCapacidad);
     setErrorEdificio(!selectedEdificio);
     setErrorAmbientes(!selectedAmbientes);
     setErrorFecha(!selectedFecha);
@@ -41,7 +41,7 @@ export default function FormSolicitudEspecial() {
 
     if (
       !textFieldNombre ||
-      !textFieldCapacidad ||
+      // !textFieldCapacidad ||
       !selectedEdificio ||
       !selectedAmbientes ||
       !selectedFecha ||
@@ -55,7 +55,7 @@ export default function FormSolicitudEspecial() {
     }
 
     console.log("Nombre:", textFieldNombre);
-    console.log("Capacidad:", textFieldCapacidad);
+    // console.log("Capacidad:", textFieldCapacidad);
     console.log("Edificio:", selectedEdificio);
     console.log("Ambientes:", selectedAmbientes);
     console.log("Fecha:", selectedFecha.format("YYYY-MM-DD"));
@@ -70,7 +70,7 @@ export default function FormSolicitudEspecial() {
       },
       body: JSON.stringify({
         nombre: textFieldNombre,
-        capacidad: textFieldCapacidad,
+        // capacidad: textFieldCapacidad,
         edificio: selectedEdificio,
         ambientes: selectedAmbientes,
         fecha: selectedFecha.format("YYYY-MM-DD"),
@@ -85,59 +85,51 @@ export default function FormSolicitudEspecial() {
       })
       .catch((error) => {
         console.error("Error:", error);
-      }    
-  );
+      });
   };
 
-  const edificios = [
-    {value: "Edificio nuevo"}
-  ];
+  const edificios = [{ value: "Edificio nuevo" }];
 
   const ambientes = [
-    {value: "Auditorio"},
-    {value: "690A"},
-    {value: "690B"},
-    {value: "690C"},
-    {value: "690D"},
+    { value: "Auditorio" },
+    { value: "690A" },
+    { value: "690B" },
+    { value: "690C" },
+    { value: "690D" },
   ];
 
-  const horasInicio = [
-    {value: "6:45"},
-    {value: "8:15"},
-  ];
+  const horasInicio = [{ value: "6:45" }, { value: "8:15" }];
 
-  const horasFin = [
-    {value: "6:45"},
-    {value: "8:15"},
-  ];
+  const horasFin = [{ value: "6:45" }, { value: "8:15" }];
 
   return (
     <form>
-      <Box 
-      display="flex"
-      flexDirection="column"
-      justifyContent="center"
-      alignItems="center"
-      minHeight="calc(100vh - 160px)" 
-      sx={{ p: 2,
-      backgroundColor: 'white',
-      color: 'black',
-      width: '500px',
-      borderRadius: "10px" }}>
+      <Box
+        display="flex"
+        flexDirection="column"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="calc(100vh - 160px)"
+        sx={{
+          p: 2,
+          backgroundColor: "white",
+          color: "black",
+          width: "500px",
+          borderRadius: "10px",
+        }}
+      >
         <FormTextField
-
-          label="Nombre completo *" 
-         
+          label="Nombre completo *"
           placeholder="Ingrese su nombre completo"
           onChange={setTextFieldNombre}
           error={errorNombre}
         />
-        <FormTextField
+        {/* <FormTextField
           label="Capacidad *"
           placeholder="Estimado de personas que asistirán"
           onChange={setTextFieldCapacidad}
           error={errorCapacidad}
-        />
+        /> */}
         <FormSelector
           label="Edificio *"
           options={edificios}

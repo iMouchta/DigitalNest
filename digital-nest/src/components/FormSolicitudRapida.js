@@ -6,6 +6,7 @@ import Box from "@mui/material/Box";
 import SendFormButton from "./SendFormButton";
 import FormDateSelector from "./FormDateSelector";
 import Grid from "@mui/material/Box";
+import SelectAmbienteDialog from "./SelectAmbienteDialog";
 
 export default function FormSolicitudRapida() {
   //* Form fields
@@ -27,8 +28,18 @@ export default function FormSolicitudRapida() {
   const [errorMotivo, setErrorMotivo] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
+  //* Dialog
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const handleOpenDialog = () => { 
+    setOpenDialog(true);
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    handleOpenDialog();
+
 
     setErrorNombreDocente(!selectedNombreDocente);
     setErrorMateria(!selectedMateria);
@@ -59,6 +70,7 @@ export default function FormSolicitudRapida() {
     console.log("Hora de inicio:", selectedHoraInicio);
     console.log("Hora de fin:", selectedHoraFin);
     console.log("Motivo:", selectedMotivo);
+
 
     // Realizar la solicitud POST
     fetch("http://localhost:8000/api/solicitud", {
@@ -124,73 +136,80 @@ export default function FormSolicitudRapida() {
   return (
     <form>
       <Grid container>
-      <Grid item xs="auto">
-      <Box 
-      display="flex"
-      flexDirection="column"
-      justifyContent="center"
-      alignItems="center"
-      minHeight="calc(100vh - 160px)" 
-      sx={{ p: 2,
-      backgroundColor: 'white',
-      color: 'black',
-      width: '500px',
-      borderRadius: "10px" }}>
-        <FormMultipleSelector
-          label="Nombres"
-          options={[
-            { value: "Leticia Blanco Coca", label: "Leticia Blanco Coca" },
-            { value: "Vladimir Costas", label: "Vladimir Costas" },
-            { value: "Corina Flores", label: "Corina Flores" },
-          ]}
-          onChange={(value) => console.log(value)}
-        />
-        <FormSelector
-          label="Nombre del docente *"
-          options={docentes}
-          onChange={setSelectedNombreDocente}
-          error={errorNombreDocente}
-        />
-        <FormSelector
-          label="Materia *"
-          options={materias}
-          onChange={setSelectedMateria}
-          error={errorMateria}
-        />
-        <FormSelector
-          label="Capacidad *"
-          options={capacidades}
-          onChange={setSelectedCapacidad}
-          error={errorCapacidad}
-        />
-        <FormDateSelector
-          label="Fecha *"
-          onChange={setSelectedFecha}
-          error={errorFecha}
-        />
-        <FormSelector
-          label="Hora inicial *"
-          options={horasIniciales}
-          onChange={setSelectedHoraInicio}
-          error={errorHoraInicio}
-        />
-        <FormSelector
-          label="Hora final *"
-          options={horasFinales}
-          onChange={setSelectedHoraFin}
-          error={errorHoraFin}
-        />
-        <FormSelector
-          label="Motivo de la reserva *"
-          options={motivos}
-          onChange={setSelectedMotivo}
-          error={errorMotivo}
-        />
+        <Grid item xs="auto">
+          <Box
+            display="flex"
+            flexDirection="column"
+            justifyContent="center"
+            alignItems="center"
+            minHeight="calc(100vh - 160px)"
+            sx={{
+              p: 2,
+              backgroundColor: "white",
+              color: "black",
+              width: "500px",
+              borderRadius: "10px",
+            }}
+          >
+            <FormSelector
+              label="Nombre del docente *"
+              options={docentes}
+              onChange={setSelectedNombreDocente}
+              error={errorNombreDocente}
+            />
+            {/* <FormMultipleSelector
+              label="Nombres"
+              options={[
+                { value: "Leticia Blanco Coca", label: "Leticia Blanco Coca" },
+                { value: "Vladimir Costas", label: "Vladimir Costas" },
+                { value: "Corina Flores", label: "Corina Flores" },
+              ]}
+              onChange={(value) => console.log(value)}
+            /> */}
+            <FormSelector
+              label="Materia *"
+              options={materias}
+              onChange={setSelectedMateria}
+              error={errorMateria}
+            />
+            <FormSelector
+              label="Capacidad *"
+              options={capacidades}
+              onChange={setSelectedCapacidad}
+              error={errorCapacidad}
+            />
+            <FormDateSelector
+              label="Fecha *"
+              onChange={setSelectedFecha}
+              error={errorFecha}
+            />
+            <FormSelector
+              label="Hora inicial *"
+              options={horasIniciales}
+              onChange={setSelectedHoraInicio}
+              error={errorHoraInicio}
+            />
+            <FormSelector
+              label="Hora final *"
+              options={horasFinales}
+              onChange={setSelectedHoraFin}
+              error={errorHoraFin}
+            />
+            <FormSelector
+              label="Motivo de la reserva *"
+              options={motivos}
+              onChange={setSelectedMotivo}
+              error={errorMotivo}
+            />
 
-        <SendFormButton onClick={handleSubmit} label={"SELECCIONAR AMBIENTE"} />
-      </Box>
+            <SendFormButton
+              onClick={handleSubmit}
+              label={"SELECCIONAR AMBIENTE"}
+            />
+          </Box>
+        </Grid>
       </Grid>
-      </Grid>
+      <SelectAmbienteDialog open={openDialog} handleClose={() => setOpenDialog(false)} />
     </form>
   );
 }
