@@ -70,7 +70,7 @@ function AppLayout() {
     <div className="app-layout">
       <div className="contenido-principal">
         <div className="barra-lateral">
-          <h1>Menú</h1>
+          <h1>Sistema de Reserva de Ambientes</h1>
           <nav>
             <List component="nav">
               <ListItem button component={RouterLink} to="/">

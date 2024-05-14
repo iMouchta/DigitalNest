@@ -1,35 +1,43 @@
-import React from "react";
-import { Button, Card, CardContent, CardActions, Typography, List, ListItem } from "@mui/material";
-
-const data = [
-  // Aquí puedes agregar tus datos
-  { text: "Texto 1", id: 1 },
-  { text: "Texto 2", id: 2 },
-  { text: "Texto 3", id: 3 },
-  { text: "Texto 4", id: 4},
-  { text: "Texto 5", id: 5 },
-  
-  // ...
-];
+import React from 'react';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@mui/material';
 
 export default function ViewSolicitudEspecial() {
+  // Aquí puedes poner tus datos. Este es solo un ejemplo.
+  const rows = [
+    { id: 1, ambiente: 'Ambiente 1', fecha: '2022-01-01', horaInicial: '10:00', fechaFinal: '2022-01-02' },
+    { id: 2, ambiente: 'Ambiente 2', fecha: '2022-01-03', horaInicial: '11:00', fechaFinal: '2022-01-04' },
+    // Agrega más filas según sea necesario
+  ];
+
   return (
-    <List>
-      {data.map((item) => (
-        <ListItem key={item.id}>
-          <Card sx={{ width: "25%"}}>
-            <CardContent>
-              <Typography variant="body1">Titular: {item.text}</Typography>
-              <Typography variant="body1">Fecha: {item.text}</Typography>
-              <Typography variant="body1">Motivo: {item.text}</Typography>
-            </CardContent>
-            <CardActions>
-              <Button size="small">Rechazar</Button>
-              <Button size="small">Aprobar</Button>
-            </CardActions>
-          </Card>
-        </ListItem>
-      ))}
-    </List>
+    <TableContainer component={Paper}>
+      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <TableHead>
+          <TableRow>
+            <TableCell>ID de Solicitud</TableCell>
+            <TableCell>Ambiente</TableCell>
+            <TableCell>Fecha</TableCell>
+            <TableCell>Hora Inicial</TableCell>
+            <TableCell>Fecha Final</TableCell>
+            <TableCell>Acciones</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {rows.map((row) => (
+            <TableRow key={row.id}>
+              <TableCell>{row.id}</TableCell>
+              <TableCell>{row.ambiente}</TableCell>
+              <TableCell>{row.fecha}</TableCell>
+              <TableCell>{row.horaInicial}</TableCell>
+              <TableCell>{row.fechaFinal}</TableCell>
+              <TableCell>
+                <Button variant="contained" color="primary">Aprobar</Button>
+                <Button variant="contained" color="secondary">Rechazar</Button>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 }
