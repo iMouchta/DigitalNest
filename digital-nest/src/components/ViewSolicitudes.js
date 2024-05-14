@@ -9,6 +9,7 @@ import Typography from "@mui/material/Typography";
 import Collapse from "@mui/material/Collapse";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
+import SolicitudesTable from "./SolicitudesTable";
 
 export default function ViewSolicitudes() {
   const [open, setOpen] = useState({});
@@ -50,6 +51,9 @@ export default function ViewSolicitudes() {
   return (
 
     <div>
+    <div>
+      <SolicitudesTable />
+    </div>
     {solicitudes.map((solicitud, index) => (
       <div key={index}>
         <p>Id Solicitud: {solicitud.idsolicitud}</p>

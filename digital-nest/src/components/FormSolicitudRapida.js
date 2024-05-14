@@ -60,7 +60,7 @@ export default function FormSolicitudRapida() {
     console.log("Motivo:", selectedMotivo);
 
     // Realizar la solicitud POST
-    fetch("http://localhost:8000/solicitud", {
+    fetch("http://localhost:8000/api/solicitud", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -110,10 +110,7 @@ export default function FormSolicitudRapida() {
     { value: "20:15" },
   ];
 
-  const horasFinales = [
-    { value: "8:15" },
-
-  ];
+  const horasFinales = [{ value: "8:15" }];
 
   const motivos = [
     { value: "Primer Parcial" },
@@ -131,6 +128,15 @@ export default function FormSolicitudRapida() {
       width: '300px',
       border: "2px solid grey",
       borderRadius: "4px" }}>
+        <FormMultipleSelector
+          label="Nombres"
+          options={[
+            { value: "Leticia Blanco Coca", label: "Leticia Blanco Coca" },
+            { value: "Vladimir Costas", label: "Vladimir Costas" },
+            { value: "Corina Flores", label: "Corina Flores" },
+          ]}
+          onChange={(value) => console.log(value)}
+        />
         <FormSelector
           label="Nombre del docente *"
           options={docentes}
