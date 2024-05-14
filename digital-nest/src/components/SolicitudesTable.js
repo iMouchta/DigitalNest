@@ -59,8 +59,8 @@ export default function SolicitudesTable({ solicitudes }) {
       solicitud.nombreadministrador,
       solicitud.nombreAmbiente,
       solicitud.fechasolicitud,
-      solicitud.horainicialsolicitud,
-      solicitud.horafinalsolicitud,
+      solicitud.horainicialsolicitud.split(":").slice(0, 2).join(":"),
+      solicitud.horafinalsolicitud.split(":").slice(0, 2).join(":"),
       solicitud.motivosolicitud
     )
   );
