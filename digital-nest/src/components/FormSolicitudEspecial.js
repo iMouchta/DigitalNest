@@ -113,16 +113,21 @@ export default function FormSolicitudEspecial() {
 
   return (
     <form>
-      <Box ml={4} sx={{ p: 2,
+      <Box 
+      display="flex"
+      flexDirection="column"
+      justifyContent="center"
+      alignItems="center"
+      minHeight="calc(100vh - 160px)" 
+      sx={{ p: 2,
       backgroundColor: 'white',
       color: 'black',
-      width: '300px',
-      border: "2px solid grey",
-      borderRadius: "4px" }}>
+      width: '500px',
+      borderRadius: "10px" }}>
         <FormTextField
 
           label="Nombre completo *" 
-          style={{ color: 'black', fontFamily: 'Arial', fontSize: '200px' }}
+         
           placeholder="Ingrese su nombre completo"
           onChange={setTextFieldNombre}
           error={errorNombre}

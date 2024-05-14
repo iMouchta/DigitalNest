@@ -17,9 +17,9 @@ export default function FormSelector({ label, options, onChange, error }) {
   return (
     <div>
       <FormControl error={error} 
-      sx={{ m: 1, minWidth: 250}}>
+      sx={{ m: 1, minWidth: 488}}>
         <InputLabel sx={{backgroundColor: '#f3f3f3'}} 
-            style={{ color: 'black', fontFamily: 'Arial', fontSize: '20px' }}>{label}
+            >{label}
         </InputLabel>
         <Input 
          
@@ -28,7 +28,7 @@ export default function FormSelector({ label, options, onChange, error }) {
         label={label} 
         value={value} 
         onChange={handleChange}
-        renderValue={(value) => `⚠️  - ${value}`}>
+        renderValue={(value) => `${value}`}>
           <MenuItem value="" >
             <em>Ninguno </em>
           </MenuItem>
@@ -38,7 +38,7 @@ export default function FormSelector({ label, options, onChange, error }) {
             </MenuItem>
           ))}
         </Select>
-        <FormHelperText style={{ color: 'black', fontFamily: 'Arial', fontSize: '15px' }}>Campo obligatorio (*)</FormHelperText>
+        <FormHelperText >Campo obligatorio (*)</FormHelperText>
       </FormControl>
     </div>
   );

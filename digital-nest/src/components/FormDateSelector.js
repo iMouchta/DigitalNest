@@ -17,10 +17,10 @@ export default function FormDateSelector({ label, onChange, error }) {
   };
 
   return (
-    <div style={{marginLeft: '8px'}}>
+    <div style={{marginLeft: '8px', marginRight:'8px'}}>
       <LocalizationProvider sx={{backgroundColor: '#f3f3f3'}}  dateAdapter={AdapterDayjs}>
         <DatePicker
-          sx={{backgroundColor: '#f3f3f3'}}
+          sx={{backgroundColor: '#f3f3f3',minWidth: 488}}
           style={{ color: error ? "red" : "inherit",  }}
           label={label}
           minDate={minDate}
