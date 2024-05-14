@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Link } from "react-router-dom";
 import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -273,7 +274,9 @@ export default function PrimarySearchAppBar() {
           role="presentation"
           onClick={toggleDrawer(false)}
           onKeyDown={toggleDrawer(false)}
+          
         >
+          
           <List>
             <ListItem button>
               <ListItemIcon>
@@ -290,12 +293,7 @@ export default function PrimarySearchAppBar() {
           </List>
           <Divider />
           <List>
-            <ListItem button>
-              <ListItemIcon>
-                <MailIcon />
-              </ListItemIcon>
-              <ListItemText primary="All mail" />
-            </ListItem>
+        
             <ListItem button>
               <ListItemIcon>
                 <DeleteIcon />

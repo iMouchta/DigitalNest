@@ -18,8 +18,9 @@ export default function FormDateSelector({ label, onChange, error }) {
 
   return (
     <div style={{marginLeft: '8px'}}>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <LocalizationProvider sx={{backgroundColor: '#f3f3f3'}}  dateAdapter={AdapterDayjs}>
         <DatePicker
+          sx={{backgroundColor: '#f3f3f3'}}
           style={{ color: error ? "red" : "inherit",  }}
           label={label}
           minDate={minDate}
@@ -29,7 +30,7 @@ export default function FormDateSelector({ label, onChange, error }) {
           error={error}
           helperText={error ? "Este campo es obligatorio" : ""}
         />
-        <FormHelperText style={{ color: error ? "rgb(211, 47, 47)" : "inherit", marginLeft: '8px' }}>
+        <FormHelperText style={{ color: error ? "rgb(311, 47, 47)" : "inherit", marginLeft: '8px' }}>
           {error ? "Campo obligatorio (*)" : ""}
         </FormHelperText>
       </LocalizationProvider>

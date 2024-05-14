@@ -1,4 +1,5 @@
 import * as React from "react";
+import Input from "@mui/material/InputLabel";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -15,11 +16,21 @@ export default function FormSelector({ label, options, onChange, error }) {
 
   return (
     <div>
-      <FormControl error={error} sx={{ m: 1, minWidth: 250 }}>
-        <InputLabel>{label}</InputLabel>
-        <Select label={label} value={value} onChange={handleChange}>
-          <MenuItem value="">
-            <em>Ninguno</em>
+      <FormControl error={error} 
+      sx={{ m: 1, minWidth: 250}}>
+        <InputLabel sx={{backgroundColor: '#f3f3f3'}} 
+            style={{ color: 'black', fontFamily: 'Arial', fontSize: '20px' }}>{label}
+        </InputLabel>
+        <Input 
+         
+        />
+        <Select sx={{backgroundColor: '#f3f3f3'}}
+        label={label} 
+        value={value} 
+        onChange={handleChange}
+        renderValue={(value) => `⚠️  - ${value}`}>
+          <MenuItem value="" >
+            <em>Ninguno </em>
           </MenuItem>
           {options.map((option, index) => (
             <MenuItem key={index} value={option.value}>
@@ -27,7 +38,7 @@ export default function FormSelector({ label, options, onChange, error }) {
             </MenuItem>
           ))}
         </Select>
-        <FormHelperText>Campo obligatorio (*)</FormHelperText>
+        <FormHelperText style={{ color: 'black', fontFamily: 'Arial', fontSize: '15px' }}>Campo obligatorio (*)</FormHelperText>
       </FormControl>
     </div>
   );

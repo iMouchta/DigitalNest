@@ -55,9 +55,7 @@ function App() {
 function AppLayout() {
   return (
     <div className="app-layout">
-      <div className="barra-superior">
-        <h1></h1>
-      </div>
+     
       <div className="contenido-principal">
         <div className="barra-lateral">
           <h1></h1>
