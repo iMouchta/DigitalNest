@@ -31,15 +31,22 @@ export default function FormSolicitudRapida() {
   //* Dialog
   const [openDialog, setOpenDialog] = useState(false);
 
-  const handleOpenDialog = () => { 
+  const [formData, setFormData] = useState({
+    nombredocente: "",
+    materia: "",
+    capacidad: "",
+    fecha: "",
+    horainicial: "",
+    horafinal: "",
+    motivo: "",
+  });
+
+  const handleOpenDialog = () => {
     setOpenDialog(true);
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
-    handleOpenDialog();
-
 
     setErrorNombreDocente(!selectedNombreDocente);
     setErrorMateria(!selectedMateria);
@@ -48,6 +55,8 @@ export default function FormSolicitudRapida() {
     setErrorHoraInicio(!selectedHoraInicio);
     setErrorHoraFin(!selectedHoraFin);
     setErrorMotivo(!selectedMotivo);
+
+    handleOpenDialog();
 
     if (
       !selectedNombreDocente ||
@@ -71,7 +80,6 @@ export default function FormSolicitudRapida() {
     console.log("Hora de fin:", selectedHoraFin);
     console.log("Motivo:", selectedMotivo);
 
-
     // Realizar la solicitud POST
     fetch("http://localhost:8000/api/solicitud", {
       method: "POST",
@@ -88,8 +96,24 @@ export default function FormSolicitudRapida() {
         motivo: selectedMotivo,
       }),
     })
-      .then((response) => response.json())
-      .then((data) => console.log(data))
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Error en la solicitud POST");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+        setFormData({
+          nombredocente: selectedNombreDocente,
+          materia: selectedMateria,
+          capacidad: selectedCapacidad,
+          fecha: selectedFecha.format("YYYY-MM-DD"),
+          horainicial: selectedHoraInicio,
+          horafinal: selectedHoraFin,
+          motivo: selectedMotivo,
+        });
+      })
       .catch((error) => {
         console.error("Error:", error);
       });
@@ -133,10 +157,33 @@ export default function FormSolicitudRapida() {
     { value: "Examen de Mesa" },
   ];
 
+  const ambientesTest = [
+    { value: "Aula 1", label: "Aula 1" },
+    { value: "Aula 2", label: "Aula 2" },
+    { value: "Aula 3", label: "Aula 3" },
+    { value: "Aula 4", label: "Aula 4" },
+    { value: "Aula 5", label: "Aula 5" },
+    { value: "Aula 6", label: "Aula 6" },
+    { value: "Aula 7", label: "Aula 7" },
+    { value: "Aula 8", label: "Aula 8" },
+    { value: "Aula 9", label: "Aula 9" },
+    { value: "Aula 10", label: "Aula 10" },
+    { value: "Aula 11", label: "Aula 11" },
+    { value: "Aula 12", label: "Aula 12" },
+    { value: "Aula 13", label: "Aula 13" },
+    { value: "Aula 14", label: "Aula 14" },
+    { value: "Aula 15", label: "Aula 15" },
+    { value: "Aula 16", label: "Aula 16" },
+    { value: "Aula 17", label: "Aula 17" },
+    { value: "Aula 18", label: "Aula 18" },
+    { value: "Aula 19", label: "Aula 19" },
+    { value: "Aula 20", label: "Aula 20" },
+  ];
+
   return (
     <form>
-      <Grid container>
-        <Grid item xs="auto">
+      <Grid>
+        <Grid>
           <Box
             display="flex"
             flexDirection="column"
@@ -209,7 +256,12 @@ export default function FormSolicitudRapida() {
           </Box>
         </Grid>
       </Grid>
-      <SelectAmbienteDialog open={openDialog} handleClose={() => setOpenDialog(false)} />
+      <SelectAmbienteDialog
+        open={openDialog}
+        handleClose={() => setOpenDialog(false)}
+        ambientes={ambientesTest}
+        formData={formData}
+      />
     </form>
   );
 }
