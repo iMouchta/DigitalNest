@@ -73,13 +73,9 @@ export default function SelectAmbienteDialog({
             onChange={(event, newValue) => setSelectedValue(newValue)}
             aria-label="ambiente"
           >
-            {ambientes.map((ambiente) => (
-              <ToggleButton
-                key={ambiente.value}
-                value={ambiente.value}
-                aria-label={ambiente.label}
-              >
-                {ambiente.label}
+            {Object.keys(ambientes).map((nombreAmbiente) => (
+              <ToggleButton value={nombreAmbiente} key={nombreAmbiente}>
+                {`${nombreAmbiente} - ${ambientes[nombreAmbiente]}`}
               </ToggleButton>
             ))}
           </ToggleButtonGroup>
