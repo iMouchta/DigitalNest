@@ -17,31 +17,50 @@ class SolicitudEspecialController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'capacidadsolicitud' => 'required|integer',
+            'idadministrador' => 'required',
             'fechasolicitud' => 'required|date',
             'horainicialsolicitud' => 'required',
             'horafinalsolicitud' => 'required',
             'motivosolicitud' => 'required|string|max:1000',
-            'ambientesolicitud' => 'required|string|max:250',
-            'idmateria' => 'required|integer',
+            'idambiente' => 'required|integer',
+            'especial' => 'boolean|required',
+            'aceptada' => 'boolean|nullable',
         ]);
 
         $solicitud = new Solicitud();
         $solicitud->fill($request->except('_token'));
-        $solicitud->idmateria = $request->idmateria;
+        $solicitud->idambiente = $request->idambiente;
+        $solicitud->especial = true;
+
         $solicitud->save();
 
         if ($solicitud) {
             return response()->json(['subida' => true]);
-            // return back()->with('success', 'Solicitud creada exitosamente.');
         } else {
             return response()->json(['subida' => false]);
         }
     }
 
+
     public function index()
     {
-        $solicitudes = Solicitud::all();
-        return response()->json($solicitudes);
+        $solicitudes = Solicitud::with('administrador', 'ambiente')
+        ->where('especial', 1)
+        ->get();
+
+        $solicitudesConDatos = $solicitudes->map(function ($solicitud) {
+            return [
+                'fechasolicitud' => $solicitud->fechasolicitud,
+                'horainicialsolicitud' => $solicitud->horainicialsolicitud,
+                'horafinalsolicitud' => $solicitud->horafinalsolicitud,
+                'motivosolicitud' => $solicitud->motivosolicitud,
+                'idambiente' => $solicitud->idambiente,
+                'nombreadministrador' => $solicitud->administrador->nombreadministrador,
+                'nombreAmbiente' => $solicitud->ambiente->nombreambiente,
+            ];
+        });
+        return response()->json($solicitudesConDatos);
     }
+
+
 }

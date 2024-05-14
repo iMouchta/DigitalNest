@@ -10,6 +10,8 @@ class ambiente extends Model
     use HasFactory;
     protected $table = 'ambiente';
 
+    protected $primaryKey = 'idambiente';
+
     protected $fillable = ['idubicacion, nombreambiente, capacidadambiente'];
 
     // Relacion con los periodos no disponibles
