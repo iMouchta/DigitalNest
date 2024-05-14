@@ -4,7 +4,7 @@ import FormSolicitudEspecial from "../components/FormSolicitudEspecial.js";
 export default function SolicitudEspecialPage() {
   return (
     <div>
-      <h1>Solicitud Especial</h1>
+      <h1>Realizar una solicitud especial</h1>
       <div className="recuadro-formulario">
         <FormSolicitudEspecial />
       </div>
