@@ -99,7 +99,7 @@ class SolicitudController extends Controller
 
 
 
-        return response()->json(['nombresDocentes' => $nombresDocentes, 'solicitudesAceptadas' => $solicitudesRealizadas, 'ambientes' => $ambientesDisponibles]);
+        return response()->json(['nombresDocentes' => $nombresDocentes, 'solicitudesAceptadas' => $solicitudesRealizadas, 'ambientes' => $ambientesDisponibles, 'solicitudesSubidas' => $solicitudesSubidas]);
 	
     }
     

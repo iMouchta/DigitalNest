@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\periodonodisponible;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+use App\Models\ambiente;
 
 class PeriodonodisponibleController extends Controller
 {
@@ -35,7 +37,81 @@ class PeriodonodisponibleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $datosSolicitudFormulario = request()->except('_token');
+
+        $nombreAmbiente = $datosSolicitudFormulario['nombreambiente'];
+        $fecha = $datosSolicitudFormulario['fecha'];
+        $horaInicial = $datosSolicitudFormulario['horainicial'];
+        $horaFinal = $datosSolicitudFormulario['horafinal'];
+
+        $listaHorasDistribuidas = $this->generarListaHoras($horaInicial, $horaFinal);
+
+        $ambiente = ambiente::where('nombreambiente', $nombreAmbiente)->first();
+        $idAmbiente = $ambiente->idambiente;
+
+        $periodosNoDisponiblesRegistrados = [];
+
+        $horasDesocupadas = true;
+
+        foreach ($listaHorasDistribuidas as $horaOcupada) {
+            $periodoNoDisponibleSinRegistrar = $this->verificarPeriodoNoDisponible($horaOcupada, $fecha, $idAmbiente); 
+            if (!$periodoNoDisponibleSinRegistrar) {
+
+                $periodoNoDisponible = [
+                    'idambiente' => $idAmbiente,
+                    'fecha' => $fecha,
+                    'hora' => $horaOcupada
+                ];
+
+                $registrarPeriodoNoDisponible = periodonodisponible::insert($periodoNoDisponible);
+                $horasDesocupadas = true;
+
+                if($registrarPeriodoNoDisponible){
+                    $periodosNoDisponiblesRegistrados[] = $periodoNoDisponible;
+                }
+            } else {
+                $horasDesocupadas = false;
+            }
+        }
+
+        return response()->json([
+        'listaHorasDistribuidas' => $listaHorasDistribuidas, 
+        'idAmbiente' => $idAmbiente, 
+        'fecha' => $fecha, 
+        'periodosNoDisponiblesRegistrados' => $periodosNoDisponiblesRegistrados,
+        'horasDesocupadas' => $horasDesocupadas
+        ]);
+    }
+
+    private function generarListaHoras($horaInicial, $horaFinal)
+    {
+        $listaHoras = [];
+
+        $horaInit = Carbon::parse($horaInicial);
+        $horaFinal = Carbon::parse($horaFinal);
+
+        if($horaInit == $horaFinal){
+            $listaHoras[] = $horaInit->format('H:i:s');
+            return $listaHoras;
+        } else {
+            while ($horaInit < $horaFinal) {
+                $listaHoras[] = $horaInit->format('H:i:s');
+                $horaInit->addMinutes(45);
+            }
+    
+            // array_pop($listaHoras);
+            return $listaHoras;
+        }        
+    }
+
+    private function verificarPeriodoNoDisponible($hora, $fecha, $idAmbiente)
+    {
+        $periodoNoDisponible = periodonodisponible::where('idambiente', $idAmbiente)->where('fecha', $fecha)->where('hora', $hora)->first();
+        if ($periodoNoDisponible) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
