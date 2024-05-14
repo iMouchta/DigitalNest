@@ -13,9 +13,10 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
 
-        '/', // Ruta para crear y almacenar una solicitud
-        '/solicitudes', // Ruta para obtener todas las solicitudes
-        'solicitud', // Rutas generadas por el resource controller SolicitudController
+        '/', 
+        '/solicitudes', 
+        'solicitud', 
+        '/aceptar',
 
     ];
 }
