@@ -72,7 +72,7 @@ export default function FormSolicitudRapida() {
       return;
     }
 
-    console.log("Nombre del docente:", selectedNombreDocente);
+    console.log("Nombre del docente:", [selectedNombreDocente]);
     console.log("Materia:", selectedMateria);
     console.log("Capacidad:", selectedCapacidad);
     console.log("Fecha:", selectedFecha.format("YYYY-MM-DD"));
@@ -87,7 +87,7 @@ export default function FormSolicitudRapida() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        nombredocente: selectedNombreDocente,
+        nombresdocentes: [selectedNombreDocente],
         materia: selectedMateria,
         capacidad: selectedCapacidad,
         fecha: selectedFecha.format("YYYY-MM-DD"),
@@ -105,7 +105,7 @@ export default function FormSolicitudRapida() {
       .then((data) => {
         console.log(data);
         setFormData({
-          nombredocente: selectedNombreDocente,
+          nombresdocentes: [selectedNombreDocente],
           materia: selectedMateria,
           capacidad: selectedCapacidad,
           fecha: selectedFecha.format("YYYY-MM-DD"),
@@ -122,6 +122,7 @@ export default function FormSolicitudRapida() {
   const docentes = [{ value: "Leticia Blanco Coca" }];
 
   const materias = [
+    { value: "Introduccion a la programacion"},
     { value: "Matemáticas" },
     { value: "Física" },
     { value: "Química" },
@@ -141,13 +142,24 @@ export default function FormSolicitudRapida() {
   const horasIniciales = [
     { value: "6:45" },
     { value: "8:15" },
-
+    { value: "9:45" },
+    { value: "11:15" },
+    { value: "12:45" },
     { value: "14:15" },
     { value: "15:45" },
     { value: "20:15" },
   ];
 
-  const horasFinales = [{ value: "8:15" }];
+  const horasFinales = [{ value: "8:15" }, 
+  { value: "9:45" }, 
+  { value: "11:15" }, 
+  { value: "12:45" }, 
+  { value: "14:15" }, 
+  { value: "15:45" }, 
+  { value: "17:15" }, 
+  { value: "18:45" }, 
+  { value: "20:15" }
+  ];
 
   const motivos = [
     { value: "Primer Parcial" },

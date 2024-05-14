@@ -7,35 +7,49 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import Box from '@mui/system/Box';
+import Box from "@mui/system/Box";
 
-export default function SelectAmbienteDialog({ open, handleClose, ambientes, formData }) {
+export default function SelectAmbienteDialog({
+  open,
+  handleClose,
+  ambientes,
+  formData,
+}) {
   const [selectedValue, setSelectedValue] = React.useState("");
 
-
   const handleAccept = async () => {
-    const response = await fetch('http://localhost:8000/api/ambiente', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        ambiente: selectedValue,
-        nombredocente: formData.nombredocente,
-        materia: formData.materia,
-        capacidad: formData.capacidad,
-        fecha: formData.fecha,
-        horainicial: formData.horainicial,
-        horafinal: formData.horafinal,
-        motivo: formData.motivo,
-      }),
-    });
-
-    if (!response.ok) {
-      console.error('Error en la solicitud POST');
-    } else {
-      handleClose();
-    }
+    const response = await fetch(
+      "http://localhost:8000/api/periodonodisponible",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nombreambiente: selectedValue,
+          fecha: formData.fecha,
+          horainicial: formData.horainicial,
+          horafinal: formData.horafinal,
+          nombredocente: formData.nombredocente,
+          materia: formData.materia,
+          capacidad: formData.capacidad,
+          motivo: formData.motivo,
+        }),
+      }
+    )
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Error en la solicitud POST");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+        handleClose();
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
 
   return (
@@ -60,7 +74,11 @@ export default function SelectAmbienteDialog({ open, handleClose, ambientes, for
             aria-label="ambiente"
           >
             {ambientes.map((ambiente) => (
-              <ToggleButton key={ambiente.value} value={ambiente.value} aria-label={ambiente.label}>
+              <ToggleButton
+                key={ambiente.value}
+                value={ambiente.value}
+                aria-label={ambiente.label}
+              >
                 {ambiente.label}
               </ToggleButton>
             ))}
