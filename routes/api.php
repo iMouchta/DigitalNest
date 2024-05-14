@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\SolicitudController;
+use App\Http\Controllers\PeriodonodisponibleController;
 
 
 /*
@@ -24,3 +25,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::resource('/solicitud', SolicitudController::class);
 Route::resource('solicitud', SolicitudController::class);
+Route::resource('periodonodisponible', PeriodonodisponibleController::class);
