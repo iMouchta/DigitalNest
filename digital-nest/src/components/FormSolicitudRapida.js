@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import FormSelector from "./FormSelector";
 import FormMultipleSelector from "./FormMultipleSelector";
 import FormTextField from "./FormTextField";
@@ -146,28 +146,42 @@ export default function FormSolicitudRapida() {
     { value: "250" },
   ];
 
-  const horasIniciales = [
+  const horasDisponibles = [
     { value: "6:45" },
+    { value: "7:30" },
     { value: "8:15" },
+    { value: "9:00" },
     { value: "9:45" },
+    { value: "10:30" },
     { value: "11:15" },
+    { value: "12:00" },
     { value: "12:45" },
+    { value: "13:30" },
     { value: "14:15" },
+    { value: "15:00" },
     { value: "15:45" },
+    { value: "16:30" },
+    { value: "17:15" },
+    { value: "18:00" },
+    { value: "18:45" },
+    { value: "19:30" },
     { value: "20:15" },
+    { value: "21:00" },
+    { value: "21:45" },
   ];
 
-  const horasFinales = [
-    { value: "8:15" },
-    { value: "9:45" },
-    { value: "11:15" },
-    { value: "12:45" },
-    { value: "14:15" },
-    { value: "15:45" },
-    { value: "17:15" },
-    { value: "18:45" },
-    { value: "20:15" },
-  ];
+  const horasIniciales = horasDisponibles.slice(0, -1);
+
+  const [horasFinales, setHorasFinales] = useState([]);
+
+  useEffect(() => {
+    if (selectedHoraInicio) {
+      const indiceHoraInicial = horasDisponibles.findIndex(hora => hora.value === selectedHoraInicio);
+      setHorasFinales(horasDisponibles.slice(indiceHoraInicial + 1, indiceHoraInicial + 5));
+    } else {
+      setHorasFinales([]);
+    }
+  }, [selectedHoraInicio]);
 
   const motivos = [
     { value: "Primer Parcial" },
