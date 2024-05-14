@@ -8,6 +8,9 @@ import Button from "@mui/material/Button";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import Box from "@mui/system/Box";
+import { toast, Toaster } from "react-hot-toast";
+import Grid from "@mui/material/Grid";
+import Paper from "@mui/material/Paper";
 
 export default function SelectAmbienteDialog({
   open,
@@ -16,8 +19,11 @@ export default function SelectAmbienteDialog({
   formData,
 }) {
   const [selectedValue, setSelectedValue] = React.useState("");
+  const [isButtonDisabled, setIsButtonDisabled] = React.useState(false);
 
   const handleAccept = async () => {
+    setIsButtonDisabled(true);
+
     const response = await fetch(
       "http://localhost:8000/api/periodonodisponible",
       {
@@ -44,51 +50,81 @@ export default function SelectAmbienteDialog({
         return response.json();
       })
       .then((data) => {
-        console.log(data);
+        if (data.reservarealizada) {
+          toast.success("Se ha realizado la reserva con éxito", {
+            duration: 7000,
+          });
+        } else {
+          toast.error("No se ha podido realizar la reserva");
+        }
         handleClose();
       })
       .catch((error) => {
+        toast.error(
+          "Ha ocurrido un error en el servidor al realizar la reserva"
+        );
         console.error("Error:", error);
+      })
+      .finally(() => {
+        setIsButtonDisabled(false);
       });
   };
 
   return (
-    <Dialog
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="select-ambiente-dialog-title"
-      aria-describedby="select-ambiente-dialog-description"
-    >
-      <DialogTitle id="select-ambiente-dialog-title">
-        {"Seleccionar Ambiente"}
-      </DialogTitle>
-      <DialogContent>
-        <DialogContentText id="select-ambiente-dialog-description">
-          Aquí puedes seleccionar el ambiente.
-        </DialogContentText>
-        <Box display="flex" flexWrap="wrap" justifyContent="space-between">
-          <ToggleButtonGroup
-            value={selectedValue}
-            exclusive
-            onChange={(event, newValue) => setSelectedValue(newValue)}
-            aria-label="ambiente"
+    <div>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="select-ambiente-dialog-title"
+        aria-describedby="select-ambiente-dialog-description"
+      >
+        <DialogTitle id="select-ambiente-dialog-title">
+          {"Seleccionar Ambiente"}
+        </DialogTitle>
+        <DialogContent>
+          <Grid container spacing={2}>
+            {Object.keys(ambientes).length > 0 ? (
+              Object.keys(ambientes).map((nombreAmbiente, index) => (
+                <Grid item xs={4} key={index}>
+                  <Paper
+                    onClick={() => setSelectedValue(nombreAmbiente)}
+                    style={{
+                      padding: "1em",
+                      cursor: "pointer",
+                      backgroundColor:
+                        nombreAmbiente === selectedValue
+                          ? "lightblue"
+                          : "white",
+                    }}
+                  >
+                    {`${nombreAmbiente} - ${ambientes[nombreAmbiente]}`}
+                  </Paper>
+                </Grid>
+              ))
+            ) : (
+              <p>No existen ambientes disponibles</p>
+            )}
+          </Grid>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={handleClose}
+            color="primary"
+            disabled={isButtonDisabled}
           >
-            {Object.keys(ambientes).map((nombreAmbiente) => (
-              <ToggleButton value={nombreAmbiente} key={nombreAmbiente}>
-                {`${nombreAmbiente} - ${ambientes[nombreAmbiente]}`}
-              </ToggleButton>
-            ))}
-          </ToggleButtonGroup>
-        </Box>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose} color="primary">
-          Cancelar
-        </Button>
-        <Button onClick={handleAccept} color="primary" autoFocus>
-          Aceptar
-        </Button>
-      </DialogActions>
-    </Dialog>
+            Cancelar
+          </Button>
+          <Button
+            onClick={handleAccept}
+            color="primary"
+            autoFocus
+            disabled={isButtonDisabled}
+          >
+            Aceptar
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Toaster />
+    </div>
   );
 }

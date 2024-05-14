@@ -16,7 +16,6 @@ import ReplyIcon from "@mui/icons-material/Reply";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { Link as RouterLink } from "react-router-dom";
 
-
 import PrimarySearchAppBar from "./components/AppBar";
 import HomePage from "./pages/HomePage.js";
 import SolicitudRapidaPage from "./pages/SolicitudRapidaPage.js";
