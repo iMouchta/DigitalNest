@@ -10,7 +10,7 @@ class Administrador extends Migration
     {
         Schema::create('administrador', function (Blueprint $table) {
             $table->id('idadministrador');
-            $table->unsignedBigInteger('nombreadministrador')->nullable();
+            $table->string('nombreadministrador')->nullable();
         });
     }
 

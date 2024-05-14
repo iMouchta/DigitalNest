@@ -13,16 +13,16 @@ class solicitud extends Model
 
 
     protected $fillable = [
-        'idambiente', 
-        'idmateria', 
+        'idmateria',
+        'idadministrador',
+        'idambiente',
+        'especial',
         'capacidadsolicitud',
         'fechasolicitud',
         'horainicialsolicitud',
         'horafinalsolicitud',
-        'revisionestapendiente',
-        'solicitudfueaceptada',
-        'esurgente',
-        'bitacorafechasolicitud'
+        'aceptada',
+        'motivosolicitud',
     ];
 
     public function ambiente()
@@ -35,9 +35,13 @@ class solicitud extends Model
         return $this->hasMany(reserva::class, 'idsolicitud');
     }
     
-
     public function materia()
     {
         return $this->belongsTo(Materia::class, 'idmateria');
+    }
+
+    public function administrador()
+    {
+        return $this->belongsTo(Administrador::class, 'idadministrador', 'idadministrador');
     }
 }
