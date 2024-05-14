@@ -31,7 +31,7 @@ export default function FormDateSelector({ label, onChange, error }) {
           helperText={error ? "Este campo es obligatorio" : ""}
         />
         <FormHelperText style={{ color: error ? "rgb(311, 47, 47)" : "inherit", marginLeft: '8px' }}>
-          {error ? "Campo obligatorio (*)" : ""}
+        Campo obligatorio (*)
         </FormHelperText>
       </LocalizationProvider>
     </div>
