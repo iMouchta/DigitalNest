@@ -30,6 +30,7 @@ export default function FormSolicitudRapida() {
 
   //* Dialog
   const [openDialog, setOpenDialog] = useState(false);
+  const [ambientes, setAmbientes] = useState({});
 
   const [formData, setFormData] = useState({
     nombredocente: "",
@@ -56,8 +57,6 @@ export default function FormSolicitudRapida() {
     setErrorHoraFin(!selectedHoraFin);
     setErrorMotivo(!selectedMotivo);
 
-    handleOpenDialog();
-
     if (
       !selectedNombreDocente ||
       !selectedMateria ||
@@ -72,7 +71,7 @@ export default function FormSolicitudRapida() {
       return;
     }
 
-    console.log("Nombre del docente:", selectedNombreDocente);
+    console.log("Nombre del docente:", [selectedNombreDocente]);
     console.log("Materia:", selectedMateria);
     console.log("Capacidad:", selectedCapacidad);
     console.log("Fecha:", selectedFecha.format("YYYY-MM-DD"));
@@ -87,7 +86,7 @@ export default function FormSolicitudRapida() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        nombredocente: selectedNombreDocente,
+        nombresdocentes: [selectedNombreDocente],
         materia: selectedMateria,
         capacidad: selectedCapacidad,
         fecha: selectedFecha.format("YYYY-MM-DD"),
@@ -105,7 +104,7 @@ export default function FormSolicitudRapida() {
       .then((data) => {
         console.log(data);
         setFormData({
-          nombredocente: selectedNombreDocente,
+          nombresdocentes: [selectedNombreDocente],
           materia: selectedMateria,
           capacidad: selectedCapacidad,
           fecha: selectedFecha.format("YYYY-MM-DD"),
@@ -113,6 +112,14 @@ export default function FormSolicitudRapida() {
           horafinal: selectedHoraFin,
           motivo: selectedMotivo,
         });
+        const ambientesMap = data.ambientes.reduce((map, ambiente) => {
+          map[ambiente.nombreambiente] = ambiente.capacidadambiente;
+          return map;
+        }, {});
+
+        setAmbientes(ambientesMap);
+
+        handleOpenDialog();
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -122,6 +129,7 @@ export default function FormSolicitudRapida() {
   const docentes = [{ value: "Leticia Blanco Coca" }];
 
   const materias = [
+    { value: "Introduccion a la programacion" },
     { value: "Matemáticas" },
     { value: "Física" },
     { value: "Química" },
@@ -141,13 +149,25 @@ export default function FormSolicitudRapida() {
   const horasIniciales = [
     { value: "6:45" },
     { value: "8:15" },
-
+    { value: "9:45" },
+    { value: "11:15" },
+    { value: "12:45" },
     { value: "14:15" },
     { value: "15:45" },
     { value: "20:15" },
   ];
 
-  const horasFinales = [{ value: "8:15" }];
+  const horasFinales = [
+    { value: "8:15" },
+    { value: "9:45" },
+    { value: "11:15" },
+    { value: "12:45" },
+    { value: "14:15" },
+    { value: "15:45" },
+    { value: "17:15" },
+    { value: "18:45" },
+    { value: "20:15" },
+  ];
 
   const motivos = [
     { value: "Primer Parcial" },
@@ -155,29 +175,6 @@ export default function FormSolicitudRapida() {
     { value: "Examen Final" },
     { value: "Segunda Instancia" },
     { value: "Examen de Mesa" },
-  ];
-
-  const ambientesTest = [
-    { value: "Aula 1", label: "Aula 1" },
-    { value: "Aula 2", label: "Aula 2" },
-    { value: "Aula 3", label: "Aula 3" },
-    { value: "Aula 4", label: "Aula 4" },
-    { value: "Aula 5", label: "Aula 5" },
-    { value: "Aula 6", label: "Aula 6" },
-    { value: "Aula 7", label: "Aula 7" },
-    { value: "Aula 8", label: "Aula 8" },
-    { value: "Aula 9", label: "Aula 9" },
-    { value: "Aula 10", label: "Aula 10" },
-    { value: "Aula 11", label: "Aula 11" },
-    { value: "Aula 12", label: "Aula 12" },
-    { value: "Aula 13", label: "Aula 13" },
-    { value: "Aula 14", label: "Aula 14" },
-    { value: "Aula 15", label: "Aula 15" },
-    { value: "Aula 16", label: "Aula 16" },
-    { value: "Aula 17", label: "Aula 17" },
-    { value: "Aula 18", label: "Aula 18" },
-    { value: "Aula 19", label: "Aula 19" },
-    { value: "Aula 20", label: "Aula 20" },
   ];
 
   return (
@@ -259,7 +256,7 @@ export default function FormSolicitudRapida() {
       <SelectAmbienteDialog
         open={openDialog}
         handleClose={() => setOpenDialog(false)}
-        ambientes={ambientesTest}
+        ambientes={ambientes}
         formData={formData}
       />
     </form>
