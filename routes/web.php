@@ -25,13 +25,6 @@ Route::group(['middleware' => ['cors']], function () {
     Route::get('/solicitudes', [SolicitudEspecialController::class, 'index'])->name('solicitud');
     Route::get('/reservas', [SolicitudEspecialController::class, 'reservas'])->name('reservas');
     // Route::resource('/solicitud', SolicitudController::class);
-    
-
-    Route::get('/', function () {return view('welcome');});
-    Route::get('/', [SolicitudEspecialController::class, 'create'])->name('solicitud.create');
-    Route::post('/', [SolicitudEspecialController::class, 'store'])->name('solicitud.store');
-    Route::post('/aceptar', [SolicitudEspecialController::class, 'aceptar'])->name('solicitud.aceptar');
-
 });
 
 

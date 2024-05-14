@@ -1,11 +1,17 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@mui/material';
 
 export default function ViewSolicitudEspecial() {
-  const rows = [
-    { id: 1, ambiente: 'Ambiente 1', fecha: '2022-01-01', horaInicial: '10:00', fechaFinal: '2022-01-02' },
-    { id: 2, ambiente: 'Ambiente 2', fecha: '2022-01-03', horaInicial: '11:00', fechaFinal: '2022-01-04' },
-  ];
+
+
+  const [rows, setRows] = useState([]);
+
+  useEffect(() => {
+    fetch('http://localhost:8000/solicitudes')
+      .then(response => response.json())
+      .then(data => setRows(data))
+      .catch(error => console.error('Error:', error));
+  }, []);
 
   return (
     <TableContainer component={Paper}>
@@ -30,7 +36,6 @@ export default function ViewSolicitudEspecial() {
               <TableCell>{row.fechaFinal}</TableCell>
               <TableCell>
                 <Button variant="contained" color="primary">Aprobar</Button>
-                <Button variant="contained" color="secondary">Rechazar</Button>
               </TableCell>
             </TableRow>
           ))}

@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\SolicitudController;
 use App\Http\Controllers\PeriodonodisponibleController;
-
+use App\Http\Controllers\SolicitudEspecialController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,3 +26,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::resource('/solicitud', SolicitudController::class);
 Route::resource('solicitud', SolicitudController::class);
 Route::resource('periodonodisponible', PeriodonodisponibleController::class);
+Route::post('/aceptar', [SolicitudEspecialController::class, 'aceptar'])->name('solicitud.aceptar');
+Route::get('/', function () {return view('welcome');});
+Route::get('/', [SolicitudEspecialController::class, 'create'])->name('solicitud.create');
+Route::post('/', [SolicitudEspecialController::class, 'store'])->name('solicitud.store');
+
