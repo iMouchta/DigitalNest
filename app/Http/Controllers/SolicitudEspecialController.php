@@ -58,6 +58,7 @@ class SolicitudEspecialController extends Controller
                 'motivosolicitud' => $solicitud->motivosolicitud,
                 'nombreadministrador' => $solicitud->administrador->nombreadministrador,
                 'nombreAmbiente' => $solicitud->ambiente->nombreambiente,
+                'aceptada' => $solicitud->aceptada ? true : false,
             ];
         });
         return response()->json($solicitudesConDatos);
