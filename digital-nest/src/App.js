@@ -5,7 +5,7 @@ import {
   Routes,
   Outlet,
 } from "react-router-dom";
-
+import { Link } from "react-router-dom";
 import PrimarySearchAppBar from "./components/AppBar";
 import HomePage from "./pages/HomePage.js";
 import SolicitudRapidaPage from "./pages/SolicitudRapidaPage.js";
@@ -36,7 +36,10 @@ function App() {
               path="responderSolicitud"
               element={<ResponderSolicitudPage />}
             />
-            <Route path="visualizarSolicitud" element={<VisualizarSolicitudPage />}/>
+            <Route
+              path="visualizarSolicitud"
+              element={<VisualizarSolicitudPage />}
+            />
           </Route>
           <Route path="/administrador" element={<HomePage />}>
             <Route path="*" element={<h1>Not Found</h1>} />
@@ -55,10 +58,28 @@ function App() {
 function AppLayout() {
   return (
     <div className="app-layout">
-     
       <div className="contenido-principal">
         <div className="barra-lateral">
-          <h1></h1>
+          <h1>Menú</h1>
+          <nav>
+            <ul>
+              <li>
+                <Link to="/">Inicio</Link>
+              </li>
+              <li>
+                <Link to="/docente/solicitudRapida">Solicitud Rápida</Link>
+              </li>
+              <li>
+                <Link to="/docente/solicitudEspecial">Solicitud Especial</Link>
+              </li>
+              <li>
+                <Link to="/docente/responderSolicitud">Responder Solicitud</Link>
+              </li>
+              <li>
+                <Link to="/docente/visualizarSolicitud">Visualizar Solicitud</Link>
+              </li>
+            </ul>
+          </nav>
         </div>
         <div className="contenido">
           <Outlet />
