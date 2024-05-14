@@ -5,7 +5,7 @@ export default function ViewSolicitudes() {
   const [solicitudes, setSolicitudes] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8000/solicitudes")
+    fetch("http://localhost:8000/reservas")
       .then((response) => response.json())
       .then((data) => setSolicitudes(data))
       .catch((error) => console.error("Error:", error));

@@ -9,18 +9,45 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 
 const columns = [
-  { id: "id", label: "ID", minWidth: 170 },
-  { id: "capacidad", label: "Capacidad", minWidth: 100 },
+  { id: "nombreadministrador", label: "Nombre Administrador", minWidth: 170 },
+  { id: "nombreAmbiente", label: "Nombre Ambiente", minWidth: 100 },
+  { id: "fechaSolicitud", label: "Fecha Solicitud", minWidth: 100 },
   {
-    id: "fechaSolicitud",
-    label: "Fecha de solicitud",
+    id: "horainicialsolicitud",
+    label: "Hora Inicial Solicitud",
+    minWidth: 100,
+    align: "right",
+  },
+  {
+    id: "horafinalsolicitud",
+    label: "Hora Final Solicitud",
+    minWidth: 100,
+    align: "right",
+  },
+  {
+    id: "motivosolicitud",
+    label: "Motivo Solicitud",
     minWidth: 170,
     align: "right",
   },
 ];
 
-function createData(id, capacidad, fechaSolicitud) {
-  return { id, capacidad, fechaSolicitud };
+function createData(
+  nombreadministrador,
+  nombreAmbiente,
+  fechaSolicitud,
+  horainicialsolicitud,
+  horafinalsolicitud,
+  motivosolicitud
+) {
+  return {
+    nombreadministrador,
+    nombreAmbiente,
+    fechaSolicitud,
+    horainicialsolicitud,
+    horafinalsolicitud,
+    motivosolicitud,
+  };
 }
 
 export default function SolicitudesTable({ solicitudes }) {
@@ -29,9 +56,12 @@ export default function SolicitudesTable({ solicitudes }) {
 
   const rows = solicitudes.map((solicitud) =>
     createData(
-      solicitud.idsolicitud,
-      solicitud.capacidadsolicitud,
-      solicitud.fechasolicitud
+      solicitud.nombreadministrador,
+      solicitud.nombreAmbiente,
+      solicitud.fechasolicitud,
+      solicitud.horainicialsolicitud,
+      solicitud.horafinalsolicitud,
+      solicitud.motivosolicitud
     )
   );
 
