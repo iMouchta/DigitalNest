@@ -4,6 +4,14 @@ import FormTextField from "./FormTextField";
 import Box from "@mui/material/Box";
 import SendFormButton from "./SendFormButton";
 import FormDateSelector from "./FormDateSelector";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
+import Button from "@mui/material/Button";
 
 export default function FormSolicitudEspecial() {
   //* Form fields
@@ -27,6 +35,17 @@ export default function FormSolicitudEspecial() {
   const [errorMotivo, setErrorMotivo] = useState(false);
 
   const [errorMessage, setErrorMessage] = useState("");
+
+  //* Dialog
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -131,12 +150,17 @@ export default function FormSolicitudEspecial() {
 
   useEffect(() => {
     if (selectedHoraInicio) {
-      const indiceHoraInicial = horasDisponibles.findIndex(hora => hora.value === selectedHoraInicio);
-      const nuevasHorasFinales = horasDisponibles.slice(indiceHoraInicial + 1, indiceHoraInicial + 5);
+      const indiceHoraInicial = horasDisponibles.findIndex(
+        (hora) => hora.value === selectedHoraInicio
+      );
+      const nuevasHorasFinales = horasDisponibles.slice(
+        indiceHoraInicial + 1,
+        indiceHoraInicial + 5
+      );
       setHorasFin(nuevasHorasFinales);
-  
+
       // Verificar si la hora final seleccionada está en el nuevo rango de horas finales
-      if (!nuevasHorasFinales.some(hora => hora.value === selectedHoraFin)) {
+      if (!nuevasHorasFinales.some((hora) => hora.value === selectedHoraFin)) {
         setSelectedHoraFin(""); // Restablecer la hora final si no está en el rango
       }
     } else {
@@ -209,7 +233,32 @@ export default function FormSolicitudEspecial() {
           error={errorMotivo}
         />
 
-        <SendFormButton onClick={handleSubmit} label={"Confirmar"} />
+        <SendFormButton onClick={handleClickOpen} label={"Confirmar"} />
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">{"Confirmación"}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              ¿Estás seguro de que quieres enviar esta solicitud?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>Cancelar</Button>
+            <Button
+              onClick={() => {
+                handleSubmit();
+                handleClose();
+              }}
+              autoFocus
+            >
+              Aceptar
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Box>
     </form>
   );

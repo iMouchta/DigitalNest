@@ -9,9 +9,27 @@ import {
   Paper,
   Button,
 } from "@mui/material";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
 
 export default function ViewSolicitudEspecial() {
+  const [open, setOpen] = useState(false);
+  const [idsolicitudToAccept, setIdsolicitudToAccept] = useState(null);
   const [rows, setRows] = useState([]);
+
+  const handleClickOpen = (idsolicitud) => {
+    setOpen(true);
+    setIdsolicitudToAccept(idsolicitud);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const fetchSolicitudes = () => {
     fetch("http://localhost:8000/solicitudes")
@@ -79,10 +97,37 @@ export default function ViewSolicitudEspecial() {
                   <Button
                     variant="contained"
                     color="primary"
-                    onClick={() => handleAccept(row.idsolicitud)}
+                    onClick={() => handleClickOpen(row.idsolicitud)}
                   >
-                    Aprobar
+                    Aceptar
                   </Button>
+                  <Dialog
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="alert-dialog-title"
+                    aria-describedby="alert-dialog-description"
+                  >
+                    <DialogTitle id="alert-dialog-title">
+                      {"Confirmación"}
+                    </DialogTitle>
+                    <DialogContent>
+                      <DialogContentText id="alert-dialog-description">
+                        ¿Está seguro de que quieres aceptar esta solicitud?
+                      </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={handleClose}>Cancelar</Button>
+                      <Button
+                        onClick={() => {
+                          handleAccept(idsolicitudToAccept);
+                          handleClose();
+                        }}
+                        autoFocus
+                      >
+                        Confirmar
+                      </Button>
+                    </DialogActions>
+                  </Dialog>
                 </TableCell>
               </TableRow>
             ))}

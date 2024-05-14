@@ -112,7 +112,7 @@ export default function SelectAmbienteDialog({
             color="primary"
             disabled={isButtonDisabled}
           >
-            Cancelar
+            CANCELAR
           </Button>
           <Button
             onClick={handleAccept}
@@ -120,7 +120,7 @@ export default function SelectAmbienteDialog({
             autoFocus
             disabled={isButtonDisabled}
           >
-            Aceptar
+            SOLICITAR
           </Button>
         </DialogActions>
       </Dialog>
