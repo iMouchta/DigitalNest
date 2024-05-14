@@ -18,13 +18,13 @@ export default function FormTextField({ label, placeholder, onChange, error }) {
           gap: 1,
           marginLeft: "8px",
           paddingY: "10px",
+          minWidth: 488
           
         }}
         
       >
         <TextField
-          style={{color: 'black', fontFamily: 'Arial', fontSize: '200px'}}
-          colorfont={blue}
+          
           sx={{backgroundColor: '#f3f3f3'}} 
           label={label}
           placeholder={placeholder}
@@ -34,7 +34,7 @@ export default function FormTextField({ label, placeholder, onChange, error }) {
           
         />
           
-        <FormHelperText error={error} style={{marginLeft: '12px',color: 'blue', fontFamily: 'Arial', fontSize: '200px'}}>
+        <FormHelperText error={error} >
           
           {error ? "Campo   obligatorio (*)" : ""}
         </FormHelperText>

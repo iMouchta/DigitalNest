@@ -24,15 +24,16 @@ export default function FormMultipleSelector({ label, options, onChange }) {
 
   return (
     <div>
-      <FormControl sx={{ m: 1, minWidth: 300 }}>
-        <InputLabel>{label}</InputLabel>
+      <FormControl sx={{ m: 1, minWidth: 488 }}>
+        <InputLabel sx={{backgroundColor: '#f3f3f3'}}>{label}</InputLabel>
         <Select
+          sx={{backgroundColor: '#f3f3f3'}}
           multiple
           label={label}
           value={value}
           onChange={handleChange}
           renderValue={(selected) => (
-            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+            <Box sx={{  display: "flex", flexWrap: "wrap", gap: 0.5 }}>
               {selected.map((value) => (
                 <Chip key={value} label={value} />
               ))}

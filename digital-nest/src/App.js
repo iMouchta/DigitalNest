@@ -5,6 +5,10 @@ import {
   Routes,
   Outlet,
 } from "react-router-dom";
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import { Link as RouterLink } from 'react-router-dom';
 
 import PrimarySearchAppBar from "./components/AppBar";
 import HomePage from "./pages/HomePage.js";
@@ -36,7 +40,10 @@ function App() {
               path="responderSolicitud"
               element={<ResponderSolicitudPage />}
             />
-            <Route path="visualizarSolicitud" element={<VisualizarSolicitudPage />}/>
+            <Route
+              path="visualizarSolicitud"
+              element={<VisualizarSolicitudPage />}
+            />
           </Route>
           <Route path="/administrador" element={<HomePage />}>
             <Route path="*" element={<h1>Not Found</h1>} />
@@ -55,10 +62,28 @@ function App() {
 function AppLayout() {
   return (
     <div className="app-layout">
-     
       <div className="contenido-principal">
-        <div className="barra-lateral">
-          <h1></h1>
+      <div className="barra-lateral">
+          <h1>Menú</h1>
+          <nav>
+            <List component="nav">
+              <ListItem button component={RouterLink} to="/">
+                <ListItemText primary="Inicio" />
+              </ListItem>
+              <ListItem button component={RouterLink} to="/docente/solicitudRapida">
+                <ListItemText primary="Solicitud Rápida" />
+              </ListItem>
+              <ListItem button component={RouterLink} to="/docente/solicitudEspecial">
+                <ListItemText primary="Solicitud Especial" />
+              </ListItem>
+              <ListItem button component={RouterLink} to="/docente/responderSolicitud">
+                <ListItemText primary="Responder Solicitud" />
+              </ListItem>
+              <ListItem button component={RouterLink} to="/docente/visualizarSolicitud">
+                <ListItemText primary="Visualizar Solicitud" />
+              </ListItem>
+            </List>
+          </nav>
         </div>
         <div className="contenido">
           <Outlet />

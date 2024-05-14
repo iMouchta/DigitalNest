@@ -163,17 +163,6 @@ export default function PrimarySearchAppBar() {
           </Badge>
         </IconButton>
         <p>Notifications</p>
-        <Menu
-          id="simple-menu"
-          anchorEl={anchorEl}
-          keepMounted
-          open={Boolean(anchorEl)}
-          onClose={handleClose}
-        >
-          <MenuItem onClick={handleClose}>Notification 1</MenuItem>
-          <MenuItem onClick={handleClose}>Notification 2</MenuItem>
-          <MenuItem onClick={handleClose}>Notification 3</MenuItem>
-        </Menu>
       </MenuItem>
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
@@ -194,7 +183,7 @@ export default function PrimarySearchAppBar() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton
+          {/* <IconButton
             size="large"
             edge="start"
             color="inherit"
@@ -203,7 +192,7 @@ export default function PrimarySearchAppBar() {
             onClick={toggleDrawer(true)}
           >
             <MenuIcon />
-          </IconButton>
+          </IconButton> */}
           <Typography
             variant="h6"
             noWrap
@@ -212,7 +201,7 @@ export default function PrimarySearchAppBar() {
           >
             Digital Nest
           </Typography>
-          <Search>
+          {/* <Search>
             <SearchIconWrapper>
               <SearchIcon />
             </SearchIconWrapper>
@@ -220,10 +209,10 @@ export default function PrimarySearchAppBar() {
               placeholder="Search…"
               inputProps={{ "aria-label": "search" }}
             />
-          </Search>
+          </Search> */}
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
-            <IconButton
+            {/* <IconButton
               size="large"
               aria-label="show 4 new mails"
               color="inherit"
@@ -231,7 +220,7 @@ export default function PrimarySearchAppBar() {
               <Badge badgeContent={4} color="error">
                 <MailIcon />
               </Badge>
-            </IconButton>
+            </IconButton> */}
             <IconButton
               size="large"
               aria-label="show 17 new notifications"
@@ -269,7 +258,7 @@ export default function PrimarySearchAppBar() {
       </AppBar>
       {renderMobileMenu}
       {renderMenu}
-      <Drawer open={drawerOpen} onClose={toggleDrawer}>
+      {/* <Drawer open={drawerOpen} onClose={toggleDrawer}>
         <div
           role="presentation"
           onClick={toggleDrawer(false)}
@@ -308,7 +297,7 @@ export default function PrimarySearchAppBar() {
             </ListItem>
           </List>
         </div>
-      </Drawer>
+      </Drawer> */}
     </Box>
   );
 }

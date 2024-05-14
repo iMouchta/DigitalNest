@@ -5,6 +5,7 @@ import FormTextField from "./FormTextField";
 import Box from "@mui/material/Box";
 import SendFormButton from "./SendFormButton";
 import FormDateSelector from "./FormDateSelector";
+import Grid from "@mui/material/Box";
 
 export default function FormSolicitudRapida() {
   //* Form fields
@@ -122,12 +123,19 @@ export default function FormSolicitudRapida() {
 
   return (
     <form>
-      <Box ml={4} sx={{ p: 2,
+      <Grid container>
+      <Grid item xs="auto">
+      <Box 
+      display="flex"
+      flexDirection="column"
+      justifyContent="center"
+      alignItems="center"
+      minHeight="calc(100vh - 160px)" 
+      sx={{ p: 2,
       backgroundColor: 'white',
       color: 'black',
-      width: '300px',
-      border: "2px solid grey",
-      borderRadius: "4px" }}>
+      width: '500px',
+      borderRadius: "10px" }}>
         <FormMultipleSelector
           label="Nombres"
           options={[
@@ -181,6 +189,8 @@ export default function FormSolicitudRapida() {
 
         <SendFormButton onClick={handleSubmit} label={"SELECCIONAR AMBIENTE"} />
       </Box>
+      </Grid>
+      </Grid>
     </form>
   );
 }
