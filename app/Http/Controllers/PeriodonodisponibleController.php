@@ -6,6 +6,8 @@ use App\Models\periodonodisponible;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\ambiente;
+use App\Models\solicitud;
+use App\Models\reserva;
 
 class PeriodonodisponibleController extends Controller
 {
@@ -74,13 +76,34 @@ class PeriodonodisponibleController extends Controller
             }
         }
 
-        return response()->json([
-        'listaHorasDistribuidas' => $listaHorasDistribuidas, 
-        'idAmbiente' => $idAmbiente, 
-        'fecha' => $fecha, 
-        'periodosNoDisponiblesRegistrados' => $periodosNoDisponiblesRegistrados,
-        'horasDesocupadas' => $horasDesocupadas
-        ]);
+        $idUltimaSolicitud = $this->obtenerUltimoIdSolicitud();
+
+        $registroReserva = [
+            'idambiente' => $idAmbiente,
+            'idsolicitud' => $idUltimaSolicitud,
+        ];
+
+        $registrarReserva = reserva::insert($registroReserva);
+
+        if($registrarReserva){
+            // return response()->json([
+            //     'listaHorasDistribuidas' => $listaHorasDistribuidas, 
+            //     'idUltimaSolicitud' => $idUltimaSolicitud,
+            //     'idAmbiente' => $idAmbiente, 
+            //     'fecha' => $fecha, 
+            //     'periodosNoDisponiblesRegistrados' => $periodosNoDisponiblesRegistrados,
+            //     'horasDesocupadas' => $horasDesocupadas
+            //     ]);
+            return response()->json([
+                'reservarealizada' => true
+            ]);
+        } else {
+            return response()->json([
+                'reservarealizada' => false
+            ]);
+        }
+
+        
     }
 
     private function generarListaHoras($horaInicial, $horaFinal)
@@ -112,6 +135,11 @@ class PeriodonodisponibleController extends Controller
         } else {
             return false;
         }
+    }
+
+    private function obtenerUltimoIdSolicitud(){
+        $solicitud = solicitud::latest('idsolicitud')->first();
+        return $solicitud->idsolicitud;
     }
 
     /**

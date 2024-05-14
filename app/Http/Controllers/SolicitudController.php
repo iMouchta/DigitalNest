@@ -8,6 +8,7 @@ use App\Models\materia;
 use App\Models\ambiente;
 use App\Models\periodonodisponible;
 use App\Models\reserva;
+use Carbon\Carbon;
 
 use Illuminate\Http\Request;
 
@@ -81,26 +82,58 @@ class SolicitudController extends Controller
             }
         }
 
+
+
         $ambientes = ambiente::all();
-                    
+        $listaHoras = $this->generarListaHoras($horaInicial, $horaFinal);
+        
 
         foreach ($ambientes as $ambiente) {
             if ($ambiente->capacidadambiente >= $capacidad) {
-
-                $ambienteCandidato = [
-                    'idambiente' => $ambiente->idambiente,
-                    'nombre' => $ambiente->nombreambiente,
-                    'capacidad' => $ambiente->capacidadambiente
-                ];
-
-                $ambientesDisponibles[] = $ambienteCandidato;
+                foreach ($listaHoras as $hora) {
+                    $periodoAmbienteNoDisponible = periodonodisponible::where('idambiente', $ambiente->idambiente)->where('fecha', $fecha)->where('hora', $hora)->first();
+                    if (!$periodoAmbienteNoDisponible) {
+                        $ambientesDisponibles[] = $ambiente;
+                        break;
+                    }
+                
+                }
             }
         }
 
 
 
-        return response()->json(['nombresDocentes' => $nombresDocentes, 'solicitudesAceptadas' => $solicitudesRealizadas, 'ambientes' => $ambientesDisponibles, 'solicitudesSubidas' => $solicitudesSubidas]);
+        // return response()->json(
+        //     ['nombresDocentes' => $nombresDocentes, 
+        //     'solicitudesAceptadas' => $solicitudesRealizadas, 
+        //     'ambientes' => $ambientesDisponibles, 
+        //     'solicitudesSubidas' => $solicitudesSubidas
+        //     ]);
+        return response()->json([
+            'ambientes' => $ambientesDisponibles,
+        ]);
 	
+    }
+
+    private function generarListaHoras($horaInicial, $horaFinal)
+    {
+        $listaHoras = [];
+
+        $horaInit = Carbon::parse($horaInicial);
+        $horaFinal = Carbon::parse($horaFinal);
+
+        if($horaInit == $horaFinal){
+            $listaHoras[] = $horaInit->format('H:i:s');
+            return $listaHoras;
+        } else {
+            while ($horaInit < $horaFinal) {
+                $listaHoras[] = $horaInit->format('H:i:s');
+                $horaInit->addMinutes(45);
+            }
+    
+            // array_pop($listaHoras);
+            return $listaHoras;
+        }        
     }
     
     /**
