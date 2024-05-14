@@ -7,6 +7,7 @@ import SendFormButton from "./SendFormButton";
 import FormDateSelector from "./FormDateSelector";
 import Grid from "@mui/material/Box";
 import SelectAmbienteDialog from "./SelectAmbienteDialog";
+import { set } from "lodash";
 
 export default function FormSolicitudRapida() {
   //* Form fields
@@ -177,9 +178,16 @@ export default function FormSolicitudRapida() {
   useEffect(() => {
     if (selectedHoraInicio) {
       const indiceHoraInicial = horasDisponibles.findIndex(hora => hora.value === selectedHoraInicio);
-      setHorasFinales(horasDisponibles.slice(indiceHoraInicial + 1, indiceHoraInicial + 5));
+      const nuevasHorasFinales = horasDisponibles.slice(indiceHoraInicial + 1, indiceHoraInicial + 5);
+      setHorasFinales(nuevasHorasFinales);
+  
+      // Verificar si la hora final seleccionada está en el nuevo rango de horas finales
+      if (!nuevasHorasFinales.some(hora => hora.value === selectedHoraFin)) {
+        setSelectedHoraFin(""); // Restablecer la hora final si no está en el rango
+      }
     } else {
       setHorasFinales([]);
+      setSelectedHoraFin(""); // Restablecer la hora final si la hora de inicio no está seleccionada
     }
   }, [selectedHoraInicio]);
 

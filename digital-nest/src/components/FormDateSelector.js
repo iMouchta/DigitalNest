@@ -7,7 +7,7 @@ import dayjs from "dayjs";
 
 export default function FormDateSelector({ label, onChange, error }) {
   const minDate = dayjs().add(1, "day");
-  const maxDate = dayjs().add(30, "day");
+  const maxDate = dayjs().set('month', 6).set('date', 6);
 
   const [value, setValue] = React.useState(null);
 
