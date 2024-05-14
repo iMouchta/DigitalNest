@@ -9,18 +9,18 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 
 const columns = [
-  { id: "nombreadministrador", label: "Nombre Administrador", minWidth: 170 },
-  { id: "nombreAmbiente", label: "Nombre Ambiente", minWidth: 100 },
-  { id: "fechaSolicitud", label: "Fecha Solicitud", minWidth: 100 },
+  { id: "nombreadministrador", label: "Nombre", minWidth: 170 },
+  { id: "nombreAmbiente", label: "Ambiente", minWidth: 100 },
+  { id: "fechaSolicitud", label: "Fecha de Reserva", minWidth: 100 },
   {
     id: "horainicialsolicitud",
-    label: "Hora Inicial Solicitud",
+    label: "Hora Inicial",
     minWidth: 100,
     align: "right",
   },
   {
     id: "horafinalsolicitud",
-    label: "Hora Final Solicitud",
+    label: "Hora Final",
     minWidth: 100,
     align: "right",
   },
@@ -93,6 +93,10 @@ export default function SolicitudesTable({ solicitudes }) {
           </TableHead>
           <TableBody>
             {rows
+              .sort(
+                (a, b) =>
+                  new Date(a.fechasolicitud) - new Date(b.fechasolicitud)
+              )
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row, index) => {
                 return (

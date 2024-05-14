@@ -51,8 +51,8 @@ export default function ViewSolicitudEspecial() {
         <TableHead>
           <TableRow>
             <TableCell>ID de Solicitud</TableCell>
-            <TableCell>Solicitud</TableCell>
-            <TableCell>Fecha</TableCell>
+            <TableCell>Ambiente</TableCell>
+            <TableCell>Fecha de Reserva</TableCell>
             <TableCell>Hora Inicial</TableCell>
             <TableCell>Hora final</TableCell>
             <TableCell>Aceptar Solicitud</TableCell>
@@ -61,6 +61,9 @@ export default function ViewSolicitudEspecial() {
         <TableBody>
           {rows
             .filter((row) => !row.aceptada)
+            .sort(
+              (a, b) => new Date(a.fechasolicitud) - new Date(b.fechasolicitud)
+            )
             .map((row) => (
               <TableRow key={row.idsolicitud}>
                 <TableCell>{row.idsolicitud}</TableCell>
@@ -78,7 +81,7 @@ export default function ViewSolicitudEspecial() {
                     color="primary"
                     onClick={() => handleAccept(row.idsolicitud)}
                   >
-                    Aceptar
+                    Aprobar
                   </Button>
                 </TableCell>
               </TableRow>
