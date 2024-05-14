@@ -33,8 +33,7 @@ export default function FormTextField({ label, placeholder, onChange, error }) {
           error={error}
           
         />
-          
-        <FormHelperText error={error} >
+        <FormHelperText error={error} >Campo obligatorio (*)
           
           {error ? "Campo   obligatorio (*)" : ""}
         </FormHelperText>

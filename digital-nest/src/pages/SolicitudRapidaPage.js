@@ -4,7 +4,7 @@ import FormSolicitudRapida from "../components/FormSolicitudRapida.js";
 function SolicitudRapidaPage() {
   return (
     <div>
-      <h1>Solicitud Rápida</h1>
+      <h1>Realizar una solicitud rápida</h1>
       <div className="recuadro-formulario">
         <FormSolicitudRapida />
       </div>
