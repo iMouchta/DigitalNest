@@ -16,17 +16,6 @@ import ReplyIcon from "@mui/icons-material/Reply";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { Link as RouterLink } from "react-router-dom";
 
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import HomeIcon from "@mui/icons-material/Home";
-import FastForwardIcon from "@mui/icons-material/FastForward";
-import SpecialIcon from "@mui/icons-material/Star";
-import ReplyIcon from "@mui/icons-material/Reply";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import { Link as RouterLink } from "react-router-dom";
-
 
 import PrimarySearchAppBar from "./components/AppBar";
 import HomePage from "./pages/HomePage.js";
