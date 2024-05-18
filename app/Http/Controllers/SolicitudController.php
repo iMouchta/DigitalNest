@@ -52,63 +52,45 @@ class SolicitudController extends Controller
         $horaFinal = $datosSolicitudFormulario['horafinal'];
         $motivo = $datosSolicitudFormulario['motivo'];
 
-        $solicitudesRealizadas = [];
         $ambientesDisponibles = [];
-        $solicitudesSubidas = false;
 
         foreach ($nombresDocentes as $nombreDocente) {
             $docente = docente::where('nombredocente', $nombreDocente)->first();
             if ($docente) {
                 $idDocente = $docente->iddocente;
-                $materia = materia::where('nombremateria', $nombreMateria)->where('iddocente', $idDocente)->first();
+
+                $materia = materia::
+                where('nombremateria', $nombreMateria)->
+                where('iddocente', $idDocente)->
+                first();
 
                 if($materia) {
-                    $idMateria = $materia->idmateria;
+                    $ambientes = ambiente::all();
+                    $listaHoras = $this->generarListaHoras($horaInicial, $horaFinal);
+                    
+            
+                    foreach ($ambientes as $ambiente) {
+                        if ($ambiente->capacidadambiente >= $capacidad) {
+                            foreach ($listaHoras as $hora) {
+                                $periodoAmbienteNoDisponible = periodonodisponible::
+                                    where('idambiente', $ambiente->idambiente)->
+                                    where('fecha', $fecha)->where('hora', $hora)->
+                                    first();
 
-                    $datosSolicitud = [
-                        'idmateria' => $idMateria,
-                        'capacidadsolicitud' => $capacidad,
-                        'fechasolicitud' => $fecha,
-                        'horainicialsolicitud' => $horaInicial,
-                        'horafinalsolicitud' => $horaFinal,
-                        'motivosolicitud' => $motivo
-                    ];
-
-                    $solicitudIngresada = solicitud::insert($datosSolicitud);
-                    $solicitudesRealizadas[] = $datosSolicitud;
-                    $solicitudesSubidas = true;                  
-
+                                if (!$periodoAmbienteNoDisponible) {
+                                    if (!$this->ambienteRepetido($ambiente, $ambientesDisponibles)) {
+                                        $ambientesDisponibles[] = $ambiente;
+                                        break;
+                                    }
+                                }
+                            
+                            }
+                        }
+                    }    
                 }
             }
         }
 
-
-
-        $ambientes = ambiente::all();
-        $listaHoras = $this->generarListaHoras($horaInicial, $horaFinal);
-        
-
-        foreach ($ambientes as $ambiente) {
-            if ($ambiente->capacidadambiente >= $capacidad) {
-                foreach ($listaHoras as $hora) {
-                    $periodoAmbienteNoDisponible = periodonodisponible::where('idambiente', $ambiente->idambiente)->where('fecha', $fecha)->where('hora', $hora)->first();
-                    if (!$periodoAmbienteNoDisponible) {
-                        $ambientesDisponibles[] = $ambiente;
-                        break;
-                    }
-                
-                }
-            }
-        }
-
-
-
-        // return response()->json(
-        //     ['nombresDocentes' => $nombresDocentes, 
-        //     'solicitudesAceptadas' => $solicitudesRealizadas, 
-        //     'ambientes' => $ambientesDisponibles, 
-        //     'solicitudesSubidas' => $solicitudesSubidas
-        //     ]);
         return response()->json([
             'ambientes' => $ambientesDisponibles,
         ]);
@@ -134,6 +116,17 @@ class SolicitudController extends Controller
             // array_pop($listaHoras);
             return $listaHoras;
         }        
+    }
+
+    private function ambienteRepetido($ambiente, $ambientesDisponibles) {
+        $repetido = false;
+        foreach ($ambientesDisponibles as $ambienteDisponible) {
+            if ($ambienteDisponible->idambiente == $ambiente->idambiente) {
+                $repetido = true;
+                break;
+            }
+        }
+        return $repetido;
     }
     
     /**
