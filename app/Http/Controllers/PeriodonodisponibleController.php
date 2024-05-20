@@ -12,6 +12,7 @@ use App\Models\docente;
 use App\Models\materia;
 use App\Models\docentesolicitud;
 use App\Models\solicitudconambienteasignado;
+use App\Models\motivo;
 
 class PeriodonodisponibleController extends Controller
 {
@@ -54,69 +55,125 @@ class PeriodonodisponibleController extends Controller
         $motivo = $datosSolicitudFormulario['motivo'];
         $nombresAmbientes = $datosSolicitudFormulario['nombresambientes'];
 
-        $listaIdsDocentes = [];
-        $listaIdsAmbientes = [];
+        //validacion para prevenir multiples llamadas a la api con la misma informacion
+        //(boton presionado multiples veces)
 
-        $listaHorasDistribuidas = $this->generarListaHoras($horaInicial, $horaFinal);
 
-        foreach ($nombresDocentes as $nombreDocente) {
-            $docente = docente::where('nombredocente', $nombreDocente)->first();
-            if ($docente) {
-                $idDocente = $docente->iddocente;
-                $listaIdsDocentes[] = $idDocente;
+            $listaIdAmbientes = $this->getIdAmbientes($nombresAmbientes);
+            $listaIdsDocentes = [];
+            $listaIdsAmbientes = [];
+            $listaHorasDistribuidas = $this->generarListaHoras($horaInicial, $horaFinal);
 
-                $materia = materia::where('iddocente', $idDocente)->where('nombremateria', $nombreMateria)->first();
-                if ($materia) {
-                    $idMateria = $materia->idmateria;
+            foreach ($nombresDocentes as $nombreDocente) {
+                $docente = docente::where('nombredocente', $nombreDocente)->first();
+                if ($docente) {
+                    $idDocente = $docente->iddocente;
+                    $listaIdsDocentes[] = $idDocente;
 
-                    foreach ($nombresAmbientes as $nombreAmbiente) {
-                        $ambiente = ambiente::where('nombreambiente', $nombreAmbiente)->first();
-                        $idAmbiente = $ambiente->idambiente;
+                    $materia = materia::where('iddocente', $idDocente)->where('nombremateria', $nombreMateria)->first();
+                    if ($materia) {
+                        $idMateria = $materia->idmateria;
 
-                        if (!in_array($idAmbiente, $listaIdsAmbientes)) {
-                            // Si no está, lo agregamos
-                            $listaIdsAmbientes[] = $idAmbiente;
-                        }
+                        foreach ($nombresAmbientes as $nombreAmbiente) {
+                            $ambiente = ambiente::where('nombreambiente', $nombreAmbiente)->first();
+                            $idAmbiente = $ambiente->idambiente;
 
-                        foreach ($listaHorasDistribuidas as $horaOcupada) {
-                            $this->registrarPeriodoNoDisponible($horaOcupada, $fecha, $idAmbiente);
+                            if (!in_array($idAmbiente, $listaIdsAmbientes)) {
+                                // Si no está, lo agregamos
+                                $listaIdsAmbientes[] = $idAmbiente;
+                            }
+
+                            foreach ($listaHorasDistribuidas as $horaOcupada) {
+                                $this->registrarPeriodoNoDisponible($horaOcupada, $fecha, $idAmbiente);
+
+                                $idDocente = $this->getIdDocente($nombreDocente);
+                                $idMateria = $this->getIdMateria($idDocente, $nombreMateria);
+
+                                $this->cambiarEstadoMotivo($motivo, $idMateria);
+
+                            }
                         }
                     }
                 }
             }
-        }
 
-        $datosSolicitud = [
-            'capacidadsolicitud' => $capacidad,
-            'fechasolicitud' => $fecha,
-            'horainicialsolicitud' => $horaInicial,
-            'horafinalsolicitud' => $horaFinal,
-            'motivosolicitud' => $motivo,
-            'aceptada' => true
-        ];
+            $datosSolicitud = [
+                'capacidadsolicitud' => $capacidad,
+                'fechasolicitud' => $fecha,
+                'horainicialsolicitud' => $horaInicial,
+                'horafinalsolicitud' => $horaFinal,
+                'motivosolicitud' => $motivo,
+                'aceptada' => true
+            ];
 
-        $solicitudCreada = $this->registrarSolicitud($datosSolicitud);
-        $idSolicitud = $solicitudCreada->idsolicitud;
+            $solicitudCreada = $this->registrarSolicitud($datosSolicitud);
+            $idSolicitud = $solicitudCreada->idsolicitud;
 
-        $reservaCreada = $this->registrarReserva($idSolicitud);
+            $reservaCreada = $this->registrarReserva($idSolicitud);
 
-        //se asocia la solicitud con los docentes que realizaron la solicitud 
-        
-        $asociacionDocenteSolicitud = $this->asociarSolicitudConDocente($listaIdsDocentes, $idSolicitud);
-        $asociacionAmbienteSolicitud = $this->asociarSolicitudConAmbiente($listaIdsAmbientes, $idSolicitud);
+            //se asocia la solicitud con los docentes que realizaron la solicitud 
+
+            $asociacionDocenteSolicitud = $this->asociarSolicitudConDocente($listaIdsDocentes, $idSolicitud);
+            $asociacionAmbienteSolicitud = $this->asociarSolicitudConAmbiente($listaIdsAmbientes, $idSolicitud);
+            
 
 
-        
-        return response()->json(
-            [
-                'solicitud' => $solicitudCreada,
-                'asociacioncondocente' => $asociacionDocenteSolicitud,
-                'asociacionconambiente' => $asociacionAmbienteSolicitud,
-                'reserva' => $reservaCreada
-            ]
-        );
 
+            return response()->json(
+                [
+                    'solicitud' => $solicitudCreada,
+                    'asociacioncondocente' => $asociacionDocenteSolicitud,
+                    'asociacionconambiente' => $asociacionAmbienteSolicitud,
+                    'reserva' => $reservaCreada,
+                    'mensaje' => 'Solicitud creada correctamente'
+                ]
+            );
     }
+    private function cambiarEstadoMotivo($motivo, $idMateria) {
+        $idMotivo = $this->getIdMotivo($motivo, $idMateria);
+        $motivo = motivo::find($idMotivo);
+
+        if ($motivo) {
+            $motivo->registrado = true;
+            $motivo->save();
+        }
+    }
+
+    private function getIdMotivo($motivo, $idMateria) {
+        $motivo = motivo::where('nombremotivo', $motivo)->where('idmateria', $idMateria)->first();
+        if ($motivo) {
+            return $motivo->idmotivo;
+        }
+    }
+
+
+    private function getIdMateria($idDocente, $nombreMateria) {
+        $materia = materia::where('iddocente', $idDocente)->where('nombremateria', $nombreMateria)->first();
+        if ($materia) {
+            return $materia->idmateria;
+        }
+    }
+
+    private function getIdDocente($nombreDocente) {
+        $docente = docente::where('nombredocente', $nombreDocente)->first();
+        if ($docente) {
+            return $docente->iddocente;
+        }
+    }
+
+    private function getIdAmbientes($listaIdAmbientes)
+    {
+        $listaAmbientes = [];
+        foreach ($listaIdAmbientes as $idAmbiente) {
+            $ambiente = ambiente::where('idambiente', $idAmbiente)->first();
+            if ($ambiente) {
+                $listaAmbientes[] = $ambiente;
+            }
+        }
+        return $listaAmbientes;
+    }
+
+
 
     private function registrarSolicitud($solicitudData)
     {
@@ -135,25 +192,25 @@ class PeriodonodisponibleController extends Controller
 
     private function asociarSolicitudConDocente($idsdocentes, $idSolicitud)
     {
-       foreach($idsdocentes as $idDocente) {
-        $solicitudDocente = [
-            'iddocente' => $idDocente,
-            'idsolicitud' => $idSolicitud
-        ];
+        foreach ($idsdocentes as $idDocente) {
+            $solicitudDocente = [
+                'iddocente' => $idDocente,
+                'idsolicitud' => $idSolicitud
+            ];
 
-        $solicitudDocenteAsociada = docentesolicitud::insert($solicitudDocente);
-       }
+            $solicitudDocenteAsociada = docentesolicitud::insert($solicitudDocente);
+        }
         return $solicitudDocenteAsociada;
     }
 
     private function asociarSolicitudConAmbiente($listaIDAmbiente, $idSolicitud)
     {
-        foreach($listaIDAmbiente as $idAmbiente) {
+        foreach ($listaIDAmbiente as $idAmbiente) {
             $solicitudAmbiente = [
                 'idambiente' => $idAmbiente,
                 'idsolicitud' => $idSolicitud
             ];
-    
+
             $solicitudAmbienteAsociada = solicitudconambienteasignado::insert($solicitudAmbiente);
         }
         return $solicitudAmbienteAsociada;
@@ -211,12 +268,6 @@ class PeriodonodisponibleController extends Controller
         } else {
             return false;
         }
-    }
-
-    private function obtenerUltimoIdSolicitud()
-    {
-        $solicitud = solicitud::latest('idsolicitud')->first();
-        return $solicitud->idsolicitud;
     }
 
     /**
