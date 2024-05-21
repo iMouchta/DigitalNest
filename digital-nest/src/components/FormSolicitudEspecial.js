@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import Button from "@mui/material/Button";
 import { toast, Toaster } from "react-hot-toast";
+import FormMultipleSelector from "./FormMultipleSelector";
 
 export default function FormSolicitudEspecial() {
   //* Form fields
@@ -49,7 +50,6 @@ export default function FormSolicitudEspecial() {
   };
 
   const handleSubmit = () => {
-    
     // event.preventDefault();
     setErrorNombre(!textFieldNombre);
     // setErrorCapacidad(!textFieldCapacidad);
@@ -83,7 +83,6 @@ export default function FormSolicitudEspecial() {
     console.log("Hora de inicio:", selectedHoraInicio);
     console.log("Hora de fin:", selectedHoraFin);
     console.log("Motivo:", textFieldMotivo);
-
 
     fetch("http://localhost:8000/api/", {
       method: "POST",
@@ -210,6 +209,17 @@ export default function FormSolicitudEspecial() {
           options={ambientes}
           onChange={setSelectedAmbientes}
           error={errorAmbientes}
+        />
+        <FormMultipleSelector
+          label="Amientes *"
+          options={[
+            { value: "Auditorio", label: "Auditorio" },
+            { value: "690A", label: "690A" },
+            { value: "690B", label: "690B" },
+            { value: "690C", label: "690C" },
+            { value: "690D", label: "690D" },
+          ]}
+          onChange={(value) => console.log(value)}
         />
         <FormDateSelector
           label="Fecha *"

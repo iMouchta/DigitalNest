@@ -223,7 +223,7 @@ export default function FormSolicitudRapida() {
               onChange={setSelectedNombreDocente}
               error={errorNombreDocente}
             />
-            {/* <FormMultipleSelector
+            <FormMultipleSelector
               label="Nombres"
               options={[
                 { value: "Leticia Blanco Coca", label: "Leticia Blanco Coca" },
@@ -231,7 +231,7 @@ export default function FormSolicitudRapida() {
                 { value: "Corina Flores", label: "Corina Flores" },
               ]}
               onChange={(value) => console.log(value)}
-            /> */}
+            />
             <FormSelector
               label="Materia *"
               options={materias}
