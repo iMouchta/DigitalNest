@@ -15,32 +15,27 @@ class SolicitudEspecialController extends Controller
         return view('welcome', compact('ambientes'));
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'idadministrador' => 'required',
-            'fechasolicitud' => 'required|date',
-            'horainicialsolicitud' => 'required',
-            'horafinalsolicitud' => 'required',
-            'motivosolicitud' => 'required|string|max:1000',
-            'idambiente' => 'required|integer',
-            'especial' => 'boolean|required',
-            'aceptada' => 'boolean|nullable',
-        ]);
+    public function store(Request $request){
+    $request->validate([
+        'idadministrador' => 'required|integer|exists:administrador,idadministrador',
+        'fechasolicitud' => 'required|date',
+        'horainicialsolicitud' => 'required|date_format:H:i',
+        'horafinalsolicitud' => 'required|date_format:H:i',
+        'motivosolicitud' => 'required|string|max:1000',
+        'idambientes' => 'required|array',
+        'idambientes.*' => 'integer|exists:ambiente,idambiente',
+        'especial' => 'boolean|required',
+        'aceptada' => 'boolean|nullable',
+    ]);
 
-        $solicitud = new Solicitud();
-        $solicitud->fill($request->except('_token'));
-        $solicitud->idambiente = $request->idambiente;
-        $solicitud->especial = true;
+    $solicitud = new Solicitud();
+    $solicitud->fill($request->except(['_token', 'idambientes']));
+    $solicitud->especial = true;
+    $solicitud->save();
 
-        $solicitud->save();
-
-        if ($solicitud) {
-            return response()->json(['subida' => true]);
-        } else {
-            return response()->json(['subida' => false]);
-        }
-    }
+    $solicitud->ambientes()->sync($request->idambientes);
+    return response()->json(['subida' => true]);
+}
 
 
     public function index()
