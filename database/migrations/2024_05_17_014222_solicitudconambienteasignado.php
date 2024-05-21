@@ -6,11 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 class SolicitudConAmbienteAsignado extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('solicitudconambienteasignado', function (Blueprint $table) {
@@ -30,12 +25,6 @@ class SolicitudConAmbienteAsignado extends Migration
                 ->onUpdate('NO ACTION');
         });
     }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('solicitudconambienteasignado');

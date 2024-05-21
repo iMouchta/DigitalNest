@@ -46,7 +46,6 @@ class SolicitudEspecialController extends Controller
     public function index()
     {
         $solicitudes = Solicitud::with('administrador', 'ambiente')
-            ->where('especial', 1)
             ->get();
 
         $solicitudesConDatos = $solicitudes->map(function ($solicitud) {

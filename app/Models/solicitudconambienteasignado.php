@@ -10,6 +10,9 @@ class solicitudconambienteasignado extends Model
     use HasFactory;
 
     protected $table = 'solicitudconambienteasignado';
-
-    protected $fillable = ['idsolicitud', 'idambiente'];
+    public $timestamps = false;
+    protected $fillable = [
+        'idsolicitud', 
+        'idambiente'
+    ];
 }

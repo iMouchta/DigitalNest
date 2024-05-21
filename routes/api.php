@@ -29,6 +29,6 @@ Route::resource('/solicitud', SolicitudController::class);
 Route::resource('periodonodisponible', PeriodonodisponibleController::class);
 Route::post('/aceptar', [SolicitudEspecialController::class, 'aceptar'])->name('solicitud.aceptar');
 // Route::get('/', function () {return view('welcome');});
-// Route::get('/', [SolicitudEspecialController::class, 'create'])->name('solicitud.create');
+Route::get('/', [SolicitudEspecialController::class, 'create'])->name('solicitud.create');
 // Route::post('/', [SolicitudEspecialController::class, 'store'])->name('solicitud.store');
 Route::resource('/motivo', MotivoController::class);

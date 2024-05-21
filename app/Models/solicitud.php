@@ -11,24 +11,20 @@ class solicitud extends Model
     protected $table = 'solicitud';
     protected $primaryKey = 'idsolicitud';
     public $timestamps = false;
-
-
     protected $fillable = [
-        'idmateria',
         'idadministrador',
-        'idambiente',
-        'especial',
         'capacidadsolicitud',
         'fechasolicitud',
         'horainicialsolicitud',
         'horafinalsolicitud',
-        'aceptada',
         'motivosolicitud',
+        'aceptada',
+        'especial'
     ];
 
-    public function ambiente()
+    public function ambientes()
     {
-        return $this->belongsTo(Ambiente::class, 'idambiente');
+        return $this->belongsToMany(Ambiente::class, 'solicitudconambienteasignado', 'idsolicitud', 'idambiente');
     }
 
     public function reservas()
