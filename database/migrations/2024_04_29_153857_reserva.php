@@ -16,11 +16,9 @@ class Reserva extends Migration
         Schema::create('reserva', function (Blueprint $table) {
             $table->id('idreserva');
             $table->unsignedBigInteger('idsolicitud')->nullable();
-            $table->unsignedBigInteger('idambiente')->nullable();
 
 
             $table->foreign('idsolicitud')->references('idsolicitud')->on('solicitud');
-            $table->foreign('idambiente')->references('idambiente')->on('ambiente');
         });
     }
 

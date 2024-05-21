@@ -8,6 +8,11 @@ use Carbon\Carbon;
 use App\Models\ambiente;
 use App\Models\solicitud;
 use App\Models\reserva;
+use App\Models\docente;
+use App\Models\materia;
+use App\Models\docentesolicitud;
+use App\Models\solicitudconambienteasignado;
+use App\Models\motivo;
 
 class PeriodonodisponibleController extends Controller
 {
@@ -41,69 +46,244 @@ class PeriodonodisponibleController extends Controller
     {
         $datosSolicitudFormulario = request()->except('_token');
 
-        $nombreAmbiente = $datosSolicitudFormulario['nombreambiente'];
+        $nombresDocentes = $datosSolicitudFormulario['nombresdocentes'];
+        $nombreMateria = $datosSolicitudFormulario['materia'];
+        $capacidad = $datosSolicitudFormulario['capacidad'];
         $fecha = $datosSolicitudFormulario['fecha'];
         $horaInicial = $datosSolicitudFormulario['horainicial'];
         $horaFinal = $datosSolicitudFormulario['horafinal'];
+        $motivo = $datosSolicitudFormulario['motivo'];
+        $nombresAmbientes = $datosSolicitudFormulario['nombresambientes'];
 
-        $listaHorasDistribuidas = $this->generarListaHoras($horaInicial, $horaFinal);
+        $listaIdAmbientesByName = $this->getIdAmbientesByName($nombresAmbientes);
+        $listaIdAmbientes = $this->getIdAmbientes($nombresAmbientes);
+        $periodosEstanDisponibles = $this->verificarHorasDisponibles($horaInicial, $horaFinal, $fecha, $listaIdAmbientesByName);
 
-        $ambiente = ambiente::where('nombreambiente', $nombreAmbiente)->first();
-        $idAmbiente = $ambiente->idambiente;
+        if ($periodosEstanDisponibles) {
 
-        $periodosNoDisponiblesRegistrados = [];
+            $listaIdsDocentes = [];
+            $listaIdsAmbientes = [];
+            $listaHorasDistribuidas = $this->generarListaHoras($horaInicial, $horaFinal);
 
-        $horasDesocupadas = true;
+            foreach ($nombresDocentes as $nombreDocente) {
+                $docente = docente::where('nombredocente', $nombreDocente)->first();
+                if ($docente) {
+                    $idDocente = $docente->iddocente;
+                    $listaIdsDocentes[] = $idDocente;
 
-        foreach ($listaHorasDistribuidas as $horaOcupada) {
-            $periodoNoDisponibleSinRegistrar = $this->verificarPeriodoNoDisponible($horaOcupada, $fecha, $idAmbiente); 
-            if (!$periodoNoDisponibleSinRegistrar) {
+                    $materia = materia::where('iddocente', $idDocente)->where('nombremateria', $nombreMateria)->first();
+                    if ($materia) {
+                        $idMateria = $materia->idmateria;
 
-                $periodoNoDisponible = [
-                    'idambiente' => $idAmbiente,
-                    'fecha' => $fecha,
-                    'hora' => $horaOcupada
-                ];
+                        foreach ($nombresAmbientes as $nombreAmbiente) {
+                            $ambiente = ambiente::where('nombreambiente', $nombreAmbiente)->first();
+                            $idAmbiente = $ambiente->idambiente;
 
-                $registrarPeriodoNoDisponible = periodonodisponible::insert($periodoNoDisponible);
-                $horasDesocupadas = true;
+                            if (!in_array($idAmbiente, $listaIdsAmbientes)) {
+                                // Si no está, lo agregamos
+                                $listaIdsAmbientes[] = $idAmbiente;
+                            }
 
-                if($registrarPeriodoNoDisponible){
-                    $periodosNoDisponiblesRegistrados[] = $periodoNoDisponible;
+                            foreach ($listaHorasDistribuidas as $horaOcupada) {
+                                $this->registrarPeriodoNoDisponible($horaOcupada, $fecha, $idAmbiente);
+
+                                $idDocente = $this->getIdDocente($nombreDocente);
+                                $idMateria = $this->getIdMateria($idDocente, $nombreMateria);
+
+                                $this->cambiarEstadoMotivo($motivo, $idMateria);
+
+                            }
+                        }
+                    }
                 }
-            } else {
-                $horasDesocupadas = false;
+            }
+
+            $datosSolicitud = [
+                'capacidadsolicitud' => $capacidad,
+                'fechasolicitud' => $fecha,
+                'horainicialsolicitud' => $horaInicial,
+                'horafinalsolicitud' => $horaFinal,
+                'motivosolicitud' => $motivo,
+                'aceptada' => true
+            ];
+
+            $solicitudCreada = $this->registrarSolicitud($datosSolicitud);
+            $idSolicitud = $solicitudCreada->idsolicitud;
+
+            $reservaCreada = $this->registrarReserva($idSolicitud);
+
+            //se asocia la solicitud con los docentes que realizaron la solicitud, ambos devuelven true si la informacion
+            //se guardo correctamente
+            $asociacionDocenteSolicitud = $this->asociarSolicitudConDocente($listaIdsDocentes, $idSolicitud);
+            $asociacionAmbienteSolicitud = $this->asociarSolicitudConAmbiente($listaIdsAmbientes, $idSolicitud);
+
+
+
+
+            return response()->json(
+                [
+                    'solicitud' => $solicitudCreada,
+                    'asociacioncondocente' => $asociacionDocenteSolicitud,
+                    'asociacionconambiente' => $asociacionAmbienteSolicitud,
+                    'reserva' => $reservaCreada,
+                    'mensaje' => 'Solicitud creada correctamente'
+                ]
+            );
+        } else {
+            return response()->json(
+                [
+                    'solicitud' => null,
+                    'asociacioncondocente' => false,
+                    'asociacionconambiente' => false,
+                    'reserva' => false,
+                    'mensaje' => 'No se pudo crear la solicitud, ya que el ambiente se encuentra ocupado en el horario seleccionado'
+                ]
+            );
+        }
+
+
+
+    }
+
+    private function verificarHorasDisponibles($horaInicial, $horaFinal, $fecha, $listaIdAmbientes)
+    {
+        $listaHoras = $this->generarListaHoras($horaInicial, $horaFinal);
+
+        foreach ($listaIdAmbientes as $idAmbiente) {
+            foreach ($listaHoras as $hora) {
+                $periodoOcupado = $this->periodoOcupado($hora, $fecha, $idAmbiente);
+                if ($periodoOcupado) {
+                    return false;
+                }
             }
         }
 
-        $idUltimaSolicitud = $this->obtenerUltimoIdSolicitud();
+        return true;
+    }
 
-        $registroReserva = [
-            'idambiente' => $idAmbiente,
-            'idsolicitud' => $idUltimaSolicitud,
-        ];
-
-        $registrarReserva = reserva::insert($registroReserva);
-
-        if($registrarReserva){
-            // return response()->json([
-            //     'listaHorasDistribuidas' => $listaHorasDistribuidas, 
-            //     'idUltimaSolicitud' => $idUltimaSolicitud,
-            //     'idAmbiente' => $idAmbiente, 
-            //     'fecha' => $fecha, 
-            //     'periodosNoDisponiblesRegistrados' => $periodosNoDisponiblesRegistrados,
-            //     'horasDesocupadas' => $horasDesocupadas
-            //     ]);
-            return response()->json([
-                'reservarealizada' => true
-            ]);
-        } else {
-            return response()->json([
-                'reservarealizada' => false
-            ]);
+    private function getIdAmbientesByName($nombresAmbientes)
+    {
+        $listaIdAmbientes = [];
+        foreach ($nombresAmbientes as $nombreAmbiente) {
+            $ambiente = ambiente::where('nombreambiente', $nombreAmbiente)->first();
+            if ($ambiente) {
+                $listaIdAmbientes[] = $ambiente->idambiente;
+            }
         }
+        return $listaIdAmbientes;
+    }
+    private function cambiarEstadoMotivo($motivo, $idMateria)
+    {
+        $idMotivo = $this->getIdMotivo($motivo, $idMateria);
+        $motivo = motivo::find($idMotivo);
 
-        
+        if ($motivo) {
+            $motivo->registrado = true;
+            $motivo->save();
+        }
+    }
+
+    private function getIdMotivo($motivo, $idMateria)
+    {
+        $motivo = motivo::where('nombremotivo', $motivo)->where('idmateria', $idMateria)->first();
+        if ($motivo) {
+            return $motivo->idmotivo;
+        }
+    }
+
+
+    private function getIdMateria($idDocente, $nombreMateria)
+    {
+        $materia = materia::where('iddocente', $idDocente)->where('nombremateria', $nombreMateria)->first();
+        if ($materia) {
+            return $materia->idmateria;
+        }
+    }
+
+    private function getIdDocente($nombreDocente)
+    {
+        $docente = docente::where('nombredocente', $nombreDocente)->first();
+        if ($docente) {
+            return $docente->iddocente;
+        }
+    }
+
+    private function getIdAmbientes($listaIdAmbientes)
+    {
+        $listaAmbientes = [];
+        foreach ($listaIdAmbientes as $idAmbiente) {
+            $ambiente = ambiente::where('idambiente', $idAmbiente)->first();
+            if ($ambiente) {
+                $listaAmbientes[] = $ambiente;
+            }
+        }
+        return $listaAmbientes;
+    }
+
+
+
+    private function registrarSolicitud($solicitudData)
+    {
+        $solicitud = solicitud::create($solicitudData);
+        return $solicitud;
+    }
+
+    private function registrarReserva($idSolicitud)
+    {
+        $reservaData = [
+            'idsolicitud' => $idSolicitud
+        ];
+        $reserva = reserva::insert($reservaData);
+        return $reserva;
+    }
+
+    private function asociarSolicitudConDocente($idsdocentes, $idSolicitud)
+    {
+        foreach ($idsdocentes as $idDocente) {
+            $solicitudDocente = [
+                'iddocente' => $idDocente,
+                'idsolicitud' => $idSolicitud
+            ];
+
+            $solicitudDocenteAsociada = docentesolicitud::insert($solicitudDocente);
+        }
+        return $solicitudDocenteAsociada;
+    }
+
+    private function asociarSolicitudConAmbiente($listaIDAmbiente, $idSolicitud)
+    {
+        foreach ($listaIDAmbiente as $idAmbiente) {
+            $solicitudAmbiente = [
+                'idambiente' => $idAmbiente,
+                'idsolicitud' => $idSolicitud
+            ];
+
+            $solicitudAmbienteAsociada = solicitudconambienteasignado::insert($solicitudAmbiente);
+        }
+        return $solicitudAmbienteAsociada;
+    }
+
+
+
+    private function registrarPeriodoNoDisponible($horaPorOcupar, $fecha, $idAmbiente)
+    {
+        $periodoNoDisponibleSinRegistrar = $this->periodoOcupado($horaPorOcupar, $fecha, $idAmbiente);
+        if (!$periodoNoDisponibleSinRegistrar) {
+
+            $periodoNoDisponible = [
+                'idambiente' => $idAmbiente,
+                'fecha' => $fecha,
+                'hora' => $horaPorOcupar
+            ];
+
+            $registrarPeriodoNoDisponible = periodonodisponible::insert($periodoNoDisponible);
+
+            if ($registrarPeriodoNoDisponible) {
+                $periodosNoDisponiblesRegistrados[] = $periodoNoDisponible;
+            }
+        } else {
+            $horasDesocupadas = false;
+        }
     }
 
     private function generarListaHoras($horaInicial, $horaFinal)
@@ -113,7 +293,7 @@ class PeriodonodisponibleController extends Controller
         $horaInit = Carbon::parse($horaInicial);
         $horaFinal = Carbon::parse($horaFinal);
 
-        if($horaInit == $horaFinal){
+        if ($horaInit == $horaFinal) {
             $listaHoras[] = $horaInit->format('H:i:s');
             return $listaHoras;
         } else {
@@ -121,13 +301,14 @@ class PeriodonodisponibleController extends Controller
                 $listaHoras[] = $horaInit->format('H:i:s');
                 $horaInit->addMinutes(45);
             }
-    
+
             // array_pop($listaHoras);
             return $listaHoras;
-        }        
+        }
     }
 
-    private function verificarPeriodoNoDisponible($hora, $fecha, $idAmbiente)
+    //verifica si el periodo no disponible ya ha sido registrado osea si la hora fecha y ambiente ya estan ocupados
+    private function periodoOcupado($hora, $fecha, $idAmbiente)
     {
         $periodoNoDisponible = periodonodisponible::where('idambiente', $idAmbiente)->where('fecha', $fecha)->where('hora', $hora)->first();
         if ($periodoNoDisponible) {
@@ -135,11 +316,6 @@ class PeriodonodisponibleController extends Controller
         } else {
             return false;
         }
-    }
-
-    private function obtenerUltimoIdSolicitud(){
-        $solicitud = solicitud::latest('idsolicitud')->first();
-        return $solicitud->idsolicitud;
     }
 
     /**
