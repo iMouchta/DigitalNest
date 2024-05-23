@@ -86,9 +86,11 @@ export default function FormSolicitudRapida() {
       headers: {
         "Content-Type": "application/json",
       },
+
       body: JSON.stringify({
         nombresdocentes: [selectedNombreDocente],
-        materia: selectedMateria,
+        materia: "Introduccion a la programacion",
+        // materia: selectedMateria,
         capacidad: selectedCapacidad,
         fecha: selectedFecha.format("YYYY-MM-DD"),
         horainicial: selectedHoraInicio,
@@ -115,6 +117,7 @@ export default function FormSolicitudRapida() {
         });
         const ambientesMap = data.ambientes.reduce((map, ambiente) => {
           map[ambiente.nombreambiente] = ambiente.capacidadambiente;
+          console.log("Ambiente:", ambiente.nombreambiente);
           return map;
         }, {});
 
@@ -127,15 +130,14 @@ export default function FormSolicitudRapida() {
       });
   };
 
-  const docentes = [{ value: "Leticia Blanco Coca" }];
+  const docentes = [{ value: "Leticia Blanco" }];
 
   const materias = [
     { value: "Introduccion a la programacion" },
-    { value: "Matemáticas" },
-    { value: "Física" },
-    { value: "Química" },
-    { value: "Biología" },
-    { value: "Historia" },
+    { value: "Algoritmos Avanzados" },
+    { value: "Taller de Ingenieria de Software" },
+    { value: "Elementos de programacion y Estructura de Datos" },
+    { value: "Arquitectura de Computadoras I" },
   ];
 
   const capacidades = [
@@ -223,15 +225,15 @@ export default function FormSolicitudRapida() {
               onChange={setSelectedNombreDocente}
               error={errorNombreDocente}
             />
-            {/* <FormMultipleSelector
+            <FormMultipleSelector
               label="Nombres"
               options={[
-                { value: "Leticia Blanco Coca", label: "Leticia Blanco Coca" },
+                // { value: "Leticia Blanco Coca", label: "Leticia Blanco Coca" },
                 { value: "Vladimir Costas", label: "Vladimir Costas" },
                 { value: "Corina Flores", label: "Corina Flores" },
               ]}
               onChange={(value) => console.log(value)}
-            /> */}
+            />
             <FormSelector
               label="Materia *"
               options={materias}

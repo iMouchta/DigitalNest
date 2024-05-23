@@ -55,11 +55,12 @@ class PeriodonodisponibleController extends Controller
         $motivo = $datosSolicitudFormulario['motivo'];
         $nombresAmbientes = $datosSolicitudFormulario['nombresambientes'];
 
-        //validacion para prevenir multiples llamadas a la api con la misma informacion
-        //(boton presionado multiples veces)
+        $listaIdAmbientesByName = $this->getIdAmbientesByName($nombresAmbientes);
+        $listaIdAmbientes = $this->getIdAmbientes($nombresAmbientes);
+        $periodosEstanDisponibles = $this->verificarHorasDisponibles($horaInicial, $horaFinal, $fecha, $listaIdAmbientesByName);
 
+        if ($periodosEstanDisponibles) {
 
-            $listaIdAmbientes = $this->getIdAmbientes($nombresAmbientes);
             $listaIdsDocentes = [];
             $listaIdsAmbientes = [];
             $listaHorasDistribuidas = $this->generarListaHoras($horaInicial, $horaFinal);
@@ -111,11 +112,11 @@ class PeriodonodisponibleController extends Controller
 
             $reservaCreada = $this->registrarReserva($idSolicitud);
 
-            //se asocia la solicitud con los docentes que realizaron la solicitud 
-
+            //se asocia la solicitud con los docentes que realizaron la solicitud, ambos devuelven true si la informacion
+            //se guardo correctamente
             $asociacionDocenteSolicitud = $this->asociarSolicitudConDocente($listaIdsDocentes, $idSolicitud);
             $asociacionAmbienteSolicitud = $this->asociarSolicitudConAmbiente($listaIdsAmbientes, $idSolicitud);
-            
+
 
 
 
@@ -128,8 +129,51 @@ class PeriodonodisponibleController extends Controller
                     'mensaje' => 'Solicitud creada correctamente'
                 ]
             );
+        } else {
+            return response()->json(
+                [
+                    'solicitud' => null,
+                    'asociacioncondocente' => false,
+                    'asociacionconambiente' => false,
+                    'reserva' => false,
+                    'mensaje' => 'No se pudo crear la solicitud, ya que el ambiente se encuentra ocupado en el horario seleccionado'
+                ]
+            );
+        }
+
+
+
     }
-    private function cambiarEstadoMotivo($motivo, $idMateria) {
+
+    private function verificarHorasDisponibles($horaInicial, $horaFinal, $fecha, $listaIdAmbientes)
+    {
+        $listaHoras = $this->generarListaHoras($horaInicial, $horaFinal);
+
+        foreach ($listaIdAmbientes as $idAmbiente) {
+            foreach ($listaHoras as $hora) {
+                $periodoOcupado = $this->periodoOcupado($hora, $fecha, $idAmbiente);
+                if ($periodoOcupado) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private function getIdAmbientesByName($nombresAmbientes)
+    {
+        $listaIdAmbientes = [];
+        foreach ($nombresAmbientes as $nombreAmbiente) {
+            $ambiente = ambiente::where('nombreambiente', $nombreAmbiente)->first();
+            if ($ambiente) {
+                $listaIdAmbientes[] = $ambiente->idambiente;
+            }
+        }
+        return $listaIdAmbientes;
+    }
+    private function cambiarEstadoMotivo($motivo, $idMateria)
+    {
         $idMotivo = $this->getIdMotivo($motivo, $idMateria);
         $motivo = motivo::find($idMotivo);
 
@@ -139,7 +183,8 @@ class PeriodonodisponibleController extends Controller
         }
     }
 
-    private function getIdMotivo($motivo, $idMateria) {
+    private function getIdMotivo($motivo, $idMateria)
+    {
         $motivo = motivo::where('nombremotivo', $motivo)->where('idmateria', $idMateria)->first();
         if ($motivo) {
             return $motivo->idmotivo;
@@ -147,14 +192,16 @@ class PeriodonodisponibleController extends Controller
     }
 
 
-    private function getIdMateria($idDocente, $nombreMateria) {
+    private function getIdMateria($idDocente, $nombreMateria)
+    {
         $materia = materia::where('iddocente', $idDocente)->where('nombremateria', $nombreMateria)->first();
         if ($materia) {
             return $materia->idmateria;
         }
     }
 
-    private function getIdDocente($nombreDocente) {
+    private function getIdDocente($nombreDocente)
+    {
         $docente = docente::where('nombredocente', $nombreDocente)->first();
         if ($docente) {
             return $docente->iddocente;
@@ -220,7 +267,7 @@ class PeriodonodisponibleController extends Controller
 
     private function registrarPeriodoNoDisponible($horaPorOcupar, $fecha, $idAmbiente)
     {
-        $periodoNoDisponibleSinRegistrar = $this->verificarPeriodoNoDisponible($horaPorOcupar, $fecha, $idAmbiente);
+        $periodoNoDisponibleSinRegistrar = $this->periodoOcupado($horaPorOcupar, $fecha, $idAmbiente);
         if (!$periodoNoDisponibleSinRegistrar) {
 
             $periodoNoDisponible = [
@@ -260,7 +307,8 @@ class PeriodonodisponibleController extends Controller
         }
     }
 
-    private function verificarPeriodoNoDisponible($hora, $fecha, $idAmbiente)
+    //verifica si el periodo no disponible ya ha sido registrado osea si la hora fecha y ambiente ya estan ocupados
+    private function periodoOcupado($hora, $fecha, $idAmbiente)
     {
         $periodoNoDisponible = periodonodisponible::where('idambiente', $idAmbiente)->where('fecha', $fecha)->where('hora', $hora)->first();
         if ($periodoNoDisponible) {

@@ -32,14 +32,16 @@ export default function SelectAmbienteDialog({
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          nombreambiente: selectedValue,
+          // nombredocente: formData.nombredocente,
+          nombresdocentes: ["Leticia Blanco"],
+          materia: formData.materia,
+          capacidad: formData.capacidad,
           fecha: formData.fecha,
           horainicial: formData.horainicial,
           horafinal: formData.horafinal,
-          nombredocente: formData.nombredocente,
-          materia: formData.materia,
-          capacidad: formData.capacidad,
           motivo: formData.motivo,
+          // nombreambiente: selectedValue,
+          nombresambientes: ["Auditorio", "693A"]
         }),
       }
     )
@@ -50,7 +52,7 @@ export default function SelectAmbienteDialog({
         return response.json();
       })
       .then((data) => {
-        if (data.reservarealizada) {
+        if (data.reserva) {
           toast.success("Se ha realizado la reserva con éxito", {
             duration: 7000,
           });
