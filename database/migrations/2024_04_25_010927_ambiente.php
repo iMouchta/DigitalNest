@@ -13,7 +13,7 @@ class Ambiente extends Migration
             $table->unsignedBigInteger('idubicacion');
             $table->string('nombreambiente', 20)->nullable();
             $table->unsignedInteger('capacidadambiente')->nullable();
-            $table->unsignedInteger('planta')->nullable();
+            $table->unsignedInteger('planta')->default(0);
 
             $table->foreign('idubicacion')
                   ->references('idubicacion')

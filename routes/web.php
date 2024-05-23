@@ -8,8 +8,8 @@ use App\Http\Controllers\ReservaController;
 
 // Route::get('/', function () {return view('welcome');});
 //Route::get('/', [SolicitudEspecialController::class, 'create'])->name('solicitud.create');
-//Route::get('/', [SolicitudEspecialController::class, 'index'])->name('solicitud.index');
-Route::post('/', [SolicitudEspecialController::class, 'store'])->name('solicitud.store');
+
+//Route::post('/', [SolicitudEspecialController::class, 'store'])->name('solicitud.store');
 
 
 // Route::get('/', function () {
@@ -24,7 +24,7 @@ Route::post('/', [SolicitudEspecialController::class, 'store'])->name('solicitud
 
 Route::group(['middleware' => ['cors']], function () {
     Route::get('/solicitudes', [SolicitudEspecialController::class, 'index'])->name('solicitud');
-    Route::get('/reservas', [SolicitudEspecialController::class, 'reservas'])->name('reservas');
+    
     // Route::resource('/solicitud', SolicitudController::class);
 });
 

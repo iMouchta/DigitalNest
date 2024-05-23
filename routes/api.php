@@ -32,3 +32,11 @@ Route::post('/aceptar', [SolicitudEspecialController::class, 'aceptar'])->name('
 Route::get('/', [SolicitudEspecialController::class, 'create'])->name('solicitud.create');
 // Route::post('/', [SolicitudEspecialController::class, 'store'])->name('solicitud.store');
 Route::resource('/motivo', MotivoController::class);
+
+//solicitudEspecial
+Route::post('/solicitudEspecial', [SolicitudEspecialController::class, 'store'])->name('solicitud.store');
+Route::get('/solicitudEspecial', [SolicitudEspecialController::class, 'index'])->name('solicitud.index');
+Route::get('/reservas', [SolicitudEspecialController::class, 'reservas'])->name('reservas');
+Route::post('/eliminarSoli', [SolicitudEspecialController::class, 'eliminar'])->name('eliminar');
+Route::post('/accept', [SolicitudEspecialController::class, 'accept'])->name('accept');
+
