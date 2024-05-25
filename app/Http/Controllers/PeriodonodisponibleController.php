@@ -104,7 +104,8 @@ class PeriodonodisponibleController extends Controller
                 'horainicialsolicitud' => $horaInicial,
                 'horafinalsolicitud' => $horaFinal,
                 'motivosolicitud' => $motivo,
-                'aceptada' => true
+                'aceptada' => true,
+                'especial' => false
             ];
 
             $solicitudCreada = $this->registrarSolicitud($datosSolicitud);
