@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SolicitudEspecialController;
 // use App\Http\Controllers\SolicitudController;
 use App\Http\Controllers\ReservaController;
+use App\Http\Controllers\EmailController;
 
 
 // Route::get('/', function () {return view('welcome');});
@@ -31,3 +32,7 @@ Route::group(['middleware' => ['cors']], function () {
 
 Route::resource('reserva', ReservaController::class);
 // Route::resource('solicitud', SolicitudController::class);
+
+
+
+Route::get('/enviar-correo', [EmailController::class, 'enviarCorreo']);

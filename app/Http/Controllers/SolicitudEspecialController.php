@@ -176,36 +176,31 @@ class SolicitudEspecialController extends Controller
     }
 
     public function accept(Request $request)
-    {
-        $request->validate([
-            'idsolicitud' => 'required|integer|exists:solicitud,idsolicitud'
-        ]);
+{
+    $request->validate([
+        'idsolicitud' => 'required|integer|exists:solicitud,idsolicitud'
+    ]);
 
-        $solicitudInicial = Solicitud::find($request->idsolicitud);
+    $solicitudInicial = Solicitud::find($request->idsolicitud);
 
-        $conflictosData = $this->generarConflictos($request);
-        $idsSolicitudes = $conflictosData['ids_solicitudes'];
-        $horariosInicial = $conflictosData['horario'];
+    $conflictosData = $this->generarConflictos($request);
+    $idsSolicitudes = $conflictosData['ids_solicitudes'];
+    $horariosInicial = $conflictosData['horario'];
 
-        $conflictos = [];
-        foreach ($idsSolicitudes as $id) {
-            $solicitud = Solicitud::find($id);
-            $horariosSolicitud = $this->generarListaHoras($solicitud->horainicialsolicitud, $solicitud->horafinalsolicitud);
+    $conflictos = [];
+    foreach ($idsSolicitudes as $id) {
+        $solicitud = Solicitud::find($id);
+        $horariosSolicitud = $this->generarListaHoras($solicitud->horainicialsolicitud, $solicitud->horafinalsolicitud);
 
-            $conflicto = false;
-            foreach ($horariosInicial as $horaInicial) {
-                if (in_array($horaInicial, $horariosSolicitud)) {
-                    $conflicto = true;
-                    break;
-                }
+        foreach ($horariosInicial as $horaInicial) {
+            if (in_array($horaInicial, $horariosSolicitud)) {
+                $conflictos[] = $id;
+                break;
             }
-            $conflictos[] = $conflicto;
         }
-
-        return response()->json([
-            'conflictos' => $conflictos,
-            'solicitudes' => $idsSolicitudes
-        ]);
     }
+
+    return response()->json($conflictos);
+}
 
 }
