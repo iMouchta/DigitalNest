@@ -61,21 +61,36 @@ class AmbienteController extends Controller
 
         $nombreAmbiente = $datosFormularioCreacionAmbiente['nombreambiente'];
         $capacidad = $datosFormularioCreacionAmbiente['capacidadambiente'];
-        $ubicacion = $datosFormularioCreacionAmbiente['ubicacion'];
-        $idubicacion = $datosFormularioCreacionAmbiente['idubicacion'];
+        $edificio = $datosFormularioCreacionAmbiente['edificio'];
+        $idubicacion = $datosFormularioCreacionAmbiente['idedificio'];
         $planta = $datosFormularioCreacionAmbiente['planta'];
 
-        if ($this->ambienteRepetido($nombreAmbiente)) {
-            return response()->json(['ambienteRegistrado' => false]);
+        $edificioExiste = Edificio::where('nombreedificio', $edificio)->first();
+
+        if($edificioExiste) {
+            if ($this->ambienteRepetido($nombreAmbiente)) {
+                return response()->json([
+                    'ambienteRegistrado' => false,
+                    'mensaje' => 'El ambiente ya existe'
+                ]);
+            } else {
+                $datosAmbiente = [
+                    'nombreambiente' => $nombreAmbiente,
+                    'capacidadambiente' => $capacidad,
+                    'planta' => $planta,
+                    'idedificio' => $idubicacion,
+                ];
+                $registrado = ambiente::insert($datosAmbiente);
+                return response()->json([
+                    'ambienteRegistrado' => $registrado,
+                    'mensaje' => $registrado ? 'Ambiente registrado' : 'Error al registrar ambiente'
+                ]);
+            }
         } else {
-            $datosAmbiente = [
-                'nombreambiente' => $nombreAmbiente,
-                'capacidadambiente' => $capacidad,
-                'planta' => $planta,
-                'idubicacion' => $idubicacion,
-            ];
-            $registrado = ambiente::insert($datosAmbiente);
-            return response()->json(['ambienteRegistrado' => $registrado]);
+            return response()->json([
+                'ambienteRegistrado' => false,
+                'mensaje' => 'El edificio no existe'
+            ]);
         }
 
 
