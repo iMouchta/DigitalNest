@@ -22,7 +22,7 @@ class Usuario extends Model
     }
     public function materias()
     {
-        return $this->hasMany(materia::class, 'idusuario');
+        return $this->hasMany(Materia::class, 'idusuario');
     }
     public function notificaciones()
     {

@@ -13,7 +13,7 @@ class PeriodoReservaOcupado extends Model
     protected $fillable = ['idambiente', 'fecha', 'hora'];
     public function ambiente()
     {
-        return $this->belongsTo(ambiente::class, 'idambiente');
+        return $this->belongsTo(Ambiente::class, 'idambiente');
     }
     
 }
