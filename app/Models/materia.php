@@ -18,7 +18,7 @@ class Materia extends Model
         'cuporeserva',
         'grupo',
     ];
-    public function usuario()
+    public function usuarios()
     {
         return $this->belongsTo(Usuario::class, 'idusuario', 'idusuario');
     }
