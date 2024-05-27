@@ -5,21 +5,25 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class materia extends Model
+class Materia extends Model
 {
     use HasFactory;
 
     protected $table = 'materia';
-
-    protected $fillable = ['iddocente', 'nombremateria', 'cuporeserva', 'grupo'];
-
-    public function docente()
+    protected $primaryKey = 'idmateria';
+    public $timestamps = false;
+    protected $fillable = [
+        'idusuario',
+        'nombremateria',
+        'cuporeserva',
+        'grupo',
+    ];
+    public function usuarios()
     {
-        return $this->belongsTo(docente::class, 'iddocente');
+        return $this->belongsTo(Usuario::class, 'idusuario', 'idusuario');
     }
-
-    public function solicitudes()
+    public function motivos()
     {
-        return $this->hasMany(Solicitud::class, 'idmateria');
+        return $this->hasMany(Motivo::class, 'idmateria', 'idmateria');
     }
 }
