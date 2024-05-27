@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ambiente;
-use App\Models\ubicacion;
+use App\Models\Ambiente;
+use App\Models\Edificio;
 use Illuminate\Http\Request;
 
 class AmbienteController extends Controller
@@ -15,15 +15,15 @@ class AmbienteController extends Controller
      */
     public function index()
     {
-        $ambientes = ambiente::all();
+        $ambientes = Ambiente::all();
         $listaAmbientesConUbicacion = [];
         
         foreach ($ambientes as $ambiente) {
-            $nombreUbicacion = $this->getNombreUbicacion($ambiente->idubicacion);
+            $nombreEdificio = $this->getNombreEdificio($ambiente->idedificio);
             $ambienteConUbicacion = [
                 'idambiente' => $ambiente->idambiente,
                 'nombreambiente' => $ambiente->nombreambiente,
-                'ubicacion' => $nombreUbicacion,
+                'edificio' => $nombreEdificio,
                 'planta' => $ambiente->planta,
                 'capacidadambiente' => $ambiente->capacidadambiente,
             ];
@@ -34,9 +34,9 @@ class AmbienteController extends Controller
         return response()->json($listaAmbientesConUbicacion);
     }
 
-    private function getNombreUbicacion($idUbicacion) {
-        $ubicacion = ubicacion::find($idUbicacion);
-        return $ubicacion->nombreubicacion;
+    private function getNombreEdificio($idEdificio) {
+        $edificio = Edificio::find($idEdificio);
+        return $edificio->nombreedificio;
     }
 
     /**
@@ -65,7 +65,7 @@ class AmbienteController extends Controller
         $idubicacion = $datosFormularioCreacionAmbiente['idubicacion'];
         $planta = $datosFormularioCreacionAmbiente['planta'];
 
-        if ($this->ambienteRepedido($nombreAmbiente)) {
+        if ($this->ambienteRepetido($nombreAmbiente)) {
             return response()->json(['ambienteRegistrado' => false]);
         } else {
             $datosAmbiente = [
@@ -81,7 +81,7 @@ class AmbienteController extends Controller
 
     }
 
-    private function ambienteRepedido($nombreAmbiente) {
+    private function ambienteRepetido($nombreAmbiente) {
         $ambiente = ambiente::where('nombreambiente', $nombreAmbiente)->first();
         return $ambiente != null;
     }
