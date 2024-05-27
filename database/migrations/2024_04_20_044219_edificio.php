@@ -10,7 +10,10 @@ class Edificio extends Migration
     {
         Schema::create('edificio', function (Blueprint $table) {
             $table->id('idedificio');
-            $table->string('nombreedificio', 45)->nullable();
+            $table->string('nombreedificio', 50)->nullable();
+            $table->integer('numeropisos')->default(0);
+
+
         });
     }
 

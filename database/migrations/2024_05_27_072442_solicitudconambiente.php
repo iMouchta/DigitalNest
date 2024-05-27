@@ -4,11 +4,11 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class SolicitudConAmbienteAsignado extends Migration
+class SolicitudConAmbiente extends Migration
 {
     public function up()
     {
-        Schema::create('solicitudconambienteasignado', function (Blueprint $table) {
+        Schema::create('solicitudconambiente', function (Blueprint $table) {
             $table->unsignedBigInteger('idsolicitud');
             $table->unsignedBigInteger('idambiente');
 
@@ -27,6 +27,6 @@ class SolicitudConAmbienteAsignado extends Migration
     }
     public function down()
     {
-        Schema::dropIfExists('solicitudconambienteasignado');
+        Schema::dropIfExists('solicitudconambiente');
     }
 }

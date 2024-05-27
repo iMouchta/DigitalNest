@@ -8,10 +8,10 @@ class RespuestaSolicitud extends Migration
 {
     public function up()
     {
-        Schema::create('respuesta_solicitud', function (Blueprint $table) {
+        Schema::create('respuestasolicitud', function (Blueprint $table) {
             $table->id('idrespuestasolicitud');
             $table->unsignedBigInteger('idsolicitud');
-            $table->string('motivodenoreserva', 45)->nullable();
+            $table->string('motivodenoreserva', 100)->nullable();
             $table->date('fecharevision')->nullable();
 
             
@@ -25,6 +25,6 @@ class RespuestaSolicitud extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('respuesta_solicitud');
+        Schema::dropIfExists('respuestasolicitud');
     }
 }

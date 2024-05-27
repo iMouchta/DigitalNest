@@ -11,30 +11,28 @@ class Ambiente extends Model
 
     protected $table = 'ambiente';
     protected $primaryKey = 'idambiente';
-    protected $fillable = [
-        'idedificio', 
-        'nombreambiente', 
-        'capacidadambiente',
-        'planta'
-    ];
+    public $timestamps = false;
 
+    protected $fillable = [
+        'idedificio',
+        'nombreambiente',
+        'capacidadambiente',
+        'planta',
+    ];
     public function edificio()
     {
-        return $this->belongsTo(Edificio::class, 'idedificio');
+        return $this->belongsTo(Edificio::class, 'idedificio', 'idedificio');
     }
-
-    public function periodonodisponible()
-    {
-        return $this->hasMany(PeriodoNoDisponible::class, 'idambiente');
-    }
-
-    public function reserva()
-    {
-        return $this->belongsTo(Reserva::class, 'idreserva');
-    }
-
     public function solicitudes()
     {
         return $this->belongsToMany(Solicitud::class, 'solicitudconambienteasignado', 'idambiente', 'idsolicitud');
+    }    
+    public function periodoreservaocupado()
+    {
+        return $this->hasMany(PeriodoReservaOcupado::class, 'idambiente');
+    }
+    public function reglasReserva()
+    {
+        return $this->hasMany(ReglaReservaDeAmbiente::class, 'idambiente', 'idambiente');
     }
 }

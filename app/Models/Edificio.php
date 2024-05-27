@@ -8,18 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class Edificio extends Model
 {
     use HasFactory;
-
     protected $table = 'edificio';
-
     protected $primaryKey = 'idedificio';
-
     public $timestamps = false;
     protected $fillable = [
-        'nombreedificio'
+        'nombreedificio',
+        'numeropisos'
     ];
 
-    public function ambientes()
+    public function Ambientes()
     {
-        return $this->hasMany(Ambiente::class, 'idedificio');
+        return $this->hasMany(Ambiente::class, 'idedificio', 'idedificio');
     }
 }

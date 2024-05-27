@@ -5,14 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class solicitudconambienteasignado extends Model
+class UsuarioConSolicitud extends Model
 {
     use HasFactory;
 
-    protected $table = 'solicitudconambienteasignado';
+    protected $table = 'usuarioconsolicitud';
     public $timestamps = false;
     protected $fillable = [
-        'idsolicitud', 
-        'idambiente'
+        'idusuario',
+        'idsolicitud',
     ];
 }
