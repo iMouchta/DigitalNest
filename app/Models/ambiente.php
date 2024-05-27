@@ -12,15 +12,15 @@ class Ambiente extends Model
     protected $table = 'ambiente';
     protected $primaryKey = 'idambiente';
     protected $fillable = [
-        'idubicacion', 
+        'idedificio', 
         'nombreambiente', 
         'capacidadambiente',
         'planta'
     ];
 
-    public function ubicacion()
+    public function edificio()
     {
-        return $this->belongsTo(Ubicacion::class, 'idubicacion');
+        return $this->belongsTo(Edificio::class, 'idedificio');
     }
 
     public function periodonodisponible()

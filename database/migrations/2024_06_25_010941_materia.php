@@ -10,14 +10,14 @@ class Materia extends Migration
     {
         Schema::create('materia', function (Blueprint $table) {
             $table->id('idmateria');
-            $table->unsignedBigInteger('iddocente');
+            $table->unsignedBigInteger('idusuario');
             $table->string('nombremateria', 255)->nullable();
             $table->string('grupo', 20)->nullable();
             $table->integer('cuporeserva')->default(4);
 
-            $table->foreign('iddocente')
-                  ->references('iddocente')
-                  ->on('docente')
+            $table->foreign('idusuario')
+                  ->references('idusuario')
+                  ->on('usuario')
                   ->onDelete('NO ACTION')
                   ->onUpdate('NO ACTION');
         });

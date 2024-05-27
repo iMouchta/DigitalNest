@@ -6,11 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 class Motivo extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('motivo', function (Blueprint $table) {
@@ -18,7 +13,6 @@ class Motivo extends Migration
             $table->unsignedBigInteger('idmateria')->nullable();
             $table->string('nombremotivo', 255)->nullable();
             $table->boolean('registrado')->nullable();
-            $table->timestamps();
 
             $table->foreign('idmateria')
                 ->references('idmateria')
@@ -27,12 +21,6 @@ class Motivo extends Migration
                 ->onUpdate('NO ACTION');
         });
     }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('motivo');

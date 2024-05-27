@@ -5,21 +5,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Ubicacion extends Model
+class Edificio extends Model
 {
     use HasFactory;
 
-    protected $table = 'ubicacion';
+    protected $table = 'edificio';
 
-    protected $primaryKey = 'idubicacion';
+    protected $primaryKey = 'idedificio';
 
     public $timestamps = false;
     protected $fillable = [
-        'nombreubicacion'
+        'nombreedificio'
     ];
 
     public function ambientes()
     {
-        return $this->hasMany(Ambiente::class, 'idubicacion');
+        return $this->hasMany(Ambiente::class, 'idedificio');
     }
 }

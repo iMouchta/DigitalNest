@@ -45,7 +45,7 @@ class SolicitudEspecialController extends Controller
         $solicitudes = Solicitud::with([
             'administrador',
             'ambientes' => function ($query) {
-                $query->with('ubicacion');
+                $query->with('edificio');
             }
         ])
             ->where('especial', true)
@@ -55,7 +55,7 @@ class SolicitudEspecialController extends Controller
             $ambientes = $solicitud->ambientes->map(function ($ambiente) {
                 return [
                     'nombre_ambiente' => $ambiente->nombreambiente,
-                    'ubicacion' => $ambiente->ubicacion->nombreubicacion,
+                    'edificio' => $ambiente->edificio->nombreedificio,
                     'planta' => $ambiente->planta,
                 ];
             });
@@ -76,7 +76,7 @@ class SolicitudEspecialController extends Controller
     }
     public function reservas()
     {
-        $solicitudes = Solicitud::with('administrador', 'ambientes', 'ambientes.ubicacion')
+        $solicitudes = Solicitud::with('administrador', 'ambientes', 'ambientes.edificio')
             ->where('aceptada', 1)
             ->get();
 
@@ -84,7 +84,7 @@ class SolicitudEspecialController extends Controller
             $ambientes = $solicitud->ambientes->map(function ($ambiente) {
                 return [
                     'nombre_ambiente' => $ambiente->nombreambiente,
-                    'ubicacionAmbiente' => $ambiente->ubicacion->nombreubicacion,
+                    'edificioAmbiente' => $ambiente->edificio->nombreedificio,
                     'plantaAmbiente' => $ambiente->planta,
                 ];
             });

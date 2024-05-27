@@ -10,14 +10,14 @@ class Ambiente extends Migration
     {
         Schema::create('ambiente', function (Blueprint $table) {
             $table->id('idambiente');
-            $table->unsignedBigInteger('idubicacion');
+            $table->unsignedBigInteger('idedificio');
             $table->string('nombreambiente', 20)->nullable();
             $table->unsignedInteger('capacidadambiente')->nullable();
             $table->unsignedInteger('planta')->default(0);
 
-            $table->foreign('idubicacion')
-                  ->references('idubicacion')
-                  ->on('ubicacion')
+            $table->foreign('idedificio')
+                  ->references('idedificio')
+                  ->on('edificio')
                   ->onDelete('NO ACTION')
                   ->onUpdate('NO ACTION');
         });
