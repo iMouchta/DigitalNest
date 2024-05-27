@@ -10,6 +10,8 @@ class Motivo extends Model
     use HasFactory;
     protected $table = 'motivo';
     protected $primaryKey = 'idmotivo';
+
+    public $timestamps = false;
     protected $fillable = [
         'idmateria',
         'nombremotivo',

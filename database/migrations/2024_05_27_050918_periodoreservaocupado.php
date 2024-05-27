@@ -9,7 +9,7 @@ class PeriodoReservaOcupado extends Migration
     public function up()
     {
         Schema::create('periodoreservaocupado', function (Blueprint $table) {
-            $table->id('idperiodonodisponible');
+            $table->id('idperiodoreservaocupado');
             $table->unsignedBigInteger('idambiente')->nullable();
             $table->date('fecha')->nullable();
             $table->time('hora')->nullable();

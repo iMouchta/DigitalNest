@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\periodonodisponible;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-use App\Models\ambiente;
-use App\Models\solicitud;
+use App\Models\Usuario;
+use App\Models\Materia;
+use App\Models\Motivo;
+use App\Models\Ambiente;
+use App\Models\Solicitud;
+use App\Models\SolicitudConAmbiente;
+use App\Models\UsuarioConSolicitud;
+use App\Models\PeriodoReservaOcupado;
 use App\Models\reserva;
 use App\Models\docente;
-use App\Models\materia;
-use App\Models\docentesolicitud;
-use App\Models\solicitudconambienteasignado;
-use App\Models\motivo;
 
-class PeriodonodisponibleController extends Controller
+class PeriodoReservaOcupadoController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -66,17 +67,22 @@ class PeriodonodisponibleController extends Controller
             $listaHorasDistribuidas = $this->generarListaHoras($horaInicial, $horaFinal);
 
             foreach ($nombresDocentes as $nombreDocente) {
-                $docente = docente::where('nombredocente', $nombreDocente)->first();
-                if ($docente) {
-                    $idDocente = $docente->iddocente;
-                    $listaIdsDocentes[] = $idDocente;
+                $docente = Usuario::where('nombreusuario', $nombreDocente)
+                        ->where('administrador', false)
+                        ->first();
 
-                    $materia = materia::where('iddocente', $idDocente)->where('nombremateria', $nombreMateria)->first();
+                if ($docente) {
+                    $idDocente = $docente->idusuario;
+                    $listaIdsDocentes[] = $idDocente;
+                    $materia = Materia::where('idusuario', $idDocente)
+                            ->where('nombremateria', $nombreMateria)
+                            ->first();
+
                     if ($materia) {
                         $idMateria = $materia->idmateria;
 
                         foreach ($nombresAmbientes as $nombreAmbiente) {
-                            $ambiente = ambiente::where('nombreambiente', $nombreAmbiente)->first();
+                            $ambiente = Ambiente::where('nombreambiente', $nombreAmbiente)->first();
                             $idAmbiente = $ambiente->idambiente;
 
                             if (!in_array($idAmbiente, $listaIdsAmbientes)) {
@@ -85,13 +91,10 @@ class PeriodonodisponibleController extends Controller
                             }
 
                             foreach ($listaHorasDistribuidas as $horaOcupada) {
-                                $this->registrarPeriodoNoDisponible($horaOcupada, $fecha, $idAmbiente);
-
+                                $this->registrarPeriodoReservaOcupado($horaOcupada, $fecha, $idAmbiente);
                                 $idDocente = $this->getIdDocente($nombreDocente);
                                 $idMateria = $this->getIdMateria($idDocente, $nombreMateria);
-
                                 $this->cambiarEstadoMotivo($motivo, $idMateria);
-
                             }
                         }
                     }
@@ -111,8 +114,6 @@ class PeriodonodisponibleController extends Controller
             $solicitudCreada = $this->registrarSolicitud($datosSolicitud);
             $idSolicitud = $solicitudCreada->idsolicitud;
 
-            $reservaCreada = $this->registrarReserva($idSolicitud);
-
             //se asocia la solicitud con los docentes que realizaron la solicitud, ambos devuelven true si la informacion
             //se guardo correctamente
             $asociacionDocenteSolicitud = $this->asociarSolicitudConDocente($listaIdsDocentes, $idSolicitud);
@@ -126,7 +127,7 @@ class PeriodonodisponibleController extends Controller
                     'solicitud' => $solicitudCreada,
                     'asociacioncondocente' => $asociacionDocenteSolicitud,
                     'asociacionconambiente' => $asociacionAmbienteSolicitud,
-                    'reserva' => $reservaCreada,
+                    'reserva' => true,
                     'mensaje' => 'Solicitud creada correctamente'
                 ]
             );
@@ -166,7 +167,7 @@ class PeriodonodisponibleController extends Controller
     {
         $listaIdAmbientes = [];
         foreach ($nombresAmbientes as $nombreAmbiente) {
-            $ambiente = ambiente::where('nombreambiente', $nombreAmbiente)->first();
+            $ambiente = Ambiente::where('nombreambiente', $nombreAmbiente)->first();
             if ($ambiente) {
                 $listaIdAmbientes[] = $ambiente->idambiente;
             }
@@ -176,7 +177,7 @@ class PeriodonodisponibleController extends Controller
     private function cambiarEstadoMotivo($motivo, $idMateria)
     {
         $idMotivo = $this->getIdMotivo($motivo, $idMateria);
-        $motivo = motivo::find($idMotivo);
+        $motivo = Motivo::find($idMotivo);
 
         if ($motivo) {
             $motivo->registrado = true;
@@ -186,7 +187,9 @@ class PeriodonodisponibleController extends Controller
 
     private function getIdMotivo($motivo, $idMateria)
     {
-        $motivo = motivo::where('nombremotivo', $motivo)->where('idmateria', $idMateria)->first();
+        $motivo = Motivo::where('nombremotivo', $motivo)
+                ->where('idmateria', $idMateria)
+                ->first();
         if ($motivo) {
             return $motivo->idmotivo;
         }
@@ -195,7 +198,9 @@ class PeriodonodisponibleController extends Controller
 
     private function getIdMateria($idDocente, $nombreMateria)
     {
-        $materia = materia::where('iddocente', $idDocente)->where('nombremateria', $nombreMateria)->first();
+        $materia = Materia::where('idusuario', $idDocente)
+                ->where('nombremateria', $nombreMateria)
+                ->first();
         if ($materia) {
             return $materia->idmateria;
         }
@@ -203,9 +208,11 @@ class PeriodonodisponibleController extends Controller
 
     private function getIdDocente($nombreDocente)
     {
-        $docente = docente::where('nombredocente', $nombreDocente)->first();
+        $docente = Usuario::where('nombreusuario', $nombreDocente)
+                    ->where('administrador', false)
+                    ->first();
         if ($docente) {
-            return $docente->iddocente;
+            return $docente->idusuario;
         }
     }
 
@@ -213,7 +220,7 @@ class PeriodonodisponibleController extends Controller
     {
         $listaAmbientes = [];
         foreach ($listaIdAmbientes as $idAmbiente) {
-            $ambiente = ambiente::where('idambiente', $idAmbiente)->first();
+            $ambiente = Ambiente::where('idambiente', $idAmbiente)->first();
             if ($ambiente) {
                 $listaAmbientes[] = $ambiente;
             }
@@ -225,28 +232,19 @@ class PeriodonodisponibleController extends Controller
 
     private function registrarSolicitud($solicitudData)
     {
-        $solicitud = solicitud::create($solicitudData);
+        $solicitud = Solicitud::create($solicitudData);
         return $solicitud;
-    }
-
-    private function registrarReserva($idSolicitud)
-    {
-        $reservaData = [
-            'idsolicitud' => $idSolicitud
-        ];
-        $reserva = reserva::insert($reservaData);
-        return $reserva;
     }
 
     private function asociarSolicitudConDocente($idsdocentes, $idSolicitud)
     {
         foreach ($idsdocentes as $idDocente) {
             $solicitudDocente = [
-                'iddocente' => $idDocente,
+                'idusuario' => $idDocente,
                 'idsolicitud' => $idSolicitud
             ];
 
-            $solicitudDocenteAsociada = docentesolicitud::insert($solicitudDocente);
+            $solicitudDocenteAsociada = UsuarioConSolicitud::insert($solicitudDocente);
         }
         return $solicitudDocenteAsociada;
     }
@@ -259,14 +257,14 @@ class PeriodonodisponibleController extends Controller
                 'idsolicitud' => $idSolicitud
             ];
 
-            $solicitudAmbienteAsociada = solicitudconambienteasignado::insert($solicitudAmbiente);
+            $solicitudAmbienteAsociada = SolicitudConAmbiente::insert($solicitudAmbiente);
         }
         return $solicitudAmbienteAsociada;
     }
 
 
 
-    private function registrarPeriodoNoDisponible($horaPorOcupar, $fecha, $idAmbiente)
+    private function registrarPeriodoReservaOcupado($horaPorOcupar, $fecha, $idAmbiente)
     {
         $periodoNoDisponibleSinRegistrar = $this->periodoOcupado($horaPorOcupar, $fecha, $idAmbiente);
         if (!$periodoNoDisponibleSinRegistrar) {
@@ -277,7 +275,7 @@ class PeriodonodisponibleController extends Controller
                 'hora' => $horaPorOcupar
             ];
 
-            $registrarPeriodoNoDisponible = periodonodisponible::insert($periodoNoDisponible);
+            $registrarPeriodoNoDisponible = PeriodoReservaOcupado::insert($periodoNoDisponible);
 
             if ($registrarPeriodoNoDisponible) {
                 $periodosNoDisponiblesRegistrados[] = $periodoNoDisponible;
@@ -311,8 +309,8 @@ class PeriodonodisponibleController extends Controller
     //verifica si el periodo no disponible ya ha sido registrado osea si la hora fecha y ambiente ya estan ocupados
     private function periodoOcupado($hora, $fecha, $idAmbiente)
     {
-        $periodoNoDisponible = periodonodisponible::where('idambiente', $idAmbiente)->where('fecha', $fecha)->where('hora', $hora)->first();
-        if ($periodoNoDisponible) {
+        $periodoOcupado = PeriodoReservaOcupado::where('idambiente', $idAmbiente)->where('fecha', $fecha)->where('hora', $hora)->first();
+        if ($periodoOcupado) {
             return true;
         } else {
             return false;
@@ -322,10 +320,10 @@ class PeriodonodisponibleController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\periodonodisponible  $periodonodisponible
+     * @param  \App\Models\PeriodoReservaOcupado  $periodoReservaOcupado
      * @return \Illuminate\Http\Response
      */
-    public function show(periodonodisponible $periodonodisponible)
+    public function show(PeriodoReservaOcupado $periodoReservaOcupado)
     {
         //
     }
@@ -333,10 +331,10 @@ class PeriodonodisponibleController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\periodonodisponible  $periodonodisponible
+     * @param  \App\Models\PeriodoReservaOcupado  $periodoReservaOcupado
      * @return \Illuminate\Http\Response
      */
-    public function edit(periodonodisponible $periodonodisponible)
+    public function edit(PeriodoReservaOcupado $periodoReservaOcupado)
     {
         //
     }
@@ -345,10 +343,10 @@ class PeriodonodisponibleController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\periodonodisponible  $periodonodisponible
+     * @param  \App\Models\PeriodoReservaOcupado  $periodoReservaOcupado
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, periodonodisponible $periodonodisponible)
+    public function update(Request $request, PeriodoReservaOcupado $periodoReservaOcupado)
     {
         //
     }
@@ -356,10 +354,10 @@ class PeriodonodisponibleController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\periodonodisponible  $periodonodisponible
+     * @param  \App\Models\PeriodoReservaOcupado  $periodoReservaOcupado
      * @return \Illuminate\Http\Response
      */
-    public function destroy(periodonodisponible $periodonodisponible)
+    public function destroy(PeriodoReservaOcupado $periodoReservaOcupado)
     {
         //
     }

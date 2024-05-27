@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Usuario;
+use App\Models\Materia;
+use App\Models\Ambiente;
+use App\Models\PeriodoReservaOcupado;
 use App\Models\solicitud;
-use App\Models\docente;
-use App\Models\materia;
-use App\Models\ambiente;
-use App\Models\periodonodisponible;
-use App\Models\reserva;
 use Carbon\Carbon;
 
 use Illuminate\Http\Request;
@@ -32,7 +31,7 @@ class SolicitudController extends Controller
      */
     public function create()
     {
-        return view("solicitudes.solicitudrapida");
+        // return view("solicitudes.solicitudrapida");
     }
 
     /**
@@ -55,29 +54,31 @@ class SolicitudController extends Controller
         $ambientesDisponibles = [];
 
         foreach ($nombresDocentes as $nombreDocente) {
-            $docente = docente::where('nombredocente', $nombreDocente)->first();
+            $docente = Usuario::where('nombreusuario', $nombreDocente)
+                    ->where('administrador', false)
+                    ->first();
+            
             if ($docente) {
-                $idDocente = $docente->iddocente;
+                $idDocente = $docente->idusuario;
 
-                $materia = materia::
-                where('nombremateria', $nombreMateria)->
-                where('iddocente', $idDocente)->
-                first();
+                $materia = Materia::where('nombremateria', $nombreMateria)
+                    ->where('idusuario', $idDocente)
+                    ->first();
 
                 if($materia) {
-                    $ambientes = ambiente::all();
-                    $listaHoras = $this->generarListaHoras($horaInicial, $horaFinal);
-                    
+                    $ambientes = Ambiente::all();
+                    $listaHoras = $this->generarListaHoras($horaInicial, $horaFinal);                    
             
                     foreach ($ambientes as $ambiente) {
                         if ($ambiente->capacidadambiente >= $capacidad) {
                             foreach ($listaHoras as $hora) {
-                                $periodoAmbienteNoDisponible = periodonodisponible::
-                                    where('idambiente', $ambiente->idambiente)->
-                                    where('fecha', $fecha)->where('hora', $hora)->
-                                    first();
+                                $periodoReservaOcupado = PeriodoReservaOcupado::
+                                    where('idambiente', $ambiente->idambiente)
+                                    ->where('fecha', $fecha)
+                                    ->where('hora', $hora)
+                                    ->first();
 
-                                if (!$periodoAmbienteNoDisponible) {
+                                if (!$periodoReservaOcupado) {
                                     if (!$this->ambienteRepetido($ambiente, $ambientesDisponibles)) {
                                         $ambientesDisponibles[] = $ambiente;
                                         break;

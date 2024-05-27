@@ -9,6 +9,7 @@ class PeriodoReservaOcupado extends Model
 {
     use HasFactory;
     protected $table = 'periodoreservaocupado';
+    protected $primaryKey = 'idperiodoreservaocupado';
     public $timestamps = false;
     protected $fillable = ['idambiente', 'fecha', 'hora'];
     public function ambiente()

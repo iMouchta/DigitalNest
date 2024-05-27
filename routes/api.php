@@ -4,7 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\SolicitudController;
-use App\Http\Controllers\PeriodonodisponibleController;
+use App\Http\Controllers\PeriodoReservaOcupadoController;
 use App\Http\Controllers\SolicitudEspecialController;
 use App\Http\Controllers\AmbienteController;
 use App\Http\Controllers\SolicitudRapidaController;
@@ -27,9 +27,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-Route::resource('/solicitud', SolicitudController::class);
+Route::resource('/ambientesDisponibles', SolicitudController::class);
 // Route::resource('solicitud', SolicitudController::class);
-Route::resource('periodonodisponible', PeriodonodisponibleController::class);
+Route::resource('/registrarSolicitudRapida', PeriodoReservaOcupadoController::class);
 // Route::post('/aceptar', [SolicitudEspecialController::class, 'aceptar'])->name('solicitud.aceptar');
 // Route::get('/', function () {return view('welcome');});
 // Route::get('/', [SolicitudEspecialController::class, 'create'])->name('solicitud.create');

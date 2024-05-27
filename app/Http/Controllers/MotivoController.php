@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\motivo;
-use App\Models\docente;
-use App\Models\materia;
+use App\Models\Motivo;
+use App\Models\Materia;
+use App\Models\Usuario;
 use Illuminate\Http\Request;
 
 class MotivoController extends Controller
@@ -43,13 +43,13 @@ class MotivoController extends Controller
         $motivosDisponibles = [];
 
         foreach ($nombresDocentes as $nombreDocente) {
-            $docente = docente::where('nombredocente', $nombreDocente)->first();
+            $docente = Usuario::where('nombreusuario', $nombreDocente)->where('administrador', false)->first();
             if ($docente) {
-                $idDocente = $docente->iddocente;
-                $materia = materia::where('iddocente', $idDocente)->where('nombremateria', $nombreMateria)->first();
+                $idDocente = $docente->idusuario;
+                $materia = Materia::where('idusuario', $idDocente)->where('nombremateria', $nombreMateria)->first();
 
                 if ($materia) {
-                    $motivos = motivo::where('registrado', false)->where('idmateria', $materia->idmateria)->get();
+                    $motivos = Motivo::where('registrado', false)->where('idmateria', $materia->idmateria)->get();
 
                     $motivoDisponible = [
                         'docente' => $nombreDocente,
