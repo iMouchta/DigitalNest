@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ubicacion;
+use App\Models\Edificio;
 use Illuminate\Http\Request;
 
-class UbicacionController extends Controller
+class EdificioController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,9 +14,9 @@ class UbicacionController extends Controller
      */
     public function index()
     {
-        $ubicaciones = ubicacion::all();
+        $edificios = Edificio::all();
 
-        return response()->json($ubicaciones);
+        return response()->json($edificios);
     }
 
     /**
@@ -43,7 +43,7 @@ class UbicacionController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\ubicacion  $ubicacion
+     * @param  \App\Models\Edificio  $edificio
      * @return \Illuminate\Http\Response
      */
     public function show(Request $request)
@@ -54,10 +54,10 @@ class UbicacionController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\ubicacion  $ubicacion
+     * @param  \App\Models\Edificio  $edificio
      * @return \Illuminate\Http\Response
      */
-    public function edit(ambiente $ambiente)
+    public function edit(Edificio $edificio)
     {
         //
     }
@@ -66,10 +66,10 @@ class UbicacionController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\ubicacion  $ubicacion
+     * @param  \App\Models\Edificio  $edificio
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ubicacion $ubicacion)
+    public function update(Request $request, Edificio $edificio)
     {
         //
     }
@@ -77,10 +77,10 @@ class UbicacionController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\ubicacion  $ubicacion
+     * @param  \App\Models\Edificio  $edificio
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ubicacion $ubicacion)
+    public function destroy(Edificio $edificio)
     {
         //
     }

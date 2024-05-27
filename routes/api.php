@@ -9,7 +9,7 @@ use App\Http\Controllers\SolicitudEspecialController;
 use App\Http\Controllers\AmbienteController;
 use App\Http\Controllers\SolicitudRapidaController;
 use App\Http\Controllers\MotivoController;
-use App\Http\Controllers\UbicacionController;
+use App\Http\Controllers\EdificioController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,7 +37,7 @@ Route::resource('/registrarSolicitudRapida', PeriodoReservaOcupadoController::cl
 Route::resource('/motivo', MotivoController::class);
 Route::resource('/ambiente', AmbienteController::class);
 Route::resource('/getSolicitudesRapidas', SolicitudRapidaController::class);
-Route::resource('/ubicacion', UbicacionController::class);
+Route::resource('/edificio', EdificioController::class);
 
 
 //solicitudEspecial
