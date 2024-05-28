@@ -1,4 +1,5 @@
 import * as React from "react";
+
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -9,59 +10,60 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 
 const columns = [
-  { id: "nombreadministrador", label: "Nombre", minWidth: 170 },
-  { id: "nombreAmbiente", label: "Ambiente", minWidth: 100 },
+  { id: "idSolicitud", label: "Id", minWidth: 80 },
   { id: "fechaSolicitud", label: "Fecha de Reserva", minWidth: 100 },
+  { id: "nombreMateria", label: "Materia", minWidth: 100 },
   {
-    id: "horainicialsolicitud",
+    id: "motivoSolicitud",
+    label: "Motivo Solicitud",
+    minWidth: 170,
+    align: "right",
+  },
+  {
+    id: "horaInicialSolicitud",
     label: "Hora Inicial",
     minWidth: 100,
     align: "right",
   },
   {
-    id: "horafinalsolicitud",
+    id: "horaFinalSolicitud",
     label: "Hora Final",
     minWidth: 100,
     align: "right",
   },
-  {
-    id: "motivosolicitud",
-    label: "Motivo Solicitud",
-    minWidth: 170,
-    align: "right",
-  },
+
 ];
 
 function createData(
-  nombreadministrador,
-  nombreAmbiente,
+  idSolicitud,
+  nombreMateria,
+  motivoSolicitud,
   fechaSolicitud,
-  horainicialsolicitud,
-  horafinalsolicitud,
-  motivosolicitud
+  horaInicialSolicitud,
+  horaFinalSolicitud,
 ) {
   return {
-    nombreadministrador,
-    nombreAmbiente,
+    idSolicitud,
+    nombreMateria,
+    motivoSolicitud,
     fechaSolicitud,
-    horainicialsolicitud,
-    horafinalsolicitud,
-    motivosolicitud,
+    horaInicialSolicitud,
+    horaFinalSolicitud,
   };
 }
 
-export default function SolicitudesTable({ solicitudes }) {
+export default function SolicitudRapidaTable({ solicitudes }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   const rows = solicitudes.map((solicitud) =>
     createData(
-      solicitud.nombreadministrador,
-      solicitud.nombreAmbiente,
-      solicitud.fechasolicitud,
-      solicitud.horainicialsolicitud.split(":").slice(0, 2).join(":"),
-      solicitud.horafinalsolicitud.split(":").slice(0, 2).join(":"),
-      solicitud.motivosolicitud
+      solicitud.idSolicitud,
+      solicitud.nombreMateria,
+      solicitud.motivoSolicitud,
+      solicitud.fechaSolicitud,
+      solicitud.horaInicialSolicitud.split(":").slice(0, 2).join(":"),
+      solicitud.horaFinalSolicitud.split(":").slice(0, 2).join(":"),
     )
   );
 
@@ -84,7 +86,7 @@ export default function SolicitudesTable({ solicitudes }) {
                 <TableCell
                   key={column.id}
                   align={column.align}
-                  // style={{ minWidth: column.minWidth }}
+                  style={{ minWidth: column.minWidth }}
                 >
                   {column.label}
                 </TableCell>
@@ -93,14 +95,10 @@ export default function SolicitudesTable({ solicitudes }) {
           </TableHead>
           <TableBody>
             {rows
-              .sort(
-                (a, b) =>
-                  new Date(a.fechasolicitud) - new Date(b.fechasolicitud)
-              )
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row, index) => {
+              .map((row) => {
                 return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={index}>
+                  <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
                     {columns.map((column) => {
                       const value = row[column.id];
                       return (
@@ -117,16 +115,8 @@ export default function SolicitudesTable({ solicitudes }) {
           </TableBody>
         </Table>
       </TableContainer>
-      <TablePagination
-        labelRowsPerPage="Filas por página:"
-        rowsPerPageOptions={[10, 25, 100]}
-        component="div"
-        count={rows.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
     </Paper>
   );
+  
+
 }

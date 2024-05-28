@@ -1,20 +1,33 @@
 import React, { useEffect, useState } from "react";
-import SolicitudesTable from "./SolicitudesTable";
+import SolicitudesEspecialesTable from "./SolicitudesEspecialesTable";
+import SolicitudRapidaTable from "./SolicitudRapidaTable";
 
 export default function ViewSolicitudes() {
-  const [solicitudes, setSolicitudes] = useState([]);
+  const [solicitudesEspeciales, setSolicitudesEspeciales] = useState([]);
+  const [solicitudesRapidas, setSolicitudesRapidas] = useState([]);
+
+  // useEffect(() => {
+  //   fetch("http://localhost:8000/reservas")
+  //     .then((response) => response.json())
+  //     .then((data) => setSolicitudes(data))
+  //     .catch((error) => console.error("Error:", error));
+  // }, []);
 
   useEffect(() => {
-    fetch("http://localhost:8000/reservas")
+    fetch("http://localhost:8000/api/getSolicitudesRapidas")
       .then((response) => response.json())
-      .then((data) => setSolicitudes(data))
+      .then((data) => setSolicitudesRapidas(data))
       .catch((error) => console.error("Error:", error));
   }, []);
 
   return (
     <div>
+      <div style={{marginBottom: '30px'}}>
+        <SolicitudesEspecialesTable solicitudes={solicitudesEspeciales} />
+      </div>
+      
       <div>
-        <SolicitudesTable solicitudes={solicitudes} />
+        <SolicitudRapidaTable solicitudes={solicitudesRapidas} />
       </div>
       {/* {solicitudes.map((solicitud, index) => (
       <div key={index}>
