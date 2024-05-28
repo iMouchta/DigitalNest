@@ -86,7 +86,7 @@ export default function SolicitudRapidaTable({ solicitudes }) {
                 <TableCell
                   key={column.id}
                   align={column.align}
-                  style={{ minWidth: column.minWidth }}
+                  // style={{ minWidth: column.minWidth }}
                 >
                   {column.label}
                 </TableCell>
@@ -95,10 +95,14 @@ export default function SolicitudRapidaTable({ solicitudes }) {
           </TableHead>
           <TableBody>
             {rows
+              .sort(
+                (a, b) =>
+                  new Date(a.fechaSolicitud) - new Date(b.fechaSolicitud)
+              )
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => {
+              .map((row, index) => {
                 return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+                  <TableRow hover role="checkbox" tabIndex={-1} key={index}>
                     {columns.map((column) => {
                       const value = row[column.id];
                       return (
@@ -115,6 +119,16 @@ export default function SolicitudRapidaTable({ solicitudes }) {
           </TableBody>
         </Table>
       </TableContainer>
+      <TablePagination
+        labelRowsPerPage="Filas por página:"
+        rowsPerPageOptions={[10, 25, 100]}
+        component="div"
+        count={rows.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
     </Paper>
   );
   

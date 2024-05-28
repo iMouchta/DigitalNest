@@ -22,25 +22,15 @@ export default function ViewSolicitudes() {
 
   return (
     <div>
-      <div style={{marginBottom: '30px'}}>
-        <SolicitudesEspecialesTable solicitudes={solicitudesEspeciales} />
-      </div>
-      
-      <div>
+      <div style={{ marginBottom: "30px" }}>
+        <h2>Solicitudes Rápidas</h2>
         <SolicitudRapidaTable solicitudes={solicitudesRapidas} />
       </div>
-      {/* {solicitudes.map((solicitud, index) => (
-      <div key={index}>
-        <p>Id Solicitud: {solicitud.idsolicitud}</p>
-        <p>Id Materia: {solicitud.idmateria}</p>
-        <p>Id Ambiente: {solicitud.idambiente}</p>
-        <p>Capacidad Solicitud: {solicitud.capacidadsolicitud}</p>
-        <p>Fecha Solicitud: {solicitud.fechasolicitud}</p>
-        <p>Hora Inicial Solicitud: {solicitud.horainicialsolicitud}</p>
-        <p>Hora Final Solicitud: {solicitud.horafinalsolicitud}</p>
 
+      <div style={{ marginBottom: "30px" }}>
+        <h2>Solicitudes Especiales</h2>
+        <SolicitudesEspecialesTable solicitudes={solicitudesEspeciales} />
       </div>
-    ))} */}
     </div>
   );
 }
