@@ -13,6 +13,7 @@ class Solicitud extends Model
     public $timestamps = false;
 
     protected $fillable = [
+        'idmateria',
         'capacidadsolicitud',
         'fechasolicitud',
         'horainicialsolicitud',
@@ -33,5 +34,9 @@ class Solicitud extends Model
     public function respuestas()
     {
         return $this->hasMany(RespuestaSolicitud::class, 'idsolicitud', 'idsolicitud');
+    }
+    public function materia()
+    {
+        return $this->belongsTo(Materia::class, 'idmateria', 'idmateria');
     }
 }

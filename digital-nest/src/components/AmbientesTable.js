@@ -9,59 +9,29 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 
 const columns = [
-  { id: "nombreadministrador", label: "Nombre", minWidth: 170 },
-  { id: "nombreAmbiente", label: "Ambiente", minWidth: 100 },
-  { id: "fechaSolicitud", label: "Fecha de Reserva", minWidth: 100 },
-  {
-    id: "horainicialsolicitud",
-    label: "Hora Inicial",
-    minWidth: 100,
-    align: "right",
-  },
-  {
-    id: "horafinalsolicitud",
-    label: "Hora Final",
-    minWidth: 100,
-    align: "right",
-  },
-  {
-    id: "motivosolicitud",
-    label: "Motivo Solicitud",
-    minWidth: 170,
-    align: "right",
-  },
+  { id: "id", label: "ID", minWidth: 170 },
+  { id: "edificio", label: "Edificio", minWidth: 100 },
+  { id: "aula", label: "Aula", minWidth: 100 },
+  { id: "planta", label: "Planta", minWidth: 100 },
+  { id: "capacidad", label: "Capacidad", minWidth: 100, align: "right" },
+  
 ];
 
-function createData(
-  nombreadministrador,
-  nombreAmbiente,
-  fechaSolicitud,
-  horainicialsolicitud,
-  horafinalsolicitud,
-  motivosolicitud
-) {
-  return {
-    nombreadministrador,
-    nombreAmbiente,
-    fechaSolicitud,
-    horainicialsolicitud,
-    horafinalsolicitud,
-    motivosolicitud,
-  };
+function createData(id, edificio, aula, planta, capacidad) {
+  return { id, edificio, aula, planta, capacidad };
 }
 
-export default function SolicitudesTable({ solicitudes }) {
+export default function AmbientesTable({ ambientes }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-  const rows = solicitudes.map((solicitud) =>
+  const rows = ambientes.map((ambiente) =>
     createData(
-      solicitud.nombreadministrador,
-      solicitud.nombreAmbiente,
-      solicitud.fechasolicitud,
-      solicitud.horainicialsolicitud.split(":").slice(0, 2).join(":"),
-      solicitud.horafinalsolicitud.split(":").slice(0, 2).join(":"),
-      solicitud.motivosolicitud
+      ambiente.idambiente,
+      ambiente.nombreambiente,
+      ambiente.edificio,
+      ambiente.planta,
+      ambiente.capacidadambiente
     )
   );
 
@@ -93,10 +63,6 @@ export default function SolicitudesTable({ solicitudes }) {
           </TableHead>
           <TableBody>
             {rows
-              .sort(
-                (a, b) =>
-                  new Date(a.fechasolicitud) - new Date(b.fechasolicitud)
-              )
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row, index) => {
                 return (

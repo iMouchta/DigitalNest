@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\solicitud;
+use App\Models\Solicitud;
 use Illuminate\Http\Request;
 use App\Models\UsuarioConSolicitud;
 use App\Models\SolicitudConAmbiente;
 use App\Models\Usuario;
 use App\Models\Materia;
+use App\Models\Ambiente;
 
 class SolicitudRapidaController extends Controller
 {
@@ -18,51 +19,69 @@ class SolicitudRapidaController extends Controller
      */
     public function index()
     {
-        $solicitudesRapidas = solicitud::where('especial', false)->get();
-        $solicitudRapidaInfo = $this->solicitudRapidaInfoCompleta($solicitudesRapidas);
-
-        return response()->json($solicitudRapidaInfo);
-    }
-
-    public function solicitudRapidaInfoCompleta($solicitudesRapidas) {
         $listaSolicitudesRapidas = [];
+        $solicitudesRapidas = Solicitud::where('especial', false)->get();
+        foreach ($solicitudesRapidas as $solicitud) {
+            $idSolicitud = $solicitud->idsolicitud;
+            $idMateria = $solicitud->idmateria;
+            //info a subir a la lista de solicitudes
+            $capacidadSolicitud = $solicitud->capacidadsolicitud;
+            $fechaSolicitud = $solicitud->fechasolicitud;
+            $horaInicialSolicitud = $solicitud->horainicialsolicitud;
+            $horaFinalSolicitud = $solicitud->horafinalsolicitud;
+            $motivoSolicitud = $solicitud->motivosolicitud;
+            $nombresDocentes = $this->getNombresDocentes($idSolicitud);
+            $nombreMateria = $this->getNombreMateria($idMateria);
+            $nombresAmbientes = $this->getNombresAmbientes($idSolicitud);
 
-        foreach ($solicitudesRapidas as $solicitudRapida) {
-            $idSolicitudRapida = $solicitudRapida->idsolicitud;
-            $usuarioSolicitudRapida = $this->getUsuarioInfoByIdSolicitud($idSolicitudRapida); 
-
-            $solicitudRapidaInfo = [
-                'idsolicitud' => $idSolicitudRapida,                
-                'usuarios' => $usuarioSolicitudRapida,
-                'materia' => $solicitudRapida->materia,
-                'ambientes' => $this->getAmbientesInfoByIdSolicitud($idSolicitudRapida)
+            $solicitudRapida = [
+                'capacidadSolicitud' => $capacidadSolicitud,
+                'fechaSolicitud' => $fechaSolicitud,
+                'horaInicialSolicitud' => $horaInicialSolicitud,
+                'horaFinalSolicitud' => $horaFinalSolicitud,
+                'motivoSolicitud' => $motivoSolicitud,
+                'nombresDocentes' => $nombresDocentes,
+                'nombreMateria' => $nombreMateria,
+                'nombresAmbientes' => $nombresAmbientes,
+                'idSolicitud' => $idSolicitud,
             ];
-            
-            $listaSolicitudesRapidas[] = $solicitudRapidaInfo;
-        }
-        return $listaSolicitudesRapidas;
-    }
 
-    private function getMateriaSolicitudInfoByIdUsuario($idUsuario) {
-    
-    }
-
-    private function getUsuarioInfoByIdSolicitud($idSolicitud) {
-        $usuariosSolicitud = UsuarioConSolicitud::where('idsolicitud', $idSolicitud)->get();
-        $listaIdUsuarios = [];
-
-        foreach ($usuariosSolicitud as $usuarioSolicitud) {
-            $listaIdUsuarios[] = $usuarioSolicitud->idusuario;
+            $listaSolicitudesRapidas[] = $solicitudRapida;
         }
 
-        return $listaIdUsuarios;
+        return response()->json($listaSolicitudesRapidas);
     }
 
-    private function getAmbientesInfoByIdSolicitud($idSolicitud) {
-        $ambientesSolicitud = SolicitudConAmbiente::where('idsolicitud', $idSolicitud)->get();
-        return $ambientesSolicitud;
+    private function getNombresDocentes($idSolicitud) {
+        $usuariosConSolicitud = UsuarioConSolicitud::where('idsolicitud', $idSolicitud)->get();
+        $nombresDocentes = [];
+
+        foreach ($usuariosConSolicitud as $usuarioConSolicitud) {
+            $idUsuario = $usuarioConSolicitud->idusuario;
+            $usuario = Usuario::find($idUsuario);
+            $nombreDocente = $usuario->nombreusuario;
+            $nombresDocentes[] = $nombreDocente;
+        }
+        return $nombresDocentes;
     }
 
+    private function getNombreMateria($idMateria) {
+        $materia = Materia::find($idMateria);
+        return $materia->nombremateria;
+    }
+
+    private function getNombresAmbientes($idSolicitud) {
+        $solicitudConAmbiente = SolicitudConAmbiente::where('idsolicitud', $idSolicitud)->get();
+        $nombresAmbientes = [];
+
+        foreach ($solicitudConAmbiente as $solicitudAmbiente) {
+            $idAmbiente = $solicitudAmbiente->idambiente;
+            $ambiente = Ambiente::find($idAmbiente);
+            $nombreAmbiente = $ambiente->nombreambiente;
+            $nombresAmbientes[] = $nombreAmbiente;
+        }
+        return $nombresAmbientes;
+    }
 
 
     /**
@@ -83,7 +102,7 @@ class SolicitudRapidaController extends Controller
      */
     public function store(Request $request)
     {
-        
+
     }
 
     /**
@@ -94,7 +113,7 @@ class SolicitudRapidaController extends Controller
      */
     public function show(Request $request)
     {
-        
+
     }
 
     /**

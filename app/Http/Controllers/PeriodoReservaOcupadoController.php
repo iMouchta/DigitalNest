@@ -59,6 +59,7 @@ class PeriodoReservaOcupadoController extends Controller
         $listaIdAmbientesByName = $this->getIdAmbientesByName($nombresAmbientes);
         $listaIdAmbientes = $this->getIdAmbientes($nombresAmbientes);
         $periodosEstanDisponibles = $this->verificarHorasDisponibles($horaInicial, $horaFinal, $fecha, $listaIdAmbientesByName);
+        $idMateriaDocentes = $this->getIdMateriaDocentes($nombresDocentes, $nombreMateria);
 
         if ($periodosEstanDisponibles) {
 
@@ -102,6 +103,7 @@ class PeriodoReservaOcupadoController extends Controller
             }
 
             $datosSolicitud = [
+                'idmateria' => $idMateriaDocentes,
                 'capacidadsolicitud' => $capacidad,
                 'fechasolicitud' => $fecha,
                 'horainicialsolicitud' => $horaInicial,
@@ -145,6 +147,26 @@ class PeriodoReservaOcupadoController extends Controller
 
 
 
+    }
+
+    private function getIdMateriaDocentes($nombresDocentes, $nombreMateria)
+    {
+        $listaIdMaterias = [];
+        foreach ($nombresDocentes as $nombreDocente) {
+            $docente = Usuario::where('nombreusuario', $nombreDocente)
+                    ->where('administrador', false)
+                    ->first();
+            if ($docente) {
+                $idDocente = $docente->idusuario;
+                $materia = Materia::where('idusuario', $idDocente)
+                        ->where('nombremateria', $nombreMateria)
+                        ->first();
+                if ($materia) {
+                    $listaIdMaterias[] = $materia->idmateria;
+                }
+            }
+        }
+        return $listaIdMaterias[0];
     }
 
     private function verificarHorasDisponibles($horaInicial, $horaFinal, $fecha, $listaIdAmbientes)
