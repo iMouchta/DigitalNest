@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SolicitudEspecialController;
 // use App\Http\Controllers\SolicitudController;
-use App\Http\Controllers\ReservaController;
 use App\Http\Controllers\EmailController;
 
 
@@ -29,8 +28,6 @@ Route::group(['middleware' => ['cors']], function () {
     // Route::resource('/solicitud', SolicitudController::class);
 });
 
-
-Route::resource('reserva', ReservaController::class);
 // Route::resource('solicitud', SolicitudController::class);
 
 
