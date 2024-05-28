@@ -2,9 +2,8 @@ import * as React from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { FormHelperText } from "@mui/material";
-import { blue } from "@mui/material/colors";
 
-export default function FormTextField({ label, placeholder, onChange, error }) {
+export default function FormTextField({ label, placeholder, onChange, error, value }) {
   const handleChange = (event) => {
     onChange(event.target.value);
   };
@@ -31,11 +30,11 @@ export default function FormTextField({ label, placeholder, onChange, error }) {
           multiline
           onChange={handleChange}
           error={error}
+          value={value}
+          // inputProps={{ maxLength: 20 }}
           
         />
-        <FormHelperText error={error} >Campo obligatorio (*)
-          
-          {error ? "Campo   obligatorio (*)" : ""}
+        <FormHelperText error={error} >Campo obligatorio (*)          
         </FormHelperText>
       </Box>
     </div>

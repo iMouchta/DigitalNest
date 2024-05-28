@@ -13,14 +13,16 @@ export default function FormSelector({
   error,
   value,
 }) {
+
   const handleChange = (event) => {
-    onChange(event.target.value);
+    onChange(event);
   };
 
   return (
     <div>
       <FormControl error={error} sx={{ m: 1, minWidth: 488 }}>
         <InputLabel sx={{ backgroundColor: "#f3f3f3" }}>{label}</InputLabel>
+        <Input />
         <Select
           sx={{ backgroundColor: "#f3f3f3" }}
           label={label}

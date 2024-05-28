@@ -203,12 +203,14 @@ export default function FormSolicitudEspecial() {
           options={edificios}
           onChange={setSelectedEdificio}
           error={errorEdificio}
+          value={selectedEdificio}
         />
         <FormSelector
           label="Ambientes *"
           options={ambientes}
           onChange={setSelectedAmbientes}
           error={errorAmbientes}
+          value={selectedAmbientes}
         />
         <FormMultipleSelector
           label="Amientes *"
@@ -232,12 +234,14 @@ export default function FormSolicitudEspecial() {
           options={horasInicio}
           onChange={setSelectedHoraInicio}
           error={errorHoraInicio}
+          value={selectedHoraInicio}
         />
         <FormSelector
           label="Hora final *"
           options={horasFin}
           onChange={setSelectedHoraFin}
           error={errorHoraFin}
+          value={selectedHoraFin}
         />
         <FormTextField
           label="Motivo de la reserva"
