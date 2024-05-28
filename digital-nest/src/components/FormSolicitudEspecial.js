@@ -86,11 +86,11 @@ export default function FormSolicitudEspecial() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        idusuarios: [4],
+        idusuarios: [1],
         fechasolicitud: selectedFecha.format("YYYY-MM-DD"),
         horainicialsolicitud: selectedHoraInicio,
         horafinalsolicitud: selectedHoraFin,
-        idambientes: [1],
+        idambientes: selectedAmbientes.map((ambiente) => ambiente.idambiente),
         motivosolicitud: textFieldMotivo,
       }),
     })

@@ -8,7 +8,7 @@ export default function ResponderSolicitudPage() {
     fetch("http://localhost:8000/api/solicitudEspecial")
       .then((response) => response.json())
       .then((data) => {
-        const solicitudesNoAceptadas = data.filter(solicitud => solicitud.aceptada);
+        const solicitudesNoAceptadas = data.filter(solicitud => !solicitud.aceptada);
         setSolicitudesEspeciales(solicitudesNoAceptadas);
       })
       .catch((error) => console.error("Error:", error));
