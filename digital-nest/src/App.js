@@ -16,6 +16,7 @@ import ReplyIcon from "@mui/icons-material/Reply";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { Link as RouterLink } from "react-router-dom";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 import PrimarySearchAppBar from "./components/AppBar";
 import HomePage from "./pages/HomePage.js";
@@ -152,7 +153,7 @@ function AppLayout() {
                 to="/docente/registrarAmbiente"
               >
                 <ListItemIcon>
-                  <NotificationsIcon />
+                  <AddCircleIcon />
                 </ListItemIcon>
                 <ListItemText primary="Registrar Ambiente" />
               </ListItem>
@@ -162,7 +163,7 @@ function AppLayout() {
                 to="/docente/visualizarAmbiente"
               >
                 <ListItemIcon>
-                  <NotificationsIcon />
+                  <VisibilityIcon />
                 </ListItemIcon>
                 <ListItemText primary="Visualizar Ambientes" />
               </ListItem>

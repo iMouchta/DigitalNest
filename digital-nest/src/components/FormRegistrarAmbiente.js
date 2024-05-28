@@ -114,7 +114,7 @@ export default function FormRegistrarAmbiente() {
       .then((response) => response.json())
       .then((data) => {
         console.log("Success:", data);
-        if(data.reserva) {
+        if(data.ambienteRegistrado) {
           setSelectedCapacidad("");
           setSelectedEdificio("");
           setSelectedPlanta("");

@@ -14,23 +14,23 @@ import {
 import Button from "@mui/material/Button";
 import { toast, Toaster } from "react-hot-toast";
 import FormMultipleSelector from "./FormMultipleSelector";
+import AmbientesSelector from "./AmbientesSelector";
+import { set } from "lodash";
 
 export default function FormSolicitudEspecial() {
   //* Form fields
   const [textFieldNombre, setTextFieldNombre] = useState("");
   // const [textFieldCapacidad, setTextFieldCapacidad] = useState("");
-  const [selectedEdificio, setSelectedEdificio] = useState("");
-  const [selectedAmbientes, setSelectedAmbientes] = useState("");
   const [selectedFecha, setSelectedFecha] = useState("");
   const [selectedHoraInicio, setSelectedHoraInicio] = useState("");
   const [selectedHoraFin, setSelectedHoraFin] = useState("");
   const [textFieldMotivo, setTextFieldMotivo] = useState("");
+  const [selectedAmbientes, setSelectedAmbientes] = useState([]);
 
   //* Error Handling
   const [errorNombre, setErrorNombre] = useState(false);
   // const [errorCapacidad, setErrorCapacidad] = useState(false);
-  const [errorEdificio, setErrorEdificio] = useState(false);
-  const [errorAmbientes, setErrorAmbientes] = useState(false);
+  const [isAmbientesEmpty, setIsAmbientesEmpty] = useState(true);
   const [errorFecha, setErrorFecha] = useState(false);
   const [errorHoraInicio, setErrorHoraInicio] = useState(false);
   const [errorHoraFin, setErrorHoraFin] = useState(false);
@@ -52,9 +52,8 @@ export default function FormSolicitudEspecial() {
   const handleSubmit = () => {
     // event.preventDefault();
     setErrorNombre(!textFieldNombre);
-    // setErrorCapacidad(!textFieldCapacidad);
-    setErrorEdificio(!selectedEdificio);
-    setErrorAmbientes(!selectedAmbientes);
+    // setErrorEdificio(!selectedEdificio);
+    // setErrorAmbientes(!selectedAmbientes);
     setErrorFecha(!selectedFecha);
     setErrorHoraInicio(!selectedHoraInicio);
     setErrorHoraFin(!selectedHoraFin);
@@ -62,9 +61,6 @@ export default function FormSolicitudEspecial() {
 
     if (
       !textFieldNombre ||
-      // !textFieldCapacidad ||
-      !selectedEdificio ||
-      !selectedAmbientes ||
       !selectedFecha ||
       !selectedHoraInicio ||
       !selectedHoraFin ||
@@ -77,50 +73,42 @@ export default function FormSolicitudEspecial() {
 
     console.log("Nombre:", textFieldNombre);
     // console.log("Capacidad:", textFieldCapacidad);
-    console.log("Edificio:", selectedEdificio);
     console.log("Ambientes:", selectedAmbientes);
     console.log("Fecha:", selectedFecha.format("YYYY-MM-DD"));
     console.log("Hora de inicio:", selectedHoraInicio);
     console.log("Hora de fin:", selectedHoraFin);
     console.log("Motivo:", textFieldMotivo);
 
-    fetch("http://localhost:8000/api/", {
+    fetch("http://localhost:8000/api/solicitudEspecial", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        idadministrador: textFieldNombre,
-        // capacidad: textFieldCapacidad,
-        //* Lidiar con los ambientes
-        // edificio: selectedEdificio,
-        // ambientes: selectedAmbientes,
-        idambiente: 1,
+        idusuarios: [2],
         fechasolicitud: selectedFecha.format("YYYY-MM-DD"),
         horainicialsolicitud: selectedHoraInicio,
         horafinalsolicitud: selectedHoraFin,
+        idambientes: [1],
         motivosolicitud: textFieldMotivo,
-        especial: 1,
       }),
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("Success:", data);
+        if (data.subida) {
+          toast.success("Solicitud enviada correctamente");
+        } else {
+          toast.error("Error al enviar la solicitud");
+        }
       })
       .catch((error) => {
         console.error("Error:", error);
       });
   };
 
-  const edificios = [{ value: "Edificio nuevo" }];
-
-  const ambientes = [
-    { value: "Auditorio" },
-    { value: "690A" },
-    { value: "690B" },
-    { value: "690C" },
-    { value: "690D" },
-  ];
+  const handleSelectAmbiente = (ambiente) => {
+    setSelectedAmbientes((prev) => [...prev, ambiente]);
+  };
 
   const horasDisponibles = [
     { value: "6:45" },
@@ -192,37 +180,18 @@ export default function FormSolicitudEspecial() {
           onChange={setTextFieldNombre}
           error={errorNombre}
         />
-        {/* <FormTextField
-          label="Capacidad *"
-          placeholder="Estimado de personas que asistirán"
-          onChange={setTextFieldCapacidad}
-          error={errorCapacidad}
-        /> */}
-        <FormSelector
-          label="Edificio *"
-          options={edificios}
-          onChange={setSelectedEdificio}
-          error={errorEdificio}
-          value={selectedEdificio}
+
+        <AmbientesSelector
+          onSelect={handleSelectAmbiente}
+          isEmpty={setIsAmbientesEmpty}
         />
-        <FormSelector
-          label="Ambientes *"
-          options={ambientes}
-          onChange={setSelectedAmbientes}
-          error={errorAmbientes}
-          value={selectedAmbientes}
-        />
-        <FormMultipleSelector
-          label="Amientes *"
-          options={[
-            { value: "Auditorio", label: "Auditorio" },
-            { value: "690A", label: "690A" },
-            { value: "690B", label: "690B" },
-            { value: "690C", label: "690C" },
-            { value: "690D", label: "690D" },
-          ]}
-          onChange={(value) => console.log(value)}
-        />
+        {isAmbientesEmpty && (
+          <div style={{ color: "red", fontSize: "small" }}>
+            Debes seleccionar almenos un ambiente
+          </div>
+        )}
+        <div style={{ marginTop: "20px" }}></div>
+
         <FormDateSelector
           label="Fecha *"
           onChange={setSelectedFecha}
