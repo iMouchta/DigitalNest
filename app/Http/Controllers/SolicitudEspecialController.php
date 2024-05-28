@@ -193,10 +193,15 @@ class SolicitudEspecialController extends Controller
             'idsolicitud' => 'required|integer|exists:solicitud,idsolicitud'
         ]);
 
+
         $conflictosData = $this->generarConflictos($request);
         $idsSolicitudes = $conflictosData['ids_solicitudes'];
         $horariosInicial = $conflictosData['horario'];
 
+        $solicitud = Solicitud::findOrFail($request->idsolicitud);
+
+        $solicitud->aceptada = true;
+        $solicitud->save();
 
         $conflictos = [];
         foreach ($idsSolicitudes as $id) {
@@ -210,7 +215,6 @@ class SolicitudEspecialController extends Controller
                 }
             }
         }
-
         return response()->json($conflictos);
     }
 
