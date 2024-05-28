@@ -33,7 +33,7 @@ Route::resource('/registrarSolicitudRapida', PeriodoReservaOcupadoController::cl
 // Route::post('/aceptar', [SolicitudEspecialController::class, 'aceptar'])->name('solicitud.aceptar');
 // Route::get('/', function () {return view('welcome');});
 // Route::get('/', [SolicitudEspecialController::class, 'create'])->name('solicitud.create');
-// Route::post('/', [SolicitudEspecialController::class, 'store'])->name('solicitud.store');
+//Route::post('/', [SolicitudEspecialController::class, 'store'])->name('solicitud.store');
 Route::resource('/motivo', MotivoController::class);
 Route::resource('/ambiente', AmbienteController::class);
 Route::resource('/getSolicitudesRapidas', SolicitudRapidaController::class);
@@ -41,7 +41,7 @@ Route::resource('/edificio', EdificioController::class);
 
 
 //solicitudEspecial
-// Route::post('/solicitudEspecial', [SolicitudEspecialController::class, 'store'])->name('solicitud.store');
+Route::post('/solicitudEspecial', [SolicitudEspecialController::class, 'store'])->name('solicitud.store');
 // Route::get('/solicitudEspecial', [SolicitudEspecialController::class, 'index'])->name('solicitud.index');
 Route::get('/reservas', [SolicitudEspecialController::class, 'reservas'])->name('reservas');
 Route::post('/eliminarSoli', [SolicitudEspecialController::class, 'eliminar'])->name('eliminar');

@@ -11,7 +11,7 @@ class Ambiente extends Migration
         Schema::create('ambiente', function (Blueprint $table) {
             $table->id('idambiente');
             $table->unsignedBigInteger('idedificio');
-            $table->string('nombreambiente', 20)->nullable();
+            $table->string('nombreambiente', 50)->nullable();
             $table->unsignedInteger('capacidadambiente')->nullable();
             $table->unsignedInteger('planta')->default(0);
 

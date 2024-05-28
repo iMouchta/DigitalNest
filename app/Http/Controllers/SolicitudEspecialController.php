@@ -5,11 +5,18 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Solicitud;
 use App\Models\Ambiente;
+use App\Models\Usuario;
+use App\Http\Controllers\NotificacionController;
 use Carbon\Carbon;
-use App\Models\periodonodisponible;
+
 
 class SolicitudEspecialController extends Controller
 {
+    protected $notificacionController;
+    public function __construct(NotificacionController $notificacionController)
+    {
+        $this->notificacionController = $notificacionController;
+    }
     public function create()
     {
         $ambientes = Ambiente::all();
@@ -19,7 +26,7 @@ class SolicitudEspecialController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'idadministrador' => 'required|integer|exists:administrador,idadministrador',
+            'idusuario' => 'required|integer|exists:usuario,idusuario',
             'fechasolicitud' => 'required|date',
             'horainicialsolicitud' => 'required|date_format:H:i',
             'horafinalsolicitud' => 'required|date_format:H:i',
@@ -36,6 +43,13 @@ class SolicitudEspecialController extends Controller
         $solicitud->save();
 
         $solicitud->ambientes()->sync($request->idambientes);
+
+        $this->notificacionController->notificarUsuario(
+            $request->idusuario,
+            'Tu solicitud especial ha sido creada.',
+            true
+        );
+
         return response()->json(['subida' => true]);
     }
 
@@ -43,7 +57,7 @@ class SolicitudEspecialController extends Controller
     public function index()
     {
         $solicitudes = Solicitud::with([
-            'administrador',
+            'usuario',
             'ambientes' => function ($query) {
                 $query->with('edificio');
             }
@@ -66,7 +80,7 @@ class SolicitudEspecialController extends Controller
                 'horainicialsolicitud' => $solicitud->horainicialsolicitud,
                 'horafinalsolicitud' => $solicitud->horafinalsolicitud,
                 'motivosolicitud' => $solicitud->motivosolicitud,
-                'nombreadministrador' => $solicitud->administrador->nombreadministrador,
+                'nombreusuario' => $solicitud->usuario->nombreusuario,
                 'ambientes' => $ambientes->toArray(),
                 'aceptada' => $solicitud->aceptada ? true : false,
             ];
@@ -76,7 +90,7 @@ class SolicitudEspecialController extends Controller
     }
     public function reservas()
     {
-        $solicitudes = Solicitud::with('administrador', 'ambientes', 'ambientes.edificio')
+        $solicitudes = Solicitud::with('usuario', 'ambientes', 'ambientes.edificio')
             ->where('aceptada', 1)
             ->get();
 
@@ -90,7 +104,7 @@ class SolicitudEspecialController extends Controller
             });
 
             return [
-                'nombreadministrador' => $solicitud->administrador->nombreadministrador,
+                'nombreusuario' => $solicitud->usuario->nombreusuario,
                 'ambientes' => $ambientes,
                 'fechasolicitud' => $solicitud->fechasolicitud,
                 'horainicialsolicitud' => $solicitud->horainicialsolicitud,
