@@ -16,11 +16,12 @@ class SolicitudEspecialController extends Controller
     protected $notificacionController;
     protected $emailcontroller;
 
-    public function __construct(EmailController $emailController, NotificacionController $notificacionController){
+    public function __construct(EmailController $emailController, NotificacionController $notificacionController)
+    {
         $this->emailcontroller = $emailController;
         $this->notificacionController = $notificacionController;
     }
-        
+
     public function create()
     {
         $ambientes = Ambiente::all();
@@ -94,30 +95,14 @@ class SolicitudEspecialController extends Controller
     }
     public function reservas()
     {
-        $solicitudes = Solicitud::with('usuario', 'ambientes', 'ambientes.edificio')
-            ->where('aceptada', 1)
-            ->get();
-
-        $solicitudesConDatos = $solicitudes->map(function ($solicitud) {
-            $ambientes = $solicitud->ambientes->map(function ($ambiente) {
-                return [
-                    'nombre_ambiente' => $ambiente->nombreambiente,
-                    'edificioAmbiente' => $ambiente->edificio->nombreedificio,
-                    'plantaAmbiente' => $ambiente->planta,
-                ];
-            });
-
-            return [
-                'nombreusuario' => $solicitud->usuario->nombreusuario,
-                'ambientes' => $ambientes,
-                'fechasolicitud' => $solicitud->fechasolicitud,
-                'horainicialsolicitud' => $solicitud->horainicialsolicitud,
-                'horafinalsolicitud' => $solicitud->horafinalsolicitud,
-                'motivosolicitud' => $solicitud->motivosolicitud,
-            ];
+        $indexResponse = $this->index();
+        $solicitudes = json_decode($indexResponse->getContent(), true);
+        $solicitudesAceptadas = array_filter($solicitudes, function ($solicitud) {
+            return $solicitud['aceptada'] === true;
         });
 
-        return response()->json($solicitudesConDatos);
+        $solicitudesAceptadas = array_values($solicitudesAceptadas);
+        return response()->json($solicitudesAceptadas);
     }
 
     public function eliminar(Request $request)
@@ -208,10 +193,22 @@ class SolicitudEspecialController extends Controller
             'idsolicitud' => 'required|integer|exists:solicitud,idsolicitud'
         ]);
 
+
         $conflictosData = $this->generarConflictos($request);
         $idsSolicitudes = $conflictosData['ids_solicitudes'];
         $horariosInicial = $conflictosData['horario'];
 
+        $solicitud = Solicitud::findOrFail($request->idsolicitud);
+        $motivo = $solicitud->motivosolicitud;
+        $usuariosSolicitud = $solicitud->usuarios->pluck('idusuario');
+
+        $solicitud->aceptada = true;
+        $solicitud->save();
+
+        foreach ($usuariosSolicitud as $idUsuario) {
+            $mensaje = "Su solicitud con el motivo: $motivo, ha sido aceptada.";
+            $this->notificacionController->notificarUsuario($idUsuario, $mensaje, false);
+        }
 
         $conflictos = [];
         foreach ($idsSolicitudes as $id) {
@@ -226,9 +223,22 @@ class SolicitudEspecialController extends Controller
             }
         }
 
-        return response()->json($conflictos);
-    }
-
+        foreach ($conflictos as $idSolicitudConflictiva) {
+            $solicitudConflictiva = Solicitud::findOrFail($idSolicitudConflictiva);
+            $usuariosConflictiva = $solicitudConflictiva->usuarios->pluck('idusuario');
     
+            foreach ($usuariosConflictiva as $idUsuario) {
+                $mensaje = "Su solicitud ha sido rechazada por el motivo de: $motivo.";
+                $this->notificacionController->notificarUsuario($idUsuario, $mensaje, false);
+            }
+        }
+
+        foreach ($conflictos as $idSolicitudConflictiva) {
+            $requestEliminar = new Request(['idsolicitud' => $idSolicitudConflictiva]);
+            $this->eliminar($requestEliminar);
+        }
+
+        return response()->json(true);
+    }
 
 }

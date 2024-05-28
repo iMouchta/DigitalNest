@@ -16,6 +16,7 @@ class Notificacion extends Model
     protected $fillable = [
         'mensaje',
         'general',
+        'vista',
     ];
 
     public function usuarios()
