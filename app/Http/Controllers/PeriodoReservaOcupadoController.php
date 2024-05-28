@@ -10,6 +10,7 @@ use App\Models\Motivo;
 use App\Models\Ambiente;
 use App\Models\Solicitud;
 use App\Models\SolicitudConAmbiente;
+use App\Http\Controllers\NotificacionController;
 use App\Models\UsuarioConSolicitud;
 use App\Models\PeriodoReservaOcupado;
 use App\Models\reserva;
@@ -102,6 +103,8 @@ class PeriodoReservaOcupadoController extends Controller
                 }
             }
 
+            
+
             $datosSolicitud = [
                 'idmateria' => $idMateriaDocentes,
                 'capacidadsolicitud' => $capacidad,
@@ -121,7 +124,7 @@ class PeriodoReservaOcupadoController extends Controller
             $asociacionDocenteSolicitud = $this->asociarSolicitudConDocente($listaIdsDocentes, $idSolicitud);
             $asociacionAmbienteSolicitud = $this->asociarSolicitudConAmbiente($listaIdsAmbientes, $idSolicitud);
 
-
+            $this->notificarDocentesSolicitudRapida($listaIdsDocentes, $nombreMateria);
 
 
             return response()->json(
@@ -147,6 +150,20 @@ class PeriodoReservaOcupadoController extends Controller
 
 
 
+    }
+
+    private function notificarDocentesSolicitudRapida($listaIdsDocentes, $nombreMateria) {
+        $notificacionController = new NotificacionController();
+        
+        foreach ($listaIdsDocentes as $idDocente) {
+
+            $docente = Usuario::find($idDocente);
+
+           if ($docente) {
+                $mensaje = "Se ha creado una solicitud rápida para el docente: " . $docente->nombreusuario . " en la materia: " . $nombreMateria;
+                $notificacionController->notificarUsuario($idDocente, $mensaje, false);
+            } 
+        }
     }
 
     private function getIdMateriaDocentes($nombresDocentes, $nombreMateria)
