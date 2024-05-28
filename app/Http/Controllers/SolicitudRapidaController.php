@@ -43,6 +43,7 @@ class SolicitudRapidaController extends Controller
                 'nombresDocentes' => $nombresDocentes,
                 'nombreMateria' => $nombreMateria,
                 'nombresAmbientes' => $nombresAmbientes,
+                'idSolicitud' => $idSolicitud,
             ];
 
             $listaSolicitudesRapidas[] = $solicitudRapida;
