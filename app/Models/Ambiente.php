@@ -25,7 +25,7 @@ class Ambiente extends Model
     }
     public function solicitudes()
     {
-        return $this->belongsToMany(Solicitud::class, 'solicitudconambienteasignado', 'idambiente', 'idsolicitud');
+        return $this->belongsToMany(Solicitud::class, 'edificio', 'idambiente', 'idsolicitud');
     }    
     public function periodoreservaocupado()
     {

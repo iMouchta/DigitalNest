@@ -24,7 +24,7 @@ class Solicitud extends Model
 
     public function ambientes()
     {
-        return $this->belongsToMany(Ambiente::class, 'solicitudconambienteasignado', 'idsolicitud', 'idambiente');
+        return $this->belongsToMany(Ambiente::class, 'solicitudconambiente', 'idsolicitud', 'idambiente');
     }
      public function usuarios()
     {

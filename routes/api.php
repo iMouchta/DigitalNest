@@ -44,6 +44,6 @@ Route::resource('/edificio', EdificioController::class);
 Route::post('/solicitudEspecial', [SolicitudEspecialController::class, 'store'])->name('solicitudEspecial.store');
 Route::get('/solicitudEspecial', [SolicitudEspecialController::class, 'index'])->name('solicitudEspecial.index');
 Route::get('/reservas', [SolicitudEspecialController::class, 'reservas'])->name('reservas');
-Route::post('/eliminarSoli', [SolicitudEspecialController::class, 'eliminar'])->name('eliminar');
+Route::post('/eliminarSoli', [SolicitudEspecialController::class, 'eliminar'])->name('solicitudEspecial.eliminar');
 Route::post('/accept', [SolicitudEspecialController::class, 'accept'])->name('accept');
 

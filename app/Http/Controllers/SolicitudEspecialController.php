@@ -7,16 +7,20 @@ use App\Models\Solicitud;
 use App\Models\Ambiente;
 use App\Models\Usuario;
 use App\Http\Controllers\NotificacionController;
+use App\Http\Controllers\EmailController;
 use Carbon\Carbon;
 
 
 class SolicitudEspecialController extends Controller
 {
     protected $notificacionController;
-    public function __construct(NotificacionController $notificacionController)
-    {
+    protected $emailcontroller;
+
+    public function __construct(EmailController $emailController, NotificacionController $notificacionController){
+        $this->emailcontroller = $emailController;
         $this->notificacionController = $notificacionController;
     }
+        
     public function create()
     {
         $ambientes = Ambiente::all();
@@ -26,7 +30,8 @@ class SolicitudEspecialController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'idusuario' => 'required|integer|exists:usuario,idusuario',
+            'idusuarios' => 'required|array',
+            'idusuarios.*' => 'required|integer|exists:usuario,idusuario',
             'fechasolicitud' => 'required|date',
             'horainicialsolicitud' => 'required|date_format:H:i',
             'horafinalsolicitud' => 'required|date_format:H:i',
@@ -40,15 +45,12 @@ class SolicitudEspecialController extends Controller
         $solicitud = new Solicitud();
         $solicitud->fill($request->except(['_token', 'idambientes']));
         $solicitud->especial = true;
+        $solicitud->aceptada = false;
         $solicitud->save();
 
-        $solicitud->ambientes()->sync($request->idambientes);
 
-        $this->notificacionController->notificarUsuario(
-            $request->idusuario,
-            'Tu solicitud especial ha sido creada.',
-            true
-        );
+        $solicitud->usuarios()->sync($request->idusuarios);
+        $solicitud->ambientes()->sync($request->idambientes);
 
         return response()->json(['subida' => true]);
     }
@@ -57,7 +59,7 @@ class SolicitudEspecialController extends Controller
     public function index()
     {
         $solicitudes = Solicitud::with([
-            'usuario',
+            'usuarios',
             'ambientes' => function ($query) {
                 $query->with('edificio');
             }
@@ -74,13 +76,15 @@ class SolicitudEspecialController extends Controller
                 ];
             });
 
+            $nombresUsuarios = $solicitud->usuarios->pluck('nombreusuario')->toArray();
+
             return [
                 'idsolicitud' => $solicitud->idsolicitud,
                 'fechasolicitud' => $solicitud->fechasolicitud,
                 'horainicialsolicitud' => $solicitud->horainicialsolicitud,
                 'horafinalsolicitud' => $solicitud->horafinalsolicitud,
                 'motivosolicitud' => $solicitud->motivosolicitud,
-                'nombreusuario' => $solicitud->usuario->nombreusuario,
+                'nombreusuarios' => $nombresUsuarios,
                 'ambientes' => $ambientes->toArray(),
                 'aceptada' => $solicitud->aceptada ? true : false,
             ];
@@ -128,10 +132,19 @@ class SolicitudEspecialController extends Controller
             return response()->json(['error' => 'Solicitud no encontrada'], 404);
         }
 
-        $solicitud->ambientes()->detach();
-        $solicitud->delete();
-        return response()->json(['mensaje' => 'La solicitud ha sido eliminada correctamente.']);
+        foreach ($solicitud->usuarios as $usuario) {
+            $this->notificacionController->notificarUsuario(
+                $usuario->idusuario,
+                'Tu solicitud especial ha sido eliminada.',
+                false
+            );
+        }
 
+        $solicitud->ambientes()->detach();
+        $solicitud->usuarios()->detach();
+        $solicitud->delete();
+
+        return response()->json(['mensaje' => 'La solicitud ha sido eliminada correctamente.']);
     }
 
     private function generarListaHoras($horaInicial, $horaFinal)
@@ -190,31 +203,32 @@ class SolicitudEspecialController extends Controller
     }
 
     public function accept(Request $request)
-{
-    $request->validate([
-        'idsolicitud' => 'required|integer|exists:solicitud,idsolicitud'
-    ]);
+    {
+        $request->validate([
+            'idsolicitud' => 'required|integer|exists:solicitud,idsolicitud'
+        ]);
 
-    $solicitudInicial = Solicitud::find($request->idsolicitud);
+        $conflictosData = $this->generarConflictos($request);
+        $idsSolicitudes = $conflictosData['ids_solicitudes'];
+        $horariosInicial = $conflictosData['horario'];
 
-    $conflictosData = $this->generarConflictos($request);
-    $idsSolicitudes = $conflictosData['ids_solicitudes'];
-    $horariosInicial = $conflictosData['horario'];
 
-    $conflictos = [];
-    foreach ($idsSolicitudes as $id) {
-        $solicitud = Solicitud::find($id);
-        $horariosSolicitud = $this->generarListaHoras($solicitud->horainicialsolicitud, $solicitud->horafinalsolicitud);
+        $conflictos = [];
+        foreach ($idsSolicitudes as $id) {
+            $solicitud = Solicitud::find($id);
+            $horariosSolicitud = $this->generarListaHoras($solicitud->horainicialsolicitud, $solicitud->horafinalsolicitud);
 
-        foreach ($horariosInicial as $horaInicial) {
-            if (in_array($horaInicial, $horariosSolicitud)) {
-                $conflictos[] = $id;
-                break;
+            foreach ($horariosInicial as $horaInicial) {
+                if (in_array($horaInicial, $horariosSolicitud)) {
+                    $conflictos[] = $id;
+                    break;
+                }
             }
         }
+
+        return response()->json($conflictos);
     }
 
-    return response()->json($conflictos);
-}
+    
 
 }

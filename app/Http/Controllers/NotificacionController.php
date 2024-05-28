@@ -42,4 +42,11 @@ class NotificacionController extends Controller
 
         return response()->json(['message' => 'Notificación enviada a los usuarios.'], 200);
     }
+
+    public function obtenerNotificacionesPorUsuario($idUsuario)
+    {
+        $usuario = Usuario::findOrFail($idUsuario);
+        $notificaciones = $usuario->notificaciones;
+        return response()->json($notificaciones);
+    }
 }

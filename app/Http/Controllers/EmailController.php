@@ -13,7 +13,7 @@ class EmailController extends Controller
         $details = [
             'title' => 'Título del correo',
             'body' => 'Contenido del correo.'
-        ];
+        ];  
 
         Mail::to('digital.nest.dev@gmail.com')->send(new Correo($details));
 
