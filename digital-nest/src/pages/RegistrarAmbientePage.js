@@ -5,7 +5,7 @@ function RegistrarAmbientePage() {
   return (
     <div>
       <h1>Registrar Ambiente</h1>
-      <div className="recuadro-formulario">
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop: '20px', paddingBottom: '10px' }}>
         <FormRegistrarAmbiente/>
       </div>
     </div>

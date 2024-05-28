@@ -7,7 +7,6 @@ import SendFormButton from "./SendFormButton";
 import FormDateSelector from "./FormDateSelector";
 import Grid from "@mui/material/Box";
 import SelectAmbienteDialog from "./SelectAmbienteDialog";
-import { set } from "lodash";
 
 export default function FormSolicitudRapida() {
   //* Form fields
@@ -224,6 +223,7 @@ export default function FormSolicitudRapida() {
               options={docentes}
               onChange={setSelectedNombreDocente}
               error={errorNombreDocente}
+              value={selectedNombreDocente}
             />
             <FormMultipleSelector
               label="Nombres"
@@ -239,12 +239,14 @@ export default function FormSolicitudRapida() {
               options={materias}
               onChange={setSelectedMateria}
               error={errorMateria}
+              selectedCapacidad={selectedMateria}
             />
             <FormSelector
               label="Capacidad *"
               options={capacidades}
               onChange={setSelectedCapacidad}
               error={errorCapacidad}
+              selectedCapacidad={selectedCapacidad}
             />
             <FormDateSelector
               label="Fecha *"
@@ -256,18 +258,21 @@ export default function FormSolicitudRapida() {
               options={horasIniciales}
               onChange={setSelectedHoraInicio}
               error={errorHoraInicio}
+              selectedHoraInicio={selectedHoraInicio}
             />
             <FormSelector
               label="Hora final *"
               options={horasFinales}
               onChange={setSelectedHoraFin}
               error={errorHoraFin}
+              selectedHoraFin={selectedHoraFin}
             />
             <FormSelector
               label="Motivo de la reserva *"
               options={motivos}
               onChange={setSelectedMotivo}
               error={errorMotivo}
+              selectedMotivo={selectedMotivo}
             />
 
             <SendFormButton

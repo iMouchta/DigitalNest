@@ -1,8 +1,17 @@
 import React, { useState, useEffect } from "react";
 import FormSelector from "./FormSelector";
 import FormTextField from "./FormTextField";
+import FormSelectorTrigger from "./FormSelectorTrigger";
 import Box from "@mui/material/Box";
 import SendFormButton from "./SendFormButton";
+import Typography from "@mui/material/Typography";
+
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import Button from "@mui/material/Button";
 
 export default function FormRegistrarAmbiente() {
   //* Form fields
@@ -21,17 +30,15 @@ export default function FormRegistrarAmbiente() {
 
   //* Additional states
   const [edificios, setEdificios] = useState([]);
+  const [plantas, setPlantas] = useState([]);
 
-  useEffect(() => {
-    fetch("http://localhost:8000/api/edificio")
-      .then((response) => response.json())
-      .then((data) => {
-        setEdificios(data);
-      })
-      .catch((error) => console.error("Error:", error));
-  }, []);
+  //* Dialog
+  const [open, setOpen] = useState(false);
+  const [openSuccess, setOpenSuccess] = useState(false);
+  const [dialogMessage, setDialogMessage] = useState("");
+  const [dialogTitle, setDialogTitle] = useState("");
 
-  const handleSubmit = (event) => {
+  const handleClickOpen = (event) => {
     event.preventDefault();
     setErrorNombreAmbiente(!textFieldNombreAmbiente);
     setErrorCapacidad(!selectedCapacidad);
@@ -48,6 +55,44 @@ export default function FormRegistrarAmbiente() {
       console.log("Error:", errorMessage);
       return;
     }
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleConfirm = () => {
+    handleSubmit();
+    setOpen(false);
+  };
+
+  useEffect(() => {
+    fetch("http://localhost:8000/api/edificio")
+      .then((response) => response.json())
+      .then((data) => {
+        setEdificios(data);
+      })
+      .catch((error) => console.error("Error:", error));
+  }, []);
+
+  const handleSubmit = () => {
+    // event.preventDefault();
+    // setErrorNombreAmbiente(!textFieldNombreAmbiente);
+    // setErrorCapacidad(!selectedCapacidad);
+    // setErrorEdificio(!selectedEdificio);
+    // setErrorPlanta(!selectedPlanta);
+
+    // if (
+    //   !textFieldNombreAmbiente ||
+    //   !selectedCapacidad ||
+    //   !selectedEdificio ||
+    //   !selectedPlanta
+    // ) {
+    //   setErrorMessage("Todos los campos son obligatorios");
+    //   console.log("Error:", errorMessage);
+    //   return;
+    // }
 
     console.log("Nombre del Ambiente:", textFieldNombreAmbiente);
     console.log("Capacidad:", selectedCapacidad);
@@ -62,19 +107,36 @@ export default function FormRegistrarAmbiente() {
       body: JSON.stringify({
         nombreambiente: textFieldNombreAmbiente,
         edificio: selectedEdificio,
-        planta: selectedPlanta,
+        planta: selectedPlanta === "Planta Baja" ? 0 : selectedPlanta,
         capacidadambiente: selectedCapacidad,
       }),
     })
       .then((response) => response.json())
       .then((data) => {
         console.log("Success:", data);
-        window.location.reload();
-
+        if(data.reserva) {
+          setSelectedCapacidad("");
+          setSelectedEdificio("");
+          setSelectedPlanta("");
+          setTextFieldNombreAmbiente("");
+          handlePostSuccess("Ambiente registrado", "El ambiente ha sido registrado correctamente.");
+        } else {
+          handlePostSuccess("Ambiente no registrado", "No se ha registrado el ambiente porque ya existe un ambiente con ese nombre.");
+        }
       })
       .catch((error) => {
         console.error("Error:", error);
       });
+  };
+
+  const handlePostSuccess = (title, message) => {
+    setDialogTitle(title);
+    setDialogMessage(message);
+    setOpenSuccess(true);
+  };
+
+  const handleCloseSuccess = () => {
+    setOpenSuccess(false);
   };
 
   const capacidades = [
@@ -86,13 +148,6 @@ export default function FormRegistrarAmbiente() {
     { value: "250" },
   ];
 
-  const plantas = [
-    { value: "0" },
-    { value: "1" },
-    { value: "2" },
-    { value: "3" },
-  ];
-
   return (
     <form>
       <Box
@@ -100,7 +155,7 @@ export default function FormRegistrarAmbiente() {
         flexDirection="column"
         justifyContent="center"
         alignItems="center"
-        minHeight="calc(100vh - 160px)"
+        minHeight="calc(70vh - 200px)"
         sx={{
           p: 2,
           backgroundColor: "white",
@@ -113,30 +168,95 @@ export default function FormRegistrarAmbiente() {
           label="Nombre del ambiente *"
           placeholder="Ingrese el nombre del ambiente"
           onChange={setTextFieldNombreAmbiente}
+          value={textFieldNombreAmbiente}
           error={errorNombreAmbiente}
         />
-        <FormSelector
+        <FormSelectorTrigger
           label="Edificio *"
-          onChange={setSelectedEdificio}
+          onChange={(e) => {
+            setSelectedEdificio(e.target.value);
+            setSelectedPlanta("");
+            const edificioSeleccionado = edificios.find(
+              (edificio) => edificio.nombreedificio === e.target.value
+            );
+            const numeropisos = edificioSeleccionado
+              ? edificioSeleccionado.numeropisos
+              : 0;
+            setPlantas([
+              "Planta Baja",
+              ...Array.from({ length: numeropisos - 1 }, (_, i) => i + 1),
+            ]);
+          }}
           error={errorEdificio}
           options={edificios.map((edificio) => ({
             value: edificio.nombreedificio,
           }))}
+          value={selectedEdificio}
+        />
+        <FormSelector
+          label="Planta *"
+          options={plantas.map((planta) => ({
+            value: planta,
+          }))}
+          onChange={setSelectedPlanta}
+          value={selectedPlanta}
+          error={errorPlanta}
         />
         <FormSelector
           label="Capacidad *"
           options={capacidades}
           onChange={setSelectedCapacidad}
+          value={selectedCapacidad}
           error={errorCapacidad}
         />
-        <FormSelector
-          label="Planta *"
-          options={plantas}
-          onChange={setSelectedPlanta}
-          error={errorPlanta}
-        />
 
-        <SendFormButton onClick={handleSubmit} label={"Confirmar"} />
+        <SendFormButton
+          onClick={handleClickOpen}
+          label={"Registrar ambiente"}
+        />
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            {"¿Está seguro que desea registrar este ambiente?"}
+          </DialogTitle>
+          <DialogContent>
+            <Typography align="justify" id="alert-dialog-description">
+              {
+                "Al confirmar, el ambiente será habilitado con las reglas por defecto, estará habilitado para reserva hasta el 6 de junio del 2024, de hrs. 6:45 a.m. a 21:45 p.m. (se puede modificar estas reglas posteriormente)."
+              }
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>Cancelar</Button>
+            <Button onClick={handleConfirm} autoFocus>
+              Confirmar
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <Dialog
+          open={openSuccess}
+          onClose={handleCloseSuccess}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            {dialogTitle}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              {dialogMessage}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseSuccess} autoFocus>
+              Aceptar
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Box>
     </form>
   );
