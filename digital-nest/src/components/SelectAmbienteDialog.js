@@ -25,15 +25,14 @@ export default function SelectAmbienteDialog({
     setIsButtonDisabled(true);
 
     const response = await fetch(
-      "http://localhost:8000/api/periodonodisponible",
+      "http://localhost:8000/api/registrarSolicitudRapida",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          // nombredocente: formData.nombredocente,
-          nombresdocentes: ["Leticia Blanco"],
+          nombresdocentes: formData.nombresdocentes,
           materia: formData.materia,
           capacidad: formData.capacidad,
           fecha: formData.fecha,
