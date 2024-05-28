@@ -32,4 +32,4 @@ Route::group(['middleware' => ['cors']], function () {
 
 
 
-Route::get('/enviar-correo', [EmailController::class, 'enviarCorreo']);
+//Route::get('/enviar-correo', [EmailController::class, 'enviarCorreo']);

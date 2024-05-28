@@ -10,7 +10,8 @@ use App\Http\Controllers\AmbienteController;
 use App\Http\Controllers\SolicitudRapidaController;
 use App\Http\Controllers\MotivoController;
 use App\Http\Controllers\EdificioController;
-
+use App\Http\Controllers\NotificacionController;
+use App\Http\Controllers\EmailController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -46,4 +47,11 @@ Route::get('/solicitudEspecial', [SolicitudEspecialController::class, 'index'])-
 Route::get('/reservas', [SolicitudEspecialController::class, 'reservas'])->name('reservas');
 Route::post('/eliminarSoli', [SolicitudEspecialController::class, 'eliminar'])->name('solicitudEspecial.eliminar');
 Route::post('/accept', [SolicitudEspecialController::class, 'accept'])->name('accept');
+
+//Notificaciones
+Route::get('/notificaciones/usuario/{idUsuario}', [NotificacionController::class, 'obtenerNotificacionesPorUsuario'])->name('notificaciones');
+
+
+//Mail
+Route::POST('/enviarCorreo', [EmailController::class, 'enviarCorreo']);
 

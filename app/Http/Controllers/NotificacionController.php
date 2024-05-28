@@ -49,6 +49,9 @@ class NotificacionController extends Controller
     {
         $usuario = Usuario::findOrFail($idUsuario);
         $notificaciones = $usuario->notificaciones;
+        foreach ($notificaciones as $notificacion) {
+            $notificacion->update(['vista' => 1]);
+        }
         return response()->json($notificaciones);
     }
 }
