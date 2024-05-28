@@ -81,7 +81,7 @@ export default function FormSolicitudRapida() {
     console.log("Motivo:", selectedMotivo);
 
     // Realizar la solicitud POST
-    fetch("http://localhost:8000/api/solicitud", {
+    fetch("http://localhost:8000/api/ambientesDisponibles", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -89,8 +89,8 @@ export default function FormSolicitudRapida() {
 
       body: JSON.stringify({
         nombresdocentes: [selectedNombreDocente],
-        materia: "Introduccion a la programacion",
-        // materia: selectedMateria,
+        // materia: "Introduccion a la Programacion",
+        materia: selectedMateria,
         capacidad: selectedCapacidad,
         fecha: selectedFecha.format("YYYY-MM-DD"),
         horainicial: selectedHoraInicio,
@@ -133,7 +133,7 @@ export default function FormSolicitudRapida() {
   const docentes = [{ value: "Leticia Blanco" }];
 
   const materias = [
-    { value: "Introduccion a la programacion" },
+    { value: "Introduccion a la Programacion" },
     { value: "Algoritmos Avanzados" },
     { value: "Taller de Ingenieria de Software" },
     { value: "Elementos de programacion y Estructura de Datos" },
