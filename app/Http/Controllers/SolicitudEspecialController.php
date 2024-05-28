@@ -240,7 +240,7 @@ class SolicitudEspecialController extends Controller
 
         return response()->json(
             [
-                'Solicitud' => $solicitud
+                'aceptada' => true
             ]
         );
     }
@@ -271,7 +271,7 @@ class SolicitudEspecialController extends Controller
 
         return response()->json(
             [
-                'Solicitudes a eliminar' => $conflictos
+                'SolicitudesEliminar' => $conflictos
             ]
         );
 
