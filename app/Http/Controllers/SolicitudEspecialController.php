@@ -16,11 +16,12 @@ class SolicitudEspecialController extends Controller
     protected $notificacionController;
     protected $emailcontroller;
 
-    public function __construct(EmailController $emailController, NotificacionController $notificacionController){
+    public function __construct(EmailController $emailController, NotificacionController $notificacionController)
+    {
         $this->emailcontroller = $emailController;
         $this->notificacionController = $notificacionController;
     }
-        
+
     public function create()
     {
         $ambientes = Ambiente::all();
@@ -94,30 +95,14 @@ class SolicitudEspecialController extends Controller
     }
     public function reservas()
     {
-        $solicitudes = Solicitud::with('usuario', 'ambientes', 'ambientes.edificio')
-            ->where('aceptada', 1)
-            ->get();
-
-        $solicitudesConDatos = $solicitudes->map(function ($solicitud) {
-            $ambientes = $solicitud->ambientes->map(function ($ambiente) {
-                return [
-                    'nombre_ambiente' => $ambiente->nombreambiente,
-                    'edificioAmbiente' => $ambiente->edificio->nombreedificio,
-                    'plantaAmbiente' => $ambiente->planta,
-                ];
-            });
-
-            return [
-                'nombreusuario' => $solicitud->usuario->nombreusuario,
-                'ambientes' => $ambientes,
-                'fechasolicitud' => $solicitud->fechasolicitud,
-                'horainicialsolicitud' => $solicitud->horainicialsolicitud,
-                'horafinalsolicitud' => $solicitud->horafinalsolicitud,
-                'motivosolicitud' => $solicitud->motivosolicitud,
-            ];
+        $indexResponse = $this->index();
+        $solicitudes = json_decode($indexResponse->getContent(), true);
+        $solicitudesAceptadas = array_filter($solicitudes, function ($solicitud) {
+            return $solicitud['aceptada'] === true;
         });
 
-        return response()->json($solicitudesConDatos);
+        $solicitudesAceptadas = array_values($solicitudesAceptadas);
+        return response()->json($solicitudesAceptadas);
     }
 
     public function eliminar(Request $request)
@@ -229,6 +214,6 @@ class SolicitudEspecialController extends Controller
         return response()->json($conflictos);
     }
 
-    
+
 
 }
