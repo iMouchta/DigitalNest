@@ -62,9 +62,10 @@ class AmbienteController extends Controller
         $nombreAmbiente = $datosFormularioCreacionAmbiente['nombreambiente'];
         $capacidad = $datosFormularioCreacionAmbiente['capacidadambiente'];
         $edificio = $datosFormularioCreacionAmbiente['edificio'];
-        $idubicacion = $datosFormularioCreacionAmbiente['idedificio'];
+        // $idubicacion = $datosFormularioCreacionAmbiente['idedificio'];
         $planta = $datosFormularioCreacionAmbiente['planta'];
 
+        $idEdificio = $this->getIdEdificioByName($edificio);
         $edificioExiste = Edificio::where('nombreedificio', $edificio)->first();
 
         if($edificioExiste) {
@@ -78,7 +79,7 @@ class AmbienteController extends Controller
                     'nombreambiente' => $nombreAmbiente,
                     'capacidadambiente' => $capacidad,
                     'planta' => $planta,
-                    'idedificio' => $idubicacion,
+                    'idedificio' => $idEdificio,
                 ];
                 $registrado = ambiente::insert($datosAmbiente);
                 return response()->json([
@@ -94,6 +95,11 @@ class AmbienteController extends Controller
         }
 
 
+    }
+
+    private function getIdEdificioByName($nombreEdificio) {
+        $edificio = Edificio::where('nombreedificio', $nombreEdificio)->first();
+        return $edificio->idedificio;
     }
 
     private function ambienteRepetido($nombreAmbiente) {
