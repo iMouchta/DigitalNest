@@ -26,4 +26,9 @@ class Materia extends Model
     {
         return $this->hasMany(Motivo::class, 'idmateria', 'idmateria');
     }
+
+    public function solicitudes()
+    {
+        return $this->hasMany(Solicitud::class, 'idmateria', 'idmateria');
+    }
 }

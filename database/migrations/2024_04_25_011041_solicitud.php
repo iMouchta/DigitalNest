@@ -10,6 +10,7 @@ class Solicitud extends Migration
     {
         Schema::create('solicitud', function (Blueprint $table) {
             $table->id('idsolicitud');
+            $table->unsignedBigInteger('idmateria')->nullable();
             $table->unsignedInteger('capacidadsolicitud')->nullable();
             $table->date('fechasolicitud')->nullable();
             $table->time('horainicialsolicitud')->nullable();
