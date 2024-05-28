@@ -18,6 +18,12 @@ function HomePage() {
       <div className="navigation-button">
         <Link to="/docente/visualizarSolicitud">Ver solicitudes</Link>
       </div>
+      <div className="navigation-button">
+        <Link to="/docente/registrarAmbiente">Registrar Ambiente</Link>
+      </div>
+      <div className="navigation-button">
+        <Link to="/docente/visualizarAmbiente">Visualizar Ambiente</Link>
+      </div>
     </div>
   );
 }

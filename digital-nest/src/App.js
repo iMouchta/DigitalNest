@@ -15,7 +15,7 @@ import SpecialIcon from "@mui/icons-material/Star";
 import ReplyIcon from "@mui/icons-material/Reply";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { Link as RouterLink } from "react-router-dom";
-import NotificationsIcon from '@mui/icons-material/Notifications';
+import NotificationsIcon from "@mui/icons-material/Notifications";
 
 import PrimarySearchAppBar from "./components/AppBar";
 import HomePage from "./pages/HomePage.js";
@@ -24,6 +24,8 @@ import SolicitudEspecialPage from "./pages/SolicitudEspecialPage.js";
 import ResponderSolicitudPage from "./pages/ResponderSolicitudPage.js";
 import VisualizarSolicitudPage from "./pages/VisualizarSolicitudPage.js";
 import EnviarNotificacionPage from "./pages/EnviarNotificacionPage.js";
+import RegistrarAmbientePage from "./pages/RegistrarAmbientePage.js";
+import VisualizarAmbientePage from "./pages/VisualizarAmbientePage.js";
 
 function App() {
   return (
@@ -52,11 +54,20 @@ function App() {
               path="visualizarSolicitud"
               element={<VisualizarSolicitudPage />}
             />
-            <Route 
+            <Route
               path="enviarNotificacion"
               element={<EnviarNotificacionPage />}
             />
+            <Route
+              path="registrarAmbiente"
+              element={<RegistrarAmbientePage />}
+            />
+            <Route
+              path="visualizarAmbiente"
+              element={<VisualizarAmbientePage />}
+            />
           </Route>
+
           <Route path="/administrador" element={<HomePage />}>
             <Route path="*" element={<h1>Not Found</h1>} />
             <Route path="home" element={<HomePage />} />
