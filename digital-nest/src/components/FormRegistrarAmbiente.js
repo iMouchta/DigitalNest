@@ -121,7 +121,7 @@ export default function FormRegistrarAmbiente() {
           setTextFieldNombreAmbiente("");
           handlePostSuccess("Ambiente registrado", "El ambiente ha sido registrado correctamente.");
         } else {
-          handlePostSuccess("Ambiente no registrado", "No se ha registrado el ambiente porque ya existe un ambiente con ese nombre.");
+          handlePostSuccess("No se registró el ambiente", "No se ha registrado el ambiente porque ya existe un ambiente con ese nombre.");
         }
       })
       .catch((error) => {

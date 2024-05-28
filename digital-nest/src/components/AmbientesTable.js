@@ -47,7 +47,7 @@ export default function AmbientesTable({ ambientes }) {
       ambiente.nombreambiente,
       ambiente.planta,
       ambiente.capacidadambiente,
-      "activo"
+      "Activo"
     )
   );
 
@@ -105,7 +105,7 @@ export default function AmbientesTable({ ambientes }) {
                         const value = row[column.id];
                         return (
                           <TableCell key={column.id} align={column.align}>
-                            {column.id === "estado" && value === "activo" ? (
+                            {column.id === "estado" && value === "Activo" ? (
                               <Typography style={{ color: "green" }}>
                                 {value}
                               </Typography>

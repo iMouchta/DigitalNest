@@ -6,12 +6,12 @@ export default function ViewSolicitudes() {
   const [solicitudesEspeciales, setSolicitudesEspeciales] = useState([]);
   const [solicitudesRapidas, setSolicitudesRapidas] = useState([]);
 
-  // useEffect(() => {
-  //   fetch("http://localhost:8000/reservas")
-  //     .then((response) => response.json())
-  //     .then((data) => setSolicitudes(data))
-  //     .catch((error) => console.error("Error:", error));
-  // }, []);
+  useEffect(() => {
+    fetch("http://localhost:8000/api/reservas")
+      .then((response) => response.json())
+      .then((data) => setSolicitudesEspeciales(data))
+      .catch((error) => console.error("Error:", error));
+  }, []);
 
   useEffect(() => {
     fetch("http://localhost:8000/api/getSolicitudesRapidas")

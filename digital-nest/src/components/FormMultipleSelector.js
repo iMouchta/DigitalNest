@@ -46,7 +46,7 @@ export default function FormMultipleSelector({ label, options, onChange }) {
             </MenuItem>
           ))}
         </Select>
-        <FormHelperText>Campo obligatorio (*)</FormHelperText>
+        {/* <FormHelperText>Campo obligatorio (*)</FormHelperText> */}
       </FormControl>
     </div>
   );

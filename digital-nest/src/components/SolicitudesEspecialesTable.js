@@ -8,9 +8,25 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 
+import IconButton from "@mui/material/IconButton";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import Collapse from "@mui/material/Collapse";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+
 const columns = [
-  { id: "nombreadministrador", label: "Nombre", minWidth: 170 },
-  { id: "nombreAmbiente", label: "Ambiente", minWidth: 100 },
+  {
+    id: "idsolicitud",
+    label: "ID",
+    minWidth: 170,
+  },
+  {
+    id: "motivosolicitud",
+    label: "Motivo Solicitud",
+    minWidth: 170,
+    align: "center",
+  },
   { id: "fechaSolicitud", label: "Fecha de Reserva", minWidth: 100 },
   {
     id: "horainicialsolicitud",
@@ -25,14 +41,15 @@ const columns = [
     align: "right",
   },
   {
-    id: "motivosolicitud",
-    label: "Motivo Solicitud",
+    id: "nombreadministrador",
+    label: "Administrador",
     minWidth: 170,
     align: "right",
   },
 ];
 
 function createData(
+  idsolicitud,
   nombreadministrador,
   nombreAmbiente,
   fechaSolicitud,
@@ -41,6 +58,7 @@ function createData(
   motivosolicitud
 ) {
   return {
+    idsolicitud,
     nombreadministrador,
     nombreAmbiente,
     fechaSolicitud,
@@ -53,10 +71,12 @@ function createData(
 export default function SolicitudesEspecialesTable({ solicitudes }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [expandedRow, setExpandedRow] = React.useState(null);
 
   const rows = solicitudes.map((solicitud) =>
     createData(
-      solicitud.nombreadministrador,
+      solicitud.idsolicitud,
+      solicitud.nombreusuarios[0],
       solicitud.nombreAmbiente,
       solicitud.fechasolicitud,
       solicitud.horainicialsolicitud.split(":").slice(0, 2).join(":"),
@@ -92,28 +112,94 @@ export default function SolicitudesEspecialesTable({ solicitudes }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows
-              .sort(
-                (a, b) =>
-                  new Date(a.fechasolicitud) - new Date(b.fechasolicitud)
-              )
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row, index) => {
-                return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                    {columns.map((column) => {
-                      const value = row[column.id];
-                      return (
-                        <TableCell key={column.id} align={column.align}>
-                          {column.format && typeof value === "number"
-                            ? column.format(value)
-                            : value}
+            {rows &&
+              rows
+                .sort(
+                  (a, b) =>
+                    new Date(a.fechasolicitud) - new Date(b.fechasolicitud)
+                )
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((row, index) => {
+                  return (
+                    <React.Fragment key={index}>
+                      <TableRow hover role="checkbox" tabIndex={-1} key={index}>
+                        <TableCell>
+                          <IconButton
+                            aria-label="expand row"
+                            size="small"
+                            onClick={() =>
+                              setExpandedRow(
+                                expandedRow !== index ? index : null
+                              )
+                            }
+                          >
+                            {expandedRow === index ? (
+                              <KeyboardArrowUpIcon />
+                            ) : (
+                              <KeyboardArrowDownIcon />
+                            )}
+                          </IconButton>
                         </TableCell>
-                      );
-                    })}
-                  </TableRow>
-                );
-              })}
+                        {columns.map((column) => {
+                          const value = row[column.id];
+                          return (
+                            <TableCell key={column.id} align={column.align}>
+                              {column.format && typeof value === "number"
+                                ? column.format(value)
+                                : value}
+                            </TableCell>
+                          );
+                        })}
+                      </TableRow>
+                      <TableRow>
+                        <TableCell
+                          style={{ paddingBottom: 0, paddingTop: 0 }}
+                          colSpan={6}
+                        >
+                          <Collapse
+                            in={expandedRow === index}
+                            timeout="auto"
+                            unmountOnExit
+                          >
+                            <Box margin={1}>
+                              <Typography
+                                variant="h6"
+                                gutterBottom
+                                component="div"
+                              >
+                                Ambientes
+                              </Typography>
+                              {row.ambientes && (
+                                <Table size="small" aria-label="ambientes">
+                                  <TableHead>
+                                    <TableRow>
+                                      <TableCell>Nombre del ambiente</TableCell>
+                                      <TableCell>Edificio</TableCell>
+                                      <TableCell>Planta</TableCell>
+                                    </TableRow>
+                                  </TableHead>
+                                  <TableBody>
+                                    {row.ambientes.map((ambiente, index) => (
+                                      <TableRow key={index}>
+                                        <TableCell component="th" scope="row">
+                                          {ambiente.nombre_ambiente}
+                                        </TableCell>
+                                        <TableCell>
+                                          {ambiente.edificio}
+                                        </TableCell>
+                                        <TableCell>{ambiente.planta}</TableCell>
+                                      </TableRow>
+                                    ))}
+                                  </TableBody>
+                                </Table>
+                              )}
+                            </Box>
+                          </Collapse>
+                        </TableCell>
+                      </TableRow>
+                    </React.Fragment>
+                  );
+                })}
           </TableBody>
         </Table>
       </TableContainer>

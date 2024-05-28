@@ -11,6 +11,7 @@ import SelectAmbienteDialog from "./SelectAmbienteDialog";
 export default function FormSolicitudRapida() {
   //* Form fields
   const [selectedNombreDocente, setSelectedNombreDocente] = useState("");
+  const [selectedNombres, setSelectedNombres] = useState([]);
   const [selectedMateria, setSelectedMateria] = useState("");
   const [selectedCapacidad, setSelectedCapacidad] = useState("");
   const [selectedFecha, setSelectedFecha] = useState("");
@@ -20,6 +21,7 @@ export default function FormSolicitudRapida() {
 
   //* Error Handling
   const [errorNombreDocente, setErrorNombreDocente] = useState(false);
+  const [errorNombres, setErrorNombres] = useState(false);
   const [errorMateria, setErrorMateria] = useState(false);
   const [errorCapacidad, setErrorCapacidad] = useState(false);
   const [errorFecha, setErrorFecha] = useState(false);
@@ -50,6 +52,7 @@ export default function FormSolicitudRapida() {
     event.preventDefault();
 
     setErrorNombreDocente(!selectedNombreDocente);
+    setErrorNombres(!selectedNombres);
     setErrorMateria(!selectedMateria);
     setErrorCapacidad(!selectedCapacidad);
     setErrorFecha(!selectedFecha);
@@ -59,6 +62,7 @@ export default function FormSolicitudRapida() {
 
     if (
       !selectedNombreDocente ||
+      !selectedNombres ||
       !selectedMateria ||
       !selectedCapacidad ||
       !selectedFecha ||
@@ -71,7 +75,11 @@ export default function FormSolicitudRapida() {
       return;
     }
 
+    var docentesForPost = selectedNombres;
+    selectedNombres.push(selectedNombreDocente);
+
     console.log("Nombre del docente:", [selectedNombreDocente]);
+    console.log("Nombres:", selectedNombres);
     console.log("Materia:", selectedMateria);
     console.log("Capacidad:", selectedCapacidad);
     console.log("Fecha:", selectedFecha.format("YYYY-MM-DD"));
@@ -87,8 +95,7 @@ export default function FormSolicitudRapida() {
       },
 
       body: JSON.stringify({
-        nombresdocentes: [selectedNombreDocente],
-        // materia: "Introduccion a la Programacion",
+        nombresdocentes: docentesForPost,
         materia: selectedMateria,
         capacidad: selectedCapacidad,
         fecha: selectedFecha.format("YYYY-MM-DD"),
@@ -106,7 +113,7 @@ export default function FormSolicitudRapida() {
       .then((data) => {
         console.log(data);
         setFormData({
-          nombresdocentes: [selectedNombreDocente],
+          nombresdocentes: docentesForPost,
           materia: selectedMateria,
           capacidad: selectedCapacidad,
           fecha: selectedFecha.format("YYYY-MM-DD"),
@@ -226,27 +233,27 @@ export default function FormSolicitudRapida() {
               value={selectedNombreDocente}
             />
             <FormMultipleSelector
-              label="Nombres"
+              label="Docentes adicionales"
               options={[
                 // { value: "Leticia Blanco Coca", label: "Leticia Blanco Coca" },
                 { value: "Vladimir Costas", label: "Vladimir Costas" },
                 { value: "Corina Flores", label: "Corina Flores" },
               ]}
-              onChange={(value) => console.log(value)}
+              onChange={setSelectedNombres}
             />
             <FormSelector
               label="Materia *"
               options={materias}
               onChange={setSelectedMateria}
               error={errorMateria}
-              selectedCapacidad={selectedMateria}
+              value={selectedMateria}
             />
             <FormSelector
               label="Capacidad *"
               options={capacidades}
               onChange={setSelectedCapacidad}
               error={errorCapacidad}
-              selectedCapacidad={selectedCapacidad}
+              value={selectedCapacidad}
             />
             <FormDateSelector
               label="Fecha *"
@@ -258,21 +265,21 @@ export default function FormSolicitudRapida() {
               options={horasIniciales}
               onChange={setSelectedHoraInicio}
               error={errorHoraInicio}
-              selectedHoraInicio={selectedHoraInicio}
+              value={selectedHoraInicio}
             />
             <FormSelector
               label="Hora final *"
               options={horasFinales}
               onChange={setSelectedHoraFin}
               error={errorHoraFin}
-              selectedHoraFin={selectedHoraFin}
+              value={selectedHoraFin}
             />
             <FormSelector
               label="Motivo de la reserva *"
               options={motivos}
               onChange={setSelectedMotivo}
               error={errorMotivo}
-              selectedMotivo={selectedMotivo}
+              value={selectedMotivo}
             />
 
             <SendFormButton
