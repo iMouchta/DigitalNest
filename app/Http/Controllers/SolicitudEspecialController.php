@@ -226,7 +226,7 @@ class SolicitudEspecialController extends Controller
         foreach ($conflictos as $idSolicitudConflictiva) {
             $solicitudConflictiva = Solicitud::findOrFail($idSolicitudConflictiva);
             $usuariosConflictiva = $solicitudConflictiva->usuarios->pluck('idusuario');
-    
+
             foreach ($usuariosConflictiva as $idUsuario) {
                 $mensaje = "Su solicitud ha sido rechazada por el motivo de: $motivo.";
                 $this->notificacionController->notificarUsuario($idUsuario, $mensaje, false);
@@ -238,7 +238,43 @@ class SolicitudEspecialController extends Controller
             $this->eliminar($requestEliminar);
         }
 
-        return response()->json(true);
+        return response()->json(
+            [
+                'Solicitud' => $solicitud
+            ]
+        );
+    }
+
+    public function confirmar(Request $request){
+        $request->validate([
+            'idsolicitud' => 'required|integer|exists:solicitud,idsolicitud'
+        ]);
+
+        $conflictosData = $this->generarConflictos($request);
+        $idsSolicitudes = $conflictosData['ids_solicitudes'];
+        $horariosInicial = $conflictosData['horario'];
+
+        $solicitud = Solicitud::findOrFail($request->idsolicitud);
+
+        $conflictos = [];
+        foreach ($idsSolicitudes as $id) {
+            $solicitud = Solicitud::find($id);
+            $horariosSolicitud = $this->generarListaHoras($solicitud->horainicialsolicitud, $solicitud->horafinalsolicitud);
+
+            foreach ($horariosInicial as $horaInicial) {
+                if (in_array($horaInicial, $horariosSolicitud)) {
+                    $conflictos[] = $id;
+                    break;
+                }
+            }
+        }
+
+        return response()->json(
+            [
+                'Solicitudes a eliminar' => $conflictos
+            ]
+        );
+
     }
 
 }

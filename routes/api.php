@@ -47,6 +47,7 @@ Route::get('/solicitudEspecial', [SolicitudEspecialController::class, 'index'])-
 Route::get('/reservas', [SolicitudEspecialController::class, 'reservas'])->name('reservas');
 Route::post('/eliminarSoli', [SolicitudEspecialController::class, 'eliminar'])->name('solicitudEspecial.eliminar');
 Route::post('/accept', [SolicitudEspecialController::class, 'accept'])->name('accept');
+Route::post('/confirmacion',[SolicitudEspecialController::class, 'confirmar'])->name('confirmar');
 
 //Notificaciones
 Route::get('/notificaciones/usuario/{idUsuario}', [NotificacionController::class, 'obtenerNotificacionesPorUsuario'])->name('notificaciones');
