@@ -17,19 +17,21 @@ const columns = [
   
 ];
 
-function createData(id, capacidad, fechaSolicitud) {
-  return { id, capacidad, fechaSolicitud };
+function createData(id, edificio, aula, planta, capacidad) {
+  return { id, edificio, aula, planta, capacidad };
 }
 
-export default function AmbientesTable({ solicitudes }) {
+export default function AmbientesTable({ ambientes }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-  const rows = solicitudes.map((solicitud) =>
+  const rows = ambientes.map((ambiente) =>
     createData(
-      solicitud.idsolicitud,
-      solicitud.capacidadsolicitud,
-      solicitud.fechasolicitud
+      ambiente.idambiente,
+      ambiente.nombreambiente,
+      ambiente.edificio,
+      ambiente.planta,
+      ambiente.capacidadambiente
     )
   );
 

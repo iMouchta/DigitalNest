@@ -146,6 +146,26 @@ function AppLayout() {
                 </ListItemIcon>
                 <ListItemText primary="Escribir Notificación" />
               </ListItem>
+              <ListItem
+                button
+                component={RouterLink}
+                to="/docente/registrarAmbiente"
+              >
+                <ListItemIcon>
+                  <NotificationsIcon />
+                </ListItemIcon>
+                <ListItemText primary="Registrar Ambiente" />
+              </ListItem>
+              <ListItem
+                button
+                component={RouterLink}
+                to="/docente/visualizarAmbiente"
+              >
+                <ListItemIcon>
+                  <NotificationsIcon />
+                </ListItemIcon>
+                <ListItemText primary="Visualizar Ambientes" />
+              </ListItem>
             </List>
           </nav>
         </div>

@@ -3,19 +3,19 @@ import React, { useEffect, useState } from "react";
 import AmbientesTable from "./AmbientesTable";
 
 export default function ViewAmbientes() {
-  const [solicitudes, setSolicitudes] = useState([]);
+  const [ambientes, setAmbientes] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8000/solicitudes")
+    fetch("http://localhost:8000/api/ambiente")
       .then((response) => response.json())
-      .then((data) => setSolicitudes(data))
+      .then((data) => setAmbientes(data))
       .catch((error) => console.error("Error:", error));
   }, []);
 
   return (
     <div>
       <div>
-        <AmbientesTable solicitudes={solicitudes} />
+        <AmbientesTable ambientes={ambientes} />
       </div>
       {/* {solicitudes.map((solicitud, index) => (
       <div key={index}>
