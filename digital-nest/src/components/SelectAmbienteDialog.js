@@ -18,7 +18,7 @@ export default function SelectAmbienteDialog({
   ambientes,
   formData,
 }) {
-  const [selectedValue, setSelectedValue] = React.useState("");
+  const [selectedValue, setSelectedValue] = React.useState([]);
   const [isButtonDisabled, setIsButtonDisabled] = React.useState(false);
 
   const handleAccept = async () => {
@@ -40,9 +40,9 @@ export default function SelectAmbienteDialog({
           horainicial: formData.horainicial,
           horafinal: formData.horafinal,
           motivo: formData.motivo,
-          // nombreambiente: selectedValue,
-          nombresambientes: ["Auditorio", "693A"]
+          nombresambientes: selectedValue,
         }),
+        console: console.log("selectedValue", selectedValue),
       }
     )
       .then((response) => {
@@ -56,6 +56,7 @@ export default function SelectAmbienteDialog({
           toast.success("Se ha realizado la reserva con éxito", {
             duration: 7000,
           });
+          window.location.reload();
         } else {
           toast.error("No se ha podido realizar la reserva");
         }
@@ -70,6 +71,19 @@ export default function SelectAmbienteDialog({
       .finally(() => {
         setIsButtonDisabled(false);
       });
+  };
+
+  const handleToggle = (value) => () => {
+    const currentIndex = selectedValue.indexOf(value);
+    const newChecked = [...selectedValue];
+  
+    if (currentIndex === -1) {
+      newChecked.push(value);
+    } else {
+      newChecked.splice(currentIndex, 1);
+    }
+  
+    setSelectedValue(newChecked);
   };
 
   return (
@@ -89,14 +103,13 @@ export default function SelectAmbienteDialog({
               Object.keys(ambientes).map((nombreAmbiente, index) => (
                 <Grid item xs={4} key={index}>
                   <Paper
-                    onClick={() => setSelectedValue(nombreAmbiente)}
+                    onClick={handleToggle(nombreAmbiente)}
                     style={{
                       padding: "1em",
                       cursor: "pointer",
-                      backgroundColor:
-                        nombreAmbiente === selectedValue
-                          ? "lightblue"
-                          : "white",
+                      backgroundColor: selectedValue.includes(nombreAmbiente)
+                        ? "lightblue"
+                        : "white",
                     }}
                   >
                     {`${nombreAmbiente} - ${ambientes[nombreAmbiente]}`}
