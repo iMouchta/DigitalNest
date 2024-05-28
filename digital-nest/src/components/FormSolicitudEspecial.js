@@ -16,6 +16,7 @@ import { toast, Toaster } from "react-hot-toast";
 import FormMultipleSelector from "./FormMultipleSelector";
 import AmbientesSelector from "./AmbientesSelector";
 import { set } from "lodash";
+import LockedTextField from "./LockedTextField";
 
 export default function FormSolicitudEspecial() {
   //* Form fields
@@ -51,7 +52,7 @@ export default function FormSolicitudEspecial() {
 
   const handleSubmit = () => {
     // event.preventDefault();
-    setErrorNombre(!textFieldNombre);
+    // setErrorNombre(!textFieldNombre);
     // setErrorEdificio(!selectedEdificio);
     // setErrorAmbientes(!selectedAmbientes);
     setErrorFecha(!selectedFecha);
@@ -60,7 +61,7 @@ export default function FormSolicitudEspecial() {
     setErrorMotivo(!textFieldMotivo);
 
     if (
-      !textFieldNombre ||
+      // !textFieldNombre ||
       !selectedFecha ||
       !selectedHoraInicio ||
       !selectedHoraFin ||
@@ -71,7 +72,7 @@ export default function FormSolicitudEspecial() {
       return;
     }
 
-    console.log("Nombre:", textFieldNombre);
+    // console.log("Nombre:", textFieldNombre);
     // console.log("Capacidad:", textFieldCapacidad);
     console.log("Ambientes:", selectedAmbientes);
     console.log("Fecha:", selectedFecha.format("YYYY-MM-DD"));
@@ -85,7 +86,7 @@ export default function FormSolicitudEspecial() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        idusuarios: [2],
+        idusuarios: [4],
         fechasolicitud: selectedFecha.format("YYYY-MM-DD"),
         horainicialsolicitud: selectedHoraInicio,
         horafinalsolicitud: selectedHoraFin,
@@ -97,6 +98,8 @@ export default function FormSolicitudEspecial() {
       .then((data) => {
         if (data.subida) {
           toast.success("Solicitud enviada correctamente");
+          window.location.reload();
+
         } else {
           toast.error("Error al enviar la solicitud");
         }
@@ -174,12 +177,13 @@ export default function FormSolicitudEspecial() {
           borderRadius: "10px",
         }}
       >
-        <FormTextField
+        {/* <FormTextField
           label="Nombre completo *"
           placeholder="Ingrese su nombre completo"
           onChange={setTextFieldNombre}
           error={errorNombre}
-        />
+        /> */}
+        <LockedTextField />
 
         <AmbientesSelector
           onSelect={handleSelectAmbiente}

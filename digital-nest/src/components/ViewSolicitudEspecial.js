@@ -304,6 +304,7 @@ export default function ViewSolicitudEspecial({ solicitudes }) {
                                       .then(data => {
                                         console.log(data);
                                         setOpen(false);
+                                        window.location.reload();
                                       })
                                       .catch(error => {
                                         console.error('Error:', error);

@@ -7,7 +7,10 @@ export default function ResponderSolicitudPage() {
   useEffect(() => {
     fetch("http://localhost:8000/api/solicitudEspecial")
       .then((response) => response.json())
-      .then((data) => setSolicitudesEspeciales(data))
+      .then((data) => {
+        const solicitudesNoAceptadas = data.filter(solicitud => solicitud.aceptada);
+        setSolicitudesEspeciales(solicitudesNoAceptadas);
+      })
       .catch((error) => console.error("Error:", error));
   }, []);
 
