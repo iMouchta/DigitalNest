@@ -12,6 +12,7 @@ class Notificacion extends Migration
             $table->id('idnotificacion');
             $table->string('mensaje', 1000);
             $table->boolean('general')->default(0);
+            $table->boolean('vista')->default(false);
         });
     }
 

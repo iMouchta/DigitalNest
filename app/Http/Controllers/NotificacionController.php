@@ -12,6 +12,7 @@ class NotificacionController extends Controller
         $notificacion = Notificacion::create([
             'mensaje' => $mensaje,
             'general' => $general,
+            'vista' => false,
         ]);
 
         $usuario = Usuario::find($idUsuario);
@@ -28,6 +29,7 @@ class NotificacionController extends Controller
         $notificacion = Notificacion::create([
             'mensaje' => $mensaje,
             'general' => $general,
+            'vista' => false,
         ]);
 
         if (empty($idUsuarios)) {
