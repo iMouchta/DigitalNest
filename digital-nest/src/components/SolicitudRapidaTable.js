@@ -9,10 +9,17 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 
+import IconButton from "@mui/material/IconButton";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import Collapse from "@mui/material/Collapse";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+
 const columns = [
-  { id: "idSolicitud", label: "Id", minWidth: 80 },
+  { id: "idSolicitud", label: "ID", minWidth: 80 },
   { id: "fechaSolicitud", label: "Fecha de Reserva", minWidth: 100 },
-  { id: "nombreMateria", label: "Materia", minWidth: 100 },
+  { id: "nombreMateria", label: "Materia", minWidth: 100, align: "center" },
   {
     id: "motivoSolicitud",
     label: "Motivo Solicitud",
@@ -31,7 +38,12 @@ const columns = [
     minWidth: 100,
     align: "right",
   },
-
+  {
+    id: "capacidadSolicitud",
+    label: "Capacidad",
+    minWidth: 100,
+    align: "right",
+  },
 ];
 
 function createData(
@@ -41,6 +53,9 @@ function createData(
   fechaSolicitud,
   horaInicialSolicitud,
   horaFinalSolicitud,
+  capacidadSolicitud,
+  nombresDocentes,
+  nombresAmbientes
 ) {
   return {
     idSolicitud,
@@ -49,12 +64,20 @@ function createData(
     fechaSolicitud,
     horaInicialSolicitud,
     horaFinalSolicitud,
+    capacidadSolicitud,
+    nombresDocentes,
+    nombresAmbientes,
   };
 }
 
 export default function SolicitudRapidaTable({ solicitudes }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [expandedRow, setExpandedRow] = React.useState(-1);
+
+  const handleExpandClick = (index) => {
+    setExpandedRow(expandedRow === index ? -1 : index);
+  };
 
   const rows = solicitudes.map((solicitud) =>
     createData(
@@ -64,6 +87,9 @@ export default function SolicitudRapidaTable({ solicitudes }) {
       solicitud.fechaSolicitud,
       solicitud.horaInicialSolicitud.split(":").slice(0, 2).join(":"),
       solicitud.horaFinalSolicitud.split(":").slice(0, 2).join(":"),
+      solicitud.capacidadSolicitud,
+      solicitud.nombresDocentes,
+      solicitud.nombresAmbientes
     )
   );
 
@@ -82,6 +108,8 @@ export default function SolicitudRapidaTable({ solicitudes }) {
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
+            <TableCell />
+              {/* Celda de tabla vacía para el icono de expansión */}
               {columns.map((column) => (
                 <TableCell
                   key={column.id}
@@ -102,18 +130,88 @@ export default function SolicitudRapidaTable({ solicitudes }) {
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map((row, index) => {
                 return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                    {columns.map((column) => {
-                      const value = row[column.id];
-                      return (
-                        <TableCell key={column.id} align={column.align}>
-                          {column.format && typeof value === "number"
-                            ? column.format(value)
-                            : value}
-                        </TableCell>
-                      );
-                    })}
-                  </TableRow>
+                  <React.Fragment key={index}>
+                    <TableRow hover role="checkbox" tabIndex={-1} key={index}>
+                      <TableCell>
+                        <IconButton
+                          aria-label="expand row"
+                          size="small"
+                          onClick={() => handleExpandClick(index)}
+                        >
+                          {expandedRow === index ? (
+                            <KeyboardArrowUpIcon />
+                          ) : (
+                            <KeyboardArrowDownIcon />
+                          )}
+                        </IconButton>
+                      </TableCell>
+                      {columns.map((column) => {
+                        const value = row[column.id];
+                        return (
+                          <TableCell key={column.id} align={column.align}>
+                            {column.format && typeof value === "number"
+                              ? column.format(value)
+                              : value}
+                          </TableCell>
+                        );
+                      })}
+                    </TableRow>
+                    <TableRow>
+                      <TableCell
+                        style={{ paddingBottom: 0, paddingTop: 0 }}
+                        colSpan={columns.length}
+                      >
+                        <Collapse
+                          in={expandedRow === index}
+                          timeout="auto"
+                          unmountOnExit
+                        >
+                          <Box margin={1}>
+                            <Typography
+                              variant="h6"
+                              gutterBottom
+                              component="div"
+                            >
+                              Docentes asignados
+                            </Typography>
+                            <Table size="small" aria-label="docentes">
+                              <TableBody>
+                                {row.nombresDocentes.map(
+                                  (docente, indexDocente) => (
+                                    <TableRow key={indexDocente}>
+                                      <TableCell component="th" scope="row">
+                                        {docente}
+                                      </TableCell>
+                                    </TableRow>
+                                  )
+                                )}
+                              </TableBody>
+                            </Table>
+                            <Typography
+                              variant="h6"
+                              gutterBottom
+                              component="div"
+                            >
+                              Ambientes reservados
+                            </Typography>
+                            <Table size="small" aria-label="ambientes">
+                              <TableBody>
+                                {row.nombresAmbientes.map(
+                                  (ambiente, indexAmbiente) => (
+                                    <TableRow key={indexAmbiente}>
+                                      <TableCell component="th" scope="row">
+                                        {ambiente}
+                                      </TableCell>
+                                    </TableRow>
+                                  )
+                                )}
+                              </TableBody>
+                            </Table>
+                          </Box>
+                        </Collapse>
+                      </TableCell>
+                    </TableRow>
+                  </React.Fragment>
                 );
               })}
           </TableBody>
@@ -131,6 +229,4 @@ export default function SolicitudRapidaTable({ solicitudes }) {
       />
     </Paper>
   );
-  
-
 }
