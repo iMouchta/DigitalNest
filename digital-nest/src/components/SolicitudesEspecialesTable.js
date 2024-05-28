@@ -51,20 +51,20 @@ const columns = [
 function createData(
   idsolicitud,
   nombreadministrador,
-  nombreAmbiente,
   fechaSolicitud,
   horainicialsolicitud,
   horafinalsolicitud,
-  motivosolicitud
+  motivosolicitud,
+  ambientes
 ) {
   return {
     idsolicitud,
     nombreadministrador,
-    nombreAmbiente,
     fechaSolicitud,
     horainicialsolicitud,
     horafinalsolicitud,
     motivosolicitud,
+    ambientes,
   };
 }
 
@@ -77,11 +77,11 @@ export default function SolicitudesEspecialesTable({ solicitudes }) {
     createData(
       solicitud.idsolicitud,
       solicitud.nombreusuarios[0],
-      solicitud.nombreAmbiente,
       solicitud.fechasolicitud,
       solicitud.horainicialsolicitud.split(":").slice(0, 2).join(":"),
       solicitud.horafinalsolicitud.split(":").slice(0, 2).join(":"),
-      solicitud.motivosolicitud
+      solicitud.motivosolicitud,
+      solicitud.ambientes
     )
   );
 
@@ -100,6 +100,8 @@ export default function SolicitudesEspecialesTable({ solicitudes }) {
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
+              <TableCell />
+              {/* Celda de tabla vacía para el icono de expansión */}
               {columns.map((column) => (
                 <TableCell
                   key={column.id}
@@ -119,21 +121,26 @@ export default function SolicitudesEspecialesTable({ solicitudes }) {
                     new Date(a.fechasolicitud) - new Date(b.fechasolicitud)
                 )
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
+                .map((row, indexRow) => {
                   return (
-                    <React.Fragment key={index}>
-                      <TableRow hover role="checkbox" tabIndex={-1} key={index}>
+                    <React.Fragment key={indexRow}>
+                      <TableRow
+                        hover
+                        role="checkbox"
+                        tabIndex={-1}
+                        key={indexRow}
+                      >
                         <TableCell>
                           <IconButton
                             aria-label="expand row"
                             size="small"
                             onClick={() =>
                               setExpandedRow(
-                                expandedRow !== index ? index : null
+                                expandedRow !== indexRow ? indexRow : null
                               )
                             }
                           >
-                            {expandedRow === index ? (
+                            {expandedRow === indexRow ? (
                               <KeyboardArrowUpIcon />
                             ) : (
                               <KeyboardArrowDownIcon />
@@ -157,7 +164,7 @@ export default function SolicitudesEspecialesTable({ solicitudes }) {
                           colSpan={6}
                         >
                           <Collapse
-                            in={expandedRow === index}
+                            in={expandedRow === indexRow}
                             timeout="auto"
                             unmountOnExit
                           >
@@ -167,32 +174,36 @@ export default function SolicitudesEspecialesTable({ solicitudes }) {
                                 gutterBottom
                                 component="div"
                               >
-                                Ambientes
+                                Ambientes reservados
                               </Typography>
-                              {row.ambientes && (
-                                <Table size="small" aria-label="ambientes">
-                                  <TableHead>
-                                    <TableRow>
-                                      <TableCell>Nombre del ambiente</TableCell>
-                                      <TableCell>Edificio</TableCell>
-                                      <TableCell>Planta</TableCell>
-                                    </TableRow>
-                                  </TableHead>
-                                  <TableBody>
-                                    {row.ambientes.map((ambiente, index) => (
-                                      <TableRow key={index}>
-                                        <TableCell component="th" scope="row">
-                                          {ambiente.nombre_ambiente}
-                                        </TableCell>
-                                        <TableCell>
-                                          {ambiente.edificio}
-                                        </TableCell>
-                                        <TableCell>{ambiente.planta}</TableCell>
-                                      </TableRow>
-                                    ))}
-                                  </TableBody>
-                                </Table>
-                              )}
+                              <Table size="small" aria-label="ambientes">
+                                <TableHead>
+                                  <TableRow>
+                                    <TableCell>Nombre del ambiente</TableCell>
+                                    <TableCell>Edificio</TableCell>
+                                    <TableCell>Planta</TableCell>
+                                  </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                  {expandedRow === indexRow &&
+                                    row.ambientes &&
+                                    row.ambientes.map(
+                                      (ambiente, indexAmbiente) => (
+                                        <TableRow key={indexAmbiente}>
+                                          <TableCell component="th" scope="row">
+                                            {ambiente.nombre_ambiente}
+                                          </TableCell>
+                                          <TableCell>
+                                            {ambiente.edificio}
+                                          </TableCell>
+                                          <TableCell>
+                                            {ambiente.planta}
+                                          </TableCell>
+                                        </TableRow>
+                                      )
+                                    )}
+                                </TableBody>
+                              </Table>
                             </Box>
                           </Collapse>
                         </TableCell>
