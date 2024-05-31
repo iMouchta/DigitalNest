@@ -40,6 +40,8 @@ Route::resource('/ambiente', AmbienteController::class);
 Route::resource('/getSolicitudesRapidas', SolicitudRapidaController::class);
 Route::resource('/edificio', EdificioController::class);
 
+Route::post('/getInfoAmbiente', [AmbienteController::class, 'getAmbienteById'])->name('getInfoAmbiente');
+
 
 //solicitudEspecial
 Route::post('/solicitudEspecial', [SolicitudEspecialController::class, 'store'])->name('solicitudEspecial.store');
