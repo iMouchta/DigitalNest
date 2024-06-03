@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\Ambiente;
 use App\Models\Edificio;
-use Illuminate\Http\Request;
+
+use App\Http\Controllers\ReglaReservaDeAmbienteController;
 
 class AmbienteController extends Controller
 {
@@ -16,16 +18,20 @@ class AmbienteController extends Controller
     public function index()
     {
         $ambientes = Ambiente::all();
+        $reglaReservaDeAmbienteController = new ReglaReservaDeAmbienteController();
         $listaAmbientesConUbicacion = [];
         
         foreach ($ambientes as $ambiente) {
-            $nombreEdificio = $this->getNombreEdificio($ambiente->idedificio);
+            $listaReglasDeAmbiente = $reglaReservaDeAmbienteController->getReglaReservaDeAmbiente($ambiente->idambiente);
+            $nombreEdificio = $this->getNombreEdificio($ambiente->idedificio);            
+
             $ambienteConUbicacion = [
                 'idambiente' => $ambiente->idambiente,
                 'nombreambiente' => $ambiente->nombreambiente,
                 'edificio' => $nombreEdificio,
                 'planta' => $ambiente->planta,
                 'capacidadambiente' => $ambiente->capacidadambiente,
+                'reglasDeReserva' => $listaReglasDeAmbiente,
             ];
             $listaAmbientesConUbicacion[] = $ambienteConUbicacion;
         }

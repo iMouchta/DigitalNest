@@ -85,12 +85,23 @@ class ReglaReservaDeAmbienteController extends Controller
     }
 
     // Función para obtener las reglas de reserva de un ambiente en específico con su id
-    public function getReglaReservaDeAmbiente(Request $request)
+    public function getReglaReservaDeAmbiente($idAmbiente)
     {
-        $informacionAmbiente = request()->except('_token');
-        $idAmbiente = $informacionAmbiente['idambiente'];
-        $reglasReservaDeAmbiente = ReglaReservaDeAmbiente::where('idambiente', $idAmbiente)->get();
-        return response()->json($reglasReservaDeAmbiente);
+        $reglas = ReglaReservaDeAmbiente::where('idambiente', $idAmbiente)->get();
+        $listaReglasReservaDeAmbiente = [];
+
+        foreach ($reglas as $regla) {
+            $reglaReservaDeAmbienteJson = [
+                'idreglareservadeambiente' => $regla->idreglareservadeambiente,
+                'idambiente' => $regla->idambiente,
+                'fechainicialdisponible' => $regla->fechainicialdisponible,
+                'fechafinaldisponible' => $regla->fechafinaldisponible,
+                'horainicialdisponible' => $regla->horainicialdisponible,
+                'horafinaldisponible' => $regla->horafinaldisponible,
+            ];
+            $listaReglasReservaDeAmbiente[] = $reglaReservaDeAmbienteJson;
+        }
+        return $listaReglasReservaDeAmbiente;
     }
 
     // Función para editar una regla de reserva de ambiente

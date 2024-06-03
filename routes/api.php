@@ -43,7 +43,6 @@ Route::post('/getInfoAmbiente', [AmbienteController::class, 'getAmbienteById'])-
 
 //CRUD Reglas de Reserva De Ambiente
 Route::post('/registrarReglaReservaAmbiente', [ReglaReservaDeAmbienteController::class, 'registrarReglaReservaDeAmbiente'])->name('registrarReglaReservaDeAmbiente');
-Route::post('/getReglaReservaAmbiente', [ReglaReservaDeAmbienteController::class, 'getReglaReservaDeAmbiente'])->name('getReglaReservaDeAmbiente');
 Route::post('/eliminarReglaReservaAmbiente', [ReglaReservaDeAmbienteController::class, 'eliminarReglaReservaDeAmbiente'])->name('eliminarReglaReservaDeAmbiente');
 Route::post('/editarReglaReservaAmbiente', [ReglaReservaDeAmbienteController::class, 'editarReglaReservaDeAmbiente'])->name('editarReglaReservaDeAmbiente');
 
