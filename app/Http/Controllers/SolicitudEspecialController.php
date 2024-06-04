@@ -7,19 +7,18 @@ use App\Models\Solicitud;
 use App\Models\Ambiente;
 use App\Models\Usuario;
 use App\Http\Controllers\NotificacionController;
-use App\Http\Controllers\EmailController;
 use Carbon\Carbon;
 
 
 class SolicitudEspecialController extends Controller
 {
     protected $notificacionController;
-    protected $emailcontroller;
+    protected $emailController;
 
-    public function __construct(EmailController $emailController, NotificacionController $notificacionController)
+    public function __construct(NotificacionController $notificacionController, EmailController $emailController)
     {
-        $this->emailcontroller = $emailController;
         $this->notificacionController = $notificacionController;
+        $this->emailController = $emailController;
     }
 
     public function create()
@@ -245,7 +244,8 @@ class SolicitudEspecialController extends Controller
         );
     }
 
-    public function confirmar(Request $request){
+    public function confirmar(Request $request)
+    {
         $request->validate([
             'idsolicitud' => 'required|integer|exists:solicitud,idsolicitud'
         ]);
@@ -275,6 +275,34 @@ class SolicitudEspecialController extends Controller
             ]
         );
 
+    }
+
+    public function enviarCorreos(array $idsUsuarios, string $mensaje)
+    {
+        $correos = Usuario::whereIn('idusuario', $idsUsuarios)->pluck('correousuario')->toArray();
+
+        foreach ($correos as $correo) {
+            $this->emailController->enviarCorreo(new Request([
+                'Correos' => [$correo],
+                'Mensaje' => $mensaje
+            ]));
+        }
+    }
+
+    public function enviarCorreosDesdeApi(Request $request)
+    {
+        $request->validate([
+            'ids_usuarios' => 'required|array',
+            'ids_usuarios.*' => 'required|integer|exists:usuario,idusuario',
+            'mensaje' => 'required|string'
+        ]);
+
+        $idsUsuarios = $request->ids_usuarios;
+        $mensaje = $request->mensaje;
+
+        $this->enviarCorreos($idsUsuarios, $mensaje);
+
+        return response()->json(['mensaje' => 'Correos enviados correctamente']);
     }
 
 }

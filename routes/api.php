@@ -59,5 +59,5 @@ Route::get('/notificaciones/usuario/{idUsuario}', [NotificacionController::class
 
 
 //Mail
-Route::POST('/enviarCorreo', [EmailController::class, 'enviarCorreo']);
+Route::post('/enviarCorreos', [SolicitudEspecialController::class, 'enviarCorreosDesdeApi']);
 
