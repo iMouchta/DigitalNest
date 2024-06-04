@@ -51,8 +51,9 @@ Route::post('/solicitudEspecial', [SolicitudEspecialController::class, 'store'])
 Route::get('/solicitudEspecial', [SolicitudEspecialController::class, 'index'])->name('solicitudEspecial.index');
 Route::get('/reservas', [SolicitudEspecialController::class, 'reservas'])->name('reservas');
 Route::post('/eliminarSoli', [SolicitudEspecialController::class, 'eliminar'])->name('solicitudEspecial.eliminar');
-Route::post('/accept', [SolicitudEspecialController::class, 'accept'])->name('accept');
+Route::post('/aceptarSoli', [SolicitudEspecialController::class, 'accept'])->name('accept');
 Route::post('/confirmacion',[SolicitudEspecialController::class, 'confirmar'])->name('confirmar');
+Route::post('/fecha', [SolicitudEspecialController::class, 'buscarIDPorFecha']);
 
 //Notificaciones
 Route::get('/notificaciones/usuario/{idUsuario}', [NotificacionController::class, 'obtenerNotificacionesPorUsuario'])->name('notificaciones');
