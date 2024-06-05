@@ -17,7 +17,7 @@ export default function LockedTextField() {
         <TextField
           sx={{ backgroundColor: "#f3f3f3" }}
           label="Nombre completo *"
-          defaultValue="Jose Admin"
+          defaultValue="Leticia Blanco"
           InputProps={{
             readOnly: true,
           }}
