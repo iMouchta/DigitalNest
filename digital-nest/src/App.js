@@ -27,11 +27,13 @@ import VisualizarSolicitudPage from "./pages/VisualizarSolicitudPage.js";
 import EnviarNotificacionPage from "./pages/EnviarNotificacionPage.js";
 import RegistrarAmbientePage from "./pages/RegistrarAmbientePage.js";
 import VisualizarAmbientePage from "./pages/VisualizarAmbientePage.js";
+import AppBarComponent from "./components/AppBarComponent.js";
 
 function App() {
   return (
     <div className="App">
-      <PrimarySearchAppBar />
+      {/* <PrimarySearchAppBar /> */}
+      <AppBarComponent />
       <Router>
         <Routes>
           {/* Remplazar la ruta inicial */}
