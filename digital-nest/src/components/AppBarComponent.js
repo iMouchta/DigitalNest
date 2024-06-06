@@ -25,7 +25,9 @@ export default function AppBarComponent() {
       .then((data) => {
         const sortedData = data.sort((a, b) => a.vista - b.vista);
         setNotifications(sortedData);
-        const unreadNotifications = sortedData.filter(notification => notification.vista === 0).length;
+        const unreadNotifications = sortedData.filter(
+          (notification) => notification.vista === 0
+        ).length;
         setNumNotification(unreadNotifications);
       });
   }, []);
@@ -62,14 +64,17 @@ export default function AppBarComponent() {
         onClose={handleCloseNotification}
         anchorOrigin={{
           vertical: "bottom",
-          horizontal: "center",
+          horizontal: "right",
         }}
         transformOrigin={{
           vertical: "top",
-          horizontal: "center",
+          horizontal: "right",
+        }}
+        PaperProps={{
+          style: { maxHeight: "50vh", overflow: "auto" },
         }}
       >
-        <Typography variant="h5" component="div" sx={{ padding: 2 }}>
+        <Typography variant="h5" component="div" sx={{ marginTop: 2, marginLeft: 2, fontWeight: "bold" }}>
           Notificaciones
         </Typography>
         <List>
