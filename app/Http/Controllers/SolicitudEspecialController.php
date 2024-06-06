@@ -7,19 +7,18 @@ use App\Models\Solicitud;
 use App\Models\Ambiente;
 use App\Models\Usuario;
 use App\Http\Controllers\NotificacionController;
-use App\Http\Controllers\EmailController;
 use Carbon\Carbon;
 
 
 class SolicitudEspecialController extends Controller
 {
     protected $notificacionController;
-    protected $emailcontroller;
+    protected $emailController;
 
-    public function __construct(EmailController $emailController, NotificacionController $notificacionController)
+    public function __construct(NotificacionController $notificacionController, EmailController $emailController)
     {
-        $this->emailcontroller = $emailController;
         $this->notificacionController = $notificacionController;
+        $this->emailController = $emailController;
     }
 
     public function create()
@@ -208,6 +207,10 @@ class SolicitudEspecialController extends Controller
         foreach ($usuariosSolicitud as $idUsuario) {
             $mensaje = "Su solicitud con el motivo: $motivo, ha sido aceptada.";
             $this->notificacionController->notificarUsuario($idUsuario, $mensaje, false);
+            $this->enviarCorreosDesdeApi(new Request([
+                'ids_usuarios' => [$idUsuario],
+                'mensaje' => $mensaje
+            ]));
         }
 
         $conflictos = [];
@@ -230,12 +233,17 @@ class SolicitudEspecialController extends Controller
             foreach ($usuariosConflictiva as $idUsuario) {
                 $mensaje = "Su solicitud ha sido rechazada por el motivo de: $motivo.";
                 $this->notificacionController->notificarUsuario($idUsuario, $mensaje, false);
+                $this->enviarCorreosDesdeApi(new Request([
+                    'ids_usuarios' => [$idUsuario],
+                    'mensaje' => $mensaje
+                ]));
             }
         }
 
         foreach ($conflictos as $idSolicitudConflictiva) {
             $requestEliminar = new Request(['idsolicitud' => $idSolicitudConflictiva]);
             $this->eliminar($requestEliminar);
+            
         }
 
         return response()->json(
@@ -245,7 +253,8 @@ class SolicitudEspecialController extends Controller
         );
     }
 
-    public function confirmar(Request $request){
+    public function confirmar(Request $request)
+    {
         $request->validate([
             'idsolicitud' => 'required|integer|exists:solicitud,idsolicitud'
         ]);
@@ -276,5 +285,121 @@ class SolicitudEspecialController extends Controller
         );
 
     }
+
+    public function enviarCorreos(array $idsUsuarios, string $mensaje)
+    {
+        $correos = Usuario::whereIn('idusuario', $idsUsuarios)->pluck('correousuario')->toArray();
+
+        foreach ($correos as $correo) {
+            $this->emailController->enviarCorreo(new Request([
+                'Correos' => [$correo],
+                'Mensaje' => $mensaje
+            ]));
+        }
+    }
+
+    public function enviarCorreosDesdeApi(Request $request)
+    {
+        $request->validate([
+            'ids_usuarios' => 'required|array',
+            'ids_usuarios.*' => 'required|integer',
+            'mensaje' => 'required|string'
+        ]);
+
+        $idsUsuarios = $request->ids_usuarios;
+        $mensaje = $request->mensaje;
+        $usuariosExistentes = Usuario::whereIn('idusuario', $idsUsuarios)->pluck('idusuario')->toArray();
+        $idsNoEncontradas = array_diff($idsUsuarios, $usuariosExistentes);
+
+        if (!empty($idsNoEncontradas)) {
+            return response()->json([
+                'error' => 'Un(os) usuario(s) no fue(ron) encontradp(s)',
+                'usuariosEncontrados' => $idsNoEncontradas
+            ], 400);
+        }
+
+        $this->enviarCorreos($usuariosExistentes, $mensaje);
+
+        return response()->json(['mensaje' => 'Correos enviados correctamente']);
+    }
+
+    public function buscarPorFecha(Request $request)
+    {
+        $request->validate([
+            'fecha' => 'required|date',
+        ]);
+
+        $fecha = $request->fecha;
+
+        $solicitudes = Solicitud::with([
+            'usuarios',
+            'ambientes' => function ($query) {
+                $query->with('edificio');
+            }
+        ])
+            ->where('especial', true)
+            ->whereDate('fechasolicitud', $fecha)
+            ->get();
+
+        $solicitudesConDatos = $solicitudes->map(function ($solicitud) {
+            $ambientes = $solicitud->ambientes->map(function ($ambiente) {
+                return [
+                    'nombre_ambiente' => $ambiente->nombreambiente,
+                    'edificio' => $ambiente->edificio->nombreedificio,
+                    'planta' => $ambiente->planta,
+                ];
+            });
+
+            $nombresUsuarios = $solicitud->usuarios->pluck('nombreusuario')->toArray();
+
+            return [
+                'nombreusuarios' => $nombresUsuarios,
+                'motivosolicitud' => $solicitud->motivosolicitud,
+                'fechasolicitud' => $solicitud->fechasolicitud,
+                'horainicialsolicitud' => $solicitud->horainicialsolicitud,
+                'horafinalsolicitud' => $solicitud->horafinalsolicitud,
+                'ambientes' => $ambientes->toArray(),
+                'aceptada' => $solicitud->aceptada !== null ? ($solicitud->aceptada ? true : false) : null
+            ];
+        });
+
+        return response()->json($solicitudesConDatos);
+    }
+
+    public function buscarIDPorFecha(Request $request)
+    {
+        $request->validate([
+            'fecha' => 'required|date',
+        ]);
+
+        $fecha = $request->fecha;
+
+        $solicitudes = Solicitud::where('especial', true)
+            ->whereDate('fechasolicitud', $fecha)
+            ->pluck('idsolicitud');
+
+        return response()->json($solicitudes);
+    }
+
+    public function editarSolicitudes(Request $request)
+    {
+        $request->validate([
+            'ids_solicitudes' => 'required|array',
+            'ids_solicitudes.*' => 'required|integer|exists:solicitud,idsolicitud',
+            'nueva_fecha' => 'required|date',
+        ]);
+
+        $idsSolicitudes = $request->ids_solicitudes;
+        $nuevaFecha = $request->nueva_fecha;
+
+        foreach ($idsSolicitudes as $idSolicitud) {
+            $solicitud = Solicitud::findOrFail($idSolicitud);
+            $solicitud->fechasolicitud = $nuevaFecha;
+            $solicitud->save();
+        }
+
+        return response()->json(['mensaje' => 'Las fechas han sido actualizadas correctamente.']);
+    }
+
 
 }

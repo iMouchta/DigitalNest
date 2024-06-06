@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Models\Ambiente;
 use App\Models\Edificio;
-use Illuminate\Http\Request;
+
+use App\Http\Controllers\ReglaReservaDeAmbienteController;
 
 class AmbienteController extends Controller
 {
@@ -16,16 +18,20 @@ class AmbienteController extends Controller
     public function index()
     {
         $ambientes = Ambiente::all();
+        $reglaReservaDeAmbienteController = new ReglaReservaDeAmbienteController();
         $listaAmbientesConUbicacion = [];
         
         foreach ($ambientes as $ambiente) {
-            $nombreEdificio = $this->getNombreEdificio($ambiente->idedificio);
+            $listaReglasDeAmbiente = $reglaReservaDeAmbienteController->getReglaReservaDeAmbiente($ambiente->idambiente);
+            $nombreEdificio = $this->getNombreEdificio($ambiente->idedificio);            
+
             $ambienteConUbicacion = [
                 'idambiente' => $ambiente->idambiente,
                 'nombreambiente' => $ambiente->nombreambiente,
                 'edificio' => $nombreEdificio,
                 'planta' => $ambiente->planta,
                 'capacidadambiente' => $ambiente->capacidadambiente,
+                'reglasDeReserva' => $listaReglasDeAmbiente,
             ];
             $listaAmbientesConUbicacion[] = $ambienteConUbicacion;
         }
@@ -107,48 +113,29 @@ class AmbienteController extends Controller
         return $ambiente != null;
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\ambiente  $ambiente
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Request $request)
-    {
-        
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\ambiente  $ambiente
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(ambiente $ambiente)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
+   //Devuelve informacion de un ambiente segun su id
+   /**
+     * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\ambiente  $ambiente
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ambiente $ambiente)
-    {
-        //
-    }
+   public function getAmbienteById() {
+        $datosAmbiente = request()->except('_token');
+        $idAmbiente = $datosAmbiente['idambiente'];
+        $ambiente = Ambiente::find($idAmbiente);
+        $idEdificio = $ambiente->idedificio;
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\ambiente  $ambiente
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(ambiente $ambiente)
-    {
-        //
-    }
+        $edificio = Edificio::find($idEdificio);
+        $nombreEdificio = $edificio->nombreedificio;
+
+        $infoAmbiente = [
+            'nombreambiente' => $ambiente->nombreambiente,
+            'capacidadambiente' => $ambiente->capacidadambiente,
+            'planta' => $ambiente->planta,
+            'nombreedificio' => $nombreEdificio,
+        ];
+
+        return response()->json($infoAmbiente);
+   }
 }
