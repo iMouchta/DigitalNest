@@ -90,16 +90,18 @@ class ReglaReservaDeAmbienteController extends Controller
         $reglas = ReglaReservaDeAmbiente::where('idambiente', $idAmbiente)->get();
         $listaReglasReservaDeAmbiente = [];
 
-        foreach ($reglas as $regla) {
-            $reglaReservaDeAmbienteJson = [
-                'idreglareservadeambiente' => $regla->idreglareservadeambiente,
-                'idambiente' => $regla->idambiente,
-                'fechainicialdisponible' => $regla->fechainicialdisponible,
-                'fechafinaldisponible' => $regla->fechafinaldisponible,
-                'horainicialdisponible' => $regla->horainicialdisponible,
-                'horafinaldisponible' => $regla->horafinaldisponible,
-            ];
-            $listaReglasReservaDeAmbiente[] = $reglaReservaDeAmbienteJson;
+        if($reglas) {
+            foreach ($reglas as $regla) {
+                $reglaReservaDeAmbienteJson = [
+                    'idreglareservadeambiente' => $regla->idreglareservadeambiente,
+                    'idambiente' => $regla->idambiente,
+                    'fechainicialdisponible' => $regla->fechainicialdisponible,
+                    'fechafinaldisponible' => $regla->fechafinaldisponible,
+                    'horainicialdisponible' => $regla->horainicialdisponible,
+                    'horafinaldisponible' => $regla->horafinaldisponible,
+                ];
+                $listaReglasReservaDeAmbiente[] = $reglaReservaDeAmbienteJson;
+            }
         }
         return $listaReglasReservaDeAmbiente;
     }

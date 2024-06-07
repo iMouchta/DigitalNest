@@ -7,6 +7,7 @@ use App\Models\Materia;
 use App\Models\Ambiente;
 use App\Models\PeriodoReservaOcupado;
 use App\Models\solicitud;
+use App\Models\ReglaReservaDeAmbiente;
 use Carbon\Carbon;
 
 use Illuminate\Http\Request;
@@ -55,22 +56,22 @@ class SolicitudController extends Controller
 
         foreach ($nombresDocentes as $nombreDocente) {
             $docente = Usuario::where('nombreusuario', $nombreDocente)
-                    ->where('administrador', false)
-                    ->first();
-            
+                ->where('administrador', false)
+                ->first();
+
             if ($docente) {
                 $idDocente = $docente->idusuario;
-
                 $materia = Materia::where('nombremateria', $nombreMateria)
                     ->where('idusuario', $idDocente)
                     ->first();
 
-                if($materia) {
+                if ($materia) {
                     $ambientes = Ambiente::all();
-                    $listaHoras = $this->generarListaHoras($horaInicial, $horaFinal);                    
-            
+                    $listaHoras = $this->generarListaHoras($horaInicial, $horaFinal);
+
                     foreach ($ambientes as $ambiente) {
-                        if ($ambiente->capacidadambiente >= $capacidad) {
+                        $capacidadAmbiente = $ambiente->capacidadambiente;
+                        if ($capacidadAmbiente >= $capacidad) {
                             foreach ($listaHoras as $hora) {
                                 $periodoReservaOcupado = PeriodoReservaOcupado::
                                     where('idambiente', $ambiente->idambiente)
@@ -80,14 +81,15 @@ class SolicitudController extends Controller
 
                                 if (!$periodoReservaOcupado) {
                                     if (!$this->ambienteRepetido($ambiente, $ambientesDisponibles)) {
-                                        $ambientesDisponibles[] = $ambiente;
-                                        break;
+                                        if ($this->cumpleReglaReserva($ambiente->idambiente, $fecha, $horaInicial, $horaFinal)) {
+                                            $ambientesDisponibles[] = $ambiente;
+                                            break;
+                                        }
                                     }
                                 }
-                            
                             }
                         }
-                    }    
+                    }
                 }
             }
         }
@@ -95,7 +97,31 @@ class SolicitudController extends Controller
         return response()->json([
             'ambientes' => $ambientesDisponibles,
         ]);
-	
+
+    }
+
+    private function cumpleReglaReserva($idAmbiente, $fecha, $horaInicial, $horaFinal)
+    {
+        $reglaReservaDeAmbiente = ReglaReservaDeAmbiente::where('idambiente', $idAmbiente)->get();
+        $fechaSolicitudCarbon = Carbon::parse($fecha);
+        $horaInicialSolicitudCarbon = Carbon::parse($horaInicial);
+        $horaFinalSolicitudCarbon = Carbon::parse($horaFinal);
+
+        if ($reglaReservaDeAmbiente) {
+            foreach ($reglaReservaDeAmbiente as $regla) {
+                $horaInicialDisponible = Carbon::parse($regla->horainicialdisponible);
+                $horaFinalDisponible = Carbon::parse($regla->horafinaldisponible);
+                $fechaInicialDisponible = Carbon::parse($regla->fechainicialdisponible);
+                $fechaFinalDisponible = Carbon::parse($regla->fechafinaldisponible);
+    
+                if ($fechaSolicitudCarbon -> between($fechaInicialDisponible, $fechaFinalDisponible)) {
+                    if (($horaInicialSolicitudCarbon >= $horaInicialDisponible) && ($horaFinalSolicitudCarbon <= $horaFinalDisponible)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     private function generarListaHoras($horaInicial, $horaFinal)
@@ -105,7 +131,7 @@ class SolicitudController extends Controller
         $horaInit = Carbon::parse($horaInicial);
         $horaFinal = Carbon::parse($horaFinal);
 
-        if($horaInit == $horaFinal){
+        if ($horaInit == $horaFinal) {
             $listaHoras[] = $horaInit->format('H:i:s');
             return $listaHoras;
         } else {
@@ -113,13 +139,14 @@ class SolicitudController extends Controller
                 $listaHoras[] = $horaInit->format('H:i:s');
                 $horaInit->addMinutes(45);
             }
-    
+
             // array_pop($listaHoras);
             return $listaHoras;
-        }        
+        }
     }
 
-    private function ambienteRepetido($ambiente, $ambientesDisponibles) {
+    private function ambienteRepetido($ambiente, $ambientesDisponibles)
+    {
         $repetido = false;
         foreach ($ambientesDisponibles as $ambienteDisponible) {
             if ($ambienteDisponible->idambiente == $ambiente->idambiente) {
@@ -129,7 +156,7 @@ class SolicitudController extends Controller
         }
         return $repetido;
     }
-    
+
     /**
      * Display the specified resource.
      *
