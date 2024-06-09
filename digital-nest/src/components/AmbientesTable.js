@@ -14,6 +14,8 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import Collapse from "@mui/material/Collapse";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@mui/material";
 
 const columns = [
   { id: "id", label: "ID", minWidth: 170 },
@@ -24,7 +26,15 @@ const columns = [
   { id: "estado", label: "Estado", minWidth: 100, align: "right" },
 ];
 
-function createData(id, edificio, aula, planta, capacidad, estado) {
+function createData(
+  id,
+  edificio,
+  aula,
+  planta,
+  capacidad,
+  estado,
+  reglasDeReserva
+) {
   return {
     id,
     edificio,
@@ -32,6 +42,7 @@ function createData(id, edificio, aula, planta, capacidad, estado) {
     planta: planta === 0 ? "Planta baja" : planta,
     capacidad,
     estado,
+    reglasDeReserva,
   };
 }
 
@@ -39,6 +50,7 @@ export default function AmbientesTable({ ambientes }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [expandedRow, setExpandedRow] = React.useState(null);
+  const navigate = useNavigate();
 
   const rows = ambientes.map((ambiente) =>
     createData(
@@ -47,7 +59,8 @@ export default function AmbientesTable({ ambientes }) {
       ambiente.nombreambiente,
       ambiente.planta,
       ambiente.capacidadambiente,
-      "Activo"
+      "Activo",
+      ambiente.reglasDeReserva
     )
   );
 
@@ -58,6 +71,11 @@ export default function AmbientesTable({ ambientes }) {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
+  };
+
+  const navigateToReglasDeReserva = () => {
+    const navArguments = { idAmbiente: 1 };
+    navigate("/docente/reglasDeReserva", { state: navArguments });
   };
 
   return (
@@ -142,16 +160,29 @@ export default function AmbientesTable({ ambientes }) {
                                 </TableRow>
                               </TableHead>
                               <TableBody>
-                                <TableRow>
-                                  <TableCell component="th" scope="row">
-                                    {"2024-03-01"}
-                                  </TableCell>
-                                  <TableCell>{"2024-07-06"}</TableCell>
-                                  <TableCell>{"6:45"}</TableCell>
-                                  <TableCell>{"21:45"}</TableCell>
-                                </TableRow>
+                                {(row.reglasDeReserva || []).map((regla) => (
+                                  <TableRow
+                                    key={regla.idreglareservadeambiente}
+                                  >
+                                    <TableCell component="th" scope="row">
+                                      {regla.fechainicialdisponible}
+                                    </TableCell>
+                                    <TableCell>
+                                      {regla.fechafinaldisponible}
+                                    </TableCell>
+                                    <TableCell>
+                                      {regla.horainicialdisponible}
+                                    </TableCell>
+                                    <TableCell>
+                                      {regla.horafinaldisponible}
+                                    </TableCell>
+                                  </TableRow>
+                                ))}
                               </TableBody>
                             </Table>
+                            <Button onClick={navigateToReglasDeReserva}>
+                              Editar reglas de reserva
+                            </Button>
                           </Box>
                         </Collapse>
                       </TableCell>

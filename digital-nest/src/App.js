@@ -28,6 +28,7 @@ import EnviarNotificacionPage from "./pages/EnviarNotificacionPage.js";
 import RegistrarAmbientePage from "./pages/RegistrarAmbientePage.js";
 import VisualizarAmbientePage from "./pages/VisualizarAmbientePage.js";
 import AppBarComponent from "./components/AppBarComponent.js";
+import ReglasReservaPage from "./pages/ReglasReservaPage.js";
 
 function App() {
   return (
@@ -69,6 +70,7 @@ function App() {
               path="visualizarAmbiente"
               element={<VisualizarAmbientePage />}
             />
+            <Route path="reglasDeReserva" element={<ReglasReservaPage />} />
           </Route>
 
           <Route path="/administrador" element={<HomePage />}>
