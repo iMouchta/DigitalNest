@@ -38,6 +38,9 @@ Route::resource('/getSolicitudesRapidas', SolicitudRapidaController::class);
 Route::resource('/ambiente', AmbienteController::class);
 Route::resource('/edificio', EdificioController::class);
 
+Route::post('/editAmbiente', [AmbienteController::class, 'editAmbiente'])->name('editAmbiente');
+Route::post('/deleteAmbiente', [AmbienteController::class, 'deleteAmbiente'])->name('deleteAmbiente');
+
 //Obtener informacion de un ambiente con su id
 Route::post('/getInfoAmbiente', [AmbienteController::class, 'getAmbienteById'])->name('getInfoAmbiente');
 
