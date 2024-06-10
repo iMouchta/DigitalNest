@@ -10,6 +10,7 @@ use App\Models\Solicitud;
 use App\Models\PeriodoReservaOcupado;
 use App\Models\ReglaReservaDeAmbiente;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 
 
@@ -202,6 +203,21 @@ class AmbienteController extends Controller
         }
     }
 
+    public function getSolicitudesAsociadasConAmbiente(Request $request)
+    {
+        $datosFormulario = request()->except('_token');
+        $idAmbiente = $datosFormulario['idambiente'];
+        $solicitudesAsociadasConAmbiente = SolicitudConAmbiente::where('idambiente', $idAmbiente)->get();
+        $listaIdsSolicitudesAfectadas = [];
+
+        foreach ($solicitudesAsociadasConAmbiente as $solicitudAsociadaConAmbiente) {
+            $idSolicitudAfectada = $solicitudAsociadaConAmbiente->idsolicitud;
+            $listaIdsSolicitudesAfectadas[] = $idSolicitudAfectada;
+        }
+
+        return response()->json($listaIdsSolicitudesAfectadas);
+    }
+
     public function deleteAmbiente(Request $request)
     {
         $datosFormulario = request()->except('_token');
@@ -211,16 +227,19 @@ class AmbienteController extends Controller
 
         if (!$ambienteTieneReservas) {
             $ambiente = Ambiente::find($idAmbientePorEliminar);
+            $this->eliminarReglaReservaDeAmbiente($idAmbientePorEliminar);
             $eliminado = $ambiente->delete();
 
             if ($eliminado) {
                 return response()->json([
                     'eliminado' => true,
+                    'consecuencias' => [],
                     'mensaje' => 'Ambiente eliminado correctamente'
                 ]);
             } else {
                 return response()->json([
                     'eliminado' => false,
+                    'consecuencias' => [],
                     'mensaje' => 'Error al eliminar el ambiente'
                 ]);
             }
@@ -231,36 +250,61 @@ class AmbienteController extends Controller
                 $ambientesDisponibles = $this->asignarNuevoAmbiente($idSolicitudAfectada, $idAmbientePorEliminar);
                 if (count($ambientesDisponibles) > 0) {
                     $nuevoAmbienteAsignado = $ambientesDisponibles[0];
+                    $idNuevoAmbienteAsignado = $nuevoAmbienteAsignado->idambiente;
 
-                    //to do
-                    $this->asociarNuevoAmbienteConSolicitud($idSolicitudAfectada, $nuevoAmbienteAsignado->idambiente);
+                    $this->actualizarPeriodosReservaOcupados($idSolicitudAfectada, $idNuevoAmbienteAsignado);
+                    $this->actualizarAsociacionAmbienteSolicitud($idSolicitudAfectada, $idNuevoAmbienteAsignado);
+                    $this->eliminarAsociacionAmbienteSolicitud($idSolicitudAfectada, $idAmbientePorEliminar);
 
                     $listaConsecuenciasEliminacionAmbiente[] = [
                         'idSolicitud' => $idSolicitudAfectada,
-                        'ambientesDisponibles' => $nuevoAmbienteAsignado,
+                        'nuevoAmbienteAsignado' => $idNuevoAmbienteAsignado,
                         'mensaje' => 'Se asignó un nuevo ambiente a la solicitud'
                     ];
                 } else {
+                    $this->eliminarAsociacionAmbienteSolicitud($idSolicitudAfectada, $idAmbientePorEliminar);
                     $listaConsecuenciasEliminacionAmbiente[] = [
                         'idSolicitud' => $idSolicitudAfectada,
-                        'ambientesDisponibles' => [],
+                        'nuevoAmbienteAsignado' => [],
                         'mensaje' => 'No se pudo asignar un nuevo ambiente a la solicitud'
                     ];
                 }
             }
 
-            //to do
-            $this->actualizarPeriodosDeReserva($idSolicitudAfectada, $nuevoAmbienteAsignado->idambiente);
-            $this->actualizarReglasDeReserva($idSolicitudAfectada, $nuevoAmbienteAsignado->idambiente);
+            $this->eliminarPeriodosReservaOcupadosConIdAmbiente($idAmbientePorEliminar);
+            $this->eliminarReglaReservaDeAmbiente($idAmbientePorEliminar);
             $this->eliminarAmbienteSinConsecuencias($idAmbientePorEliminar);
 
-            return response()->json([
-                // 'eliminado' => false,
-                // 'mensaje' => 'No se pudo eliminar el ambiente, porque tiene reservas asociadas',
-                'consecuencias' => $listaConsecuenciasEliminacionAmbiente
-                // 'ambientesDisponibles' => $ambientesDisponibles
-            ]);
+            if (count($ambientesDisponibles) == 0) {
+                return response()->json([
+                    'eliminado' => true,
+                    'consecuencias' => $listaConsecuenciasEliminacionAmbiente,
+                    'mensaje' => 'Ambiente eliminado correctamente, no hay ambientes disponibles para reasignar las solicitudes'
+                ]);
+            } else {
+                return response()->json([
+                    'eliminado' => true,
+                    'consecuencias' => $listaConsecuenciasEliminacionAmbiente,
+                    'ambientesDisponibles' => $ambientesDisponibles[0],
+                    'mensaje' => 'Ambiente eliminado correctamente, las solicitudes asociadas han sido reasignadas a otros ambientes en el mismo dia y horario'
+                ]);
+            }
+        }
+    }
 
+    private function eliminarAsociacionAmbienteSolicitud($idSolicitudAfectada, $idAmbientePorEliminar)
+    {
+        DB::table('solicitudconambiente')
+        ->where('idsolicitud', $idSolicitudAfectada)
+        ->where('idambiente', $idAmbientePorEliminar)
+        ->delete();
+    }
+
+    private function eliminarPeriodosReservaOcupadosConIdAmbiente($idAmbientePorEliminar)
+    {
+        $periodosReservaOcupados = PeriodoReservaOcupado::where('idambiente', $idAmbientePorEliminar)->get();
+        foreach ($periodosReservaOcupados as $periodoReservaOcupado) {
+            $periodoReservaOcupado->delete();
         }
     }
 
@@ -292,7 +336,7 @@ class AmbienteController extends Controller
                     if (!$periodoReservaOcupado) {
                         if (!$this->ambienteDuplicado($ambiente, $ambientesDisponibles)) {
                             if ($this->cumpleReglaReserva($ambiente->idambiente, $fecha, $horaInicial, $horaFinal)) {
-                                $ambientesDisponibles[] = $ambiente;
+                                $ambientesDisponibles[] = $ambiente;                                
                                 break;
                             }
                         }
@@ -304,17 +348,41 @@ class AmbienteController extends Controller
         return $ambientesDisponibles;
     }
 
-    private function getIdSolicitudesAfectadasPorEliminacion($idAmbiente)
+    private function eliminarReglaReservaDeAmbiente($idAmbientePorEliminar)
     {
-        $solicitudesAsociadasConAmbiente = SolicitudConAmbiente::where('idambiente', $idAmbiente)->get();
-        $listaIdsSolicitudesAfectadas = [];
-
-        foreach ($solicitudesAsociadasConAmbiente as $solicitudAsociadaConAmbiente) {
-            $idSolicitudAfectada = $solicitudAsociadaConAmbiente->idsolicitud;
-            $listaIdsSolicitudesAfectadas[] = $idSolicitudAfectada;
+        $reglasReservaDeAmbiente = ReglaReservaDeAmbiente::where('idambiente', $idAmbientePorEliminar)->get();
+        foreach ($reglasReservaDeAmbiente as $regla) {
+            $regla->delete();
         }
+    }
 
-        return $listaIdsSolicitudesAfectadas;
+    private function eliminarAmbienteSinConsecuencias($idAmbientePorEliminar)
+    {
+        $ambiente = Ambiente::find($idAmbientePorEliminar);
+        $ambiente->delete();
+    }
+
+    private function actualizarAsociacionAmbienteSolicitud($idSolicitudAfectada, $idNuevoAmbienteAsignado)
+    {
+        $asociacionSolicitudAmbiente = [
+            'idsolicitud' => $idSolicitudAfectada,
+            'idambiente' => $idNuevoAmbienteAsignado
+        ];
+
+        SolicitudConAmbiente::insert($asociacionSolicitudAmbiente);
+    }
+
+    private function actualizarPeriodosReservaOcupados($idSolicitudAfectada, $idAmbiente) {
+        $datosSolicitudAfectada = Solicitud::find($idSolicitudAfectada);
+        $fecha = $datosSolicitudAfectada->fechasolicitud;
+        $horaInicial = $datosSolicitudAfectada->horainicialsolicitud;
+        $horaFinal = $datosSolicitudAfectada->horafinalsolicitud;
+
+        $listaHorasDistribuidas = $this->generarListaHoras($horaInicial, $horaFinal);
+
+        foreach ($listaHorasDistribuidas as $horaOcupada) {
+            $this->registrarPeriodoReservaOcupado($horaOcupada, $fecha, $idAmbiente);
+        }
     }
 
     private function generarListaHoras($horaInicial, $horaFinal)
@@ -336,6 +404,50 @@ class AmbienteController extends Controller
             // array_pop($listaHoras);
             return $listaHoras;
         }
+    }
+
+    private function registrarPeriodoReservaOcupado($horaPorOcupar, $fecha, $idAmbiente)
+    {
+        $periodoReservaOcupadoSinRegistrar = $this->periodoReservaOcupado($horaPorOcupar, $fecha, $idAmbiente);
+        if (!$periodoReservaOcupadoSinRegistrar) {
+
+            $periodoNoDisponible = [
+                'idambiente' => $idAmbiente,
+                'fecha' => $fecha,
+                'hora' => $horaPorOcupar
+            ];
+
+            $registrarPeriodoNoDisponible = PeriodoReservaOcupado::insert($periodoNoDisponible);
+
+            if ($registrarPeriodoNoDisponible) {
+                $periodosNoDisponiblesRegistrados[] = $periodoNoDisponible;
+            }
+        } else {
+            $horasDesocupadas = false;
+        }
+    }
+
+    private function periodoReservaOcupado($hora, $fecha, $idAmbiente)
+    {
+        $periodoOcupado = PeriodoReservaOcupado::where('idambiente', $idAmbiente)->where('fecha', $fecha)->where('hora', $hora)->first();
+        if ($periodoOcupado) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private function getIdSolicitudesAfectadasPorEliminacion($idAmbiente)
+    {
+        $solicitudesAsociadasConAmbiente = SolicitudConAmbiente::where('idambiente', $idAmbiente)->get();
+        $listaIdsSolicitudesAfectadas = [];
+
+        foreach ($solicitudesAsociadasConAmbiente as $solicitudAsociadaConAmbiente) {
+            $idSolicitudAfectada = $solicitudAsociadaConAmbiente->idsolicitud;
+            $listaIdsSolicitudesAfectadas[] = $idSolicitudAfectada;
+        }
+
+        return $listaIdsSolicitudesAfectadas;
     }
 
     private function cumpleReglaReserva($idAmbiente, $fecha, $horaInicial, $horaFinal)

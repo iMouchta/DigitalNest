@@ -34,11 +34,11 @@ Route::resource('/registrarSolicitudRapida', PeriodoReservaOcupadoController::cl
 Route::resource('/motivo', MotivoController::class);
 Route::resource('/getSolicitudesRapidas', SolicitudRapidaController::class);
 
-//Registro y visualizacion de ambientes
+//Registro, visualizacion, eliminacion y edicion de informacion de ambientes
 Route::resource('/ambiente', AmbienteController::class);
 Route::resource('/edificio', EdificioController::class);
-
 Route::post('/editAmbiente', [AmbienteController::class, 'editAmbiente'])->name('editAmbiente');
+Route::post('/getSolicitudesAsociadasConAmbiente', [AmbienteController::class, 'getSolicitudesAsociadasConAmbiente'])->name('getSolicitudesAsociadasConAmbiente');
 Route::post('/deleteAmbiente', [AmbienteController::class, 'deleteAmbiente'])->name('deleteAmbiente');
 
 //Obtener informacion de un ambiente con su id
