@@ -1,7 +1,7 @@
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 
-export default function LockedTextFieldAmbiente({ label = "Nombre completo *", defaultValue = "Leticia Blanco" }) {
+export default function LockedTextFieldAmbiente({ label = "Error *", defaultValue = "Error" }) {
   return (
     <div>
       <Box

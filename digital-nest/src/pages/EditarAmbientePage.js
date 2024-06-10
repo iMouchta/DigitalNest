@@ -2,43 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import LockedTextFieldAmbiente from "../components/LockedTextFieldAmbiente";
 import { Box } from "@mui/material";
-import FormDateSelector from "../components/FormDateSelector";
 import FormSelector from "../components/FormSelector";
 
-export default function ReglasReservaPage() {
+
+export default function EditarAmbientePage() {
+
   const location = useLocation();
   const { ambiente } = location.state || {};
-
-  const horasDisponibles = [
-    { value: "6:45" },
-    { value: "7:30" },
-    { value: "8:15" },
-    { value: "9:00" },
-    { value: "9:45" },
-    { value: "10:30" },
-    { value: "11:15" },
-    { value: "12:00" },
-    { value: "12:45" },
-    { value: "13:30" },
-    { value: "14:15" },
-    { value: "15:00" },
-    { value: "15:45" },
-    { value: "16:30" },
-    { value: "17:15" },
-    { value: "18:00" },
-    { value: "18:45" },
-    { value: "19:30" },
-    { value: "20:15" },
-    { value: "21:00" },
-    { value: "21:45" },
-  ];
-
-  const horasIniciales = horasDisponibles.slice(0, -1);
-
-  const [selectedHoraInicio, setSelectedHoraInicio] = useState("");
-  const [selectedHoraFin, setSelectedHoraFin] = useState("");
-  const [horasFinales, setHorasFinales] = useState([]);
-
   return (
     <div>
       <h2>Reglas de reserva</h2>
@@ -87,21 +57,7 @@ export default function ReglasReservaPage() {
               label="Capacidad"
               defaultValue={ambiente.capacidad}
             ></LockedTextFieldAmbiente>
-            <h2>Reglas de reserva</h2>
-            <FormDateSelector label={"Fecha inicial"}></FormDateSelector>
-            <FormDateSelector label={"Fecha final"}></FormDateSelector>
-            <FormSelector
-              label="Hora inicial *"
-              options={horasIniciales}
-              onChange={setSelectedHoraInicio}
-              value={selectedHoraInicio}
-            />
-            <FormSelector
-              label="Hora final *"
-              options={horasFinales}
-              onChange={setSelectedHoraFin}
-              value={selectedHoraFin}
-            />
+
           </Box>
         </form>
       </div>
