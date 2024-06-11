@@ -23,11 +23,21 @@ export default function AppBarComponent() {
     fetch("http://localhost:8000/api/notificaciones/usuario/1")
       .then((response) => response.json())
       .then((data) => {
-        const sortedData = data.sort((a, b) => a.vista - b.vista);
+        const sortedData = data.sort((a, b) => {
+          if (a.vista === b.vista) {
+           
+            return b.idnotificacion - a.idnotificacion;
+          } else {
+            return a.vista - b.vista;
+          }
+        });
+        
         setNotifications(sortedData);
+        
         const unreadNotifications = sortedData.filter(
           (notification) => notification.vista === 0
         ).length;
+        
         setNumNotification(unreadNotifications);
         fetch("http://localhost:8000/api/verNotificaciones", {
           method: "POST",
