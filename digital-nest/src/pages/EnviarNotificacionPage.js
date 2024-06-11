@@ -27,6 +27,9 @@ export default function EnviarNotificacionPage(params) {
   const [errorFechaTransferencia, setErrorFechaTransferencia] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
+  //* Loading data
+  const [isLoading, setIsLoading] = useState(true);
+
   const handleChange = (event) => {
     setMostrarFechas(event.target.checked);
   };
@@ -69,6 +72,7 @@ export default function EnviarNotificacionPage(params) {
   };
 
   const handleEnviarNotificacion = () => {
+    isLoading(true);
     fetch("http://localhost:8000/api/users", {
       method: "POST",
       headers: {
@@ -100,6 +104,9 @@ export default function EnviarNotificacionPage(params) {
             })
             .catch((error) => {
               console.error("Error:", error);
+            })
+            .finally(() => {
+              setIsLoading(false);
             });
         }
         setOpen(false);
@@ -216,10 +223,15 @@ export default function EnviarNotificacionPage(params) {
           plataforma.
         </DialogContentText>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={handleClose} color="primary" disabled={isLoading}>
             Cancelar
           </Button>
-          <Button onClick={handleEnviarNotificacion} color="primary" autoFocus>
+          <Button
+            onClick={handleEnviarNotificacion}
+            color="primary"
+            autoFocus
+            disabled={isLoading}
+          >
             Confirmar
           </Button>
         </DialogActions>
