@@ -174,7 +174,7 @@ class SolicitudEspecialController extends Controller
         $solicitud->usuarios()->detach();
         $solicitud->delete();
 
-       
+        return response()->json("true");       
     }
 
     private function generarListaHoras($horaInicial, $horaFinal)
