@@ -56,8 +56,10 @@ class SolicitudEspecialController extends Controller
         $usuariosSolicitud = $request->idusuarios;
         $motivo = $request->motivosolicitud;
         $fecha = $request->fechasolicitud;
-        $ambiente = $request->idambientes;
-        $mensaje = "Se ha creado una nueva solicitud con el motivo: $motivo";
+
+        $mensaje = "Se ha creado una nueva solicitud con la siguiente información: 
+            - Fecha: $fecha
+            - Motivo: $motivo";
 
         foreach ($usuariosSolicitud as $idUsuario) {
             $this->notificacionController->notificarUsuario($idUsuario, $mensaje, false);
@@ -172,8 +174,9 @@ class SolicitudEspecialController extends Controller
 
         $motivo = $request->motivosolicitud;
         $usuariosSolicitud = $request->idusuarios;
-        $mensaje = "Se ha rechazado su solicitud con el motivo: $motivo";
-        
+        $fecha = $request->fechasolicitud;
+        $mensaje = "Se ha rechazado su solicitud para el dia: $fecha, con el motivo: $motivo";
+
 
         foreach ($usuariosSolicitud as $idUsuario) {
             $this->notificacionController->notificarUsuario($idUsuario, $mensaje, false);
@@ -183,7 +186,7 @@ class SolicitudEspecialController extends Controller
             ]));
         }
 
-        
+
 
         return response()->json(['mensaje' => 'La solicitud ha sido eliminada correctamente.']);
     }
@@ -296,7 +299,7 @@ class SolicitudEspecialController extends Controller
         foreach ($conflictos as $idSolicitudConflictiva) {
             $requestEliminar = new Request(['idsolicitud' => $idSolicitudConflictiva]);
             $this->eliminar($requestEliminar);
-            
+
         }
 
         $solicitud->aceptada = true;
@@ -430,26 +433,41 @@ class SolicitudEspecialController extends Controller
 
         $fecha = $request->fecha;
 
-        $solicitudes = Solicitud::where('especial', true)
-            ->whereDate('fechasolicitud', $fecha)
+        $solicitudes = Solicitud::whereDate('fechasolicitud', $fecha)
             ->pluck('idsolicitud');
 
         return response()->json($solicitudes);
     }
 
-    public function editarSolicitudes(Request $request)
+    public function actualizarFechasSolicitudes(Request $request)
     {
         $request->validate([
-            'ids_solicitudes' => 'required|array',
-            'ids_solicitudes.*' => 'required|integer|exists:solicitud,idsolicitud',
-            'nueva_fecha' => 'required|date',
+            'fecha1' => 'required|date',
+            'fecha2' => 'required|date',
         ]);
 
-        $idsSolicitudes = $request->ids_solicitudes;
-        $nuevaFecha = $request->nueva_fecha;
+        $fechaOriginal = $request->fecha1;
+        $nuevaFecha = $request->fecha2;
 
-        foreach ($idsSolicitudes as $idSolicitud) {
-            $solicitud = Solicitud::findOrFail($idSolicitud);
+        $solicitudes = Solicitud::whereDate('fechasolicitud', $fechaOriginal)->get();
+
+        if ($solicitudes->isEmpty()) {
+            return response()->json(['mensaje' => 'No se encontraron solicitudes con la fecha original proporcionada.'], 404);
+        }
+        $usuariosSolicitud = [];
+        foreach ($solicitudes as $solicitud) {
+            $usuariosSolicitud = array_merge($usuariosSolicitud, $solicitud->usuarios->pluck('idusuario')->toArray());
+        }
+        $usuariosSolicitud = array_unique($usuariosSolicitud);
+        $mensaje = "Su reserva de la fecha: $fechaOriginal, ha sido actualizada. La nueva fecha es: $nuevaFecha";
+        foreach ($usuariosSolicitud as $idUsuario) {
+            $this->notificacionController->notificarUsuario($idUsuario, $mensaje, false);
+            $this->enviarCorreosDesdeApi(new Request([
+                'ids_usuarios' => [$idUsuario],
+                'mensaje' => $mensaje
+            ]));
+        }
+        foreach ($solicitudes as $solicitud) {
             $solicitud->fechasolicitud = $nuevaFecha;
             $solicitud->save();
         }
@@ -457,6 +475,8 @@ class SolicitudEspecialController extends Controller
         return response()->json(['mensaje' => 'Las fechas han sido actualizadas correctamente.']);
     }
 
-    
+
+
+
 
 }
