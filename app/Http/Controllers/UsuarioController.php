@@ -4,14 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Usuario;
+use App\Http\Controllers\NotificacionController;
 
 class UsuarioController extends Controller
 {
     protected $emailController;
+    protected $notificacionController;
 
-    public function __construct( EmailController $emailController)
+    public function __construct(NotificacionController $notificacionController, EmailController $emailController)
     {
         $this->emailController = $emailController;
+        $this->notificacionController = $notificacionController;
     }
 
     public function enviarAviso(Request $request){
@@ -19,6 +22,7 @@ class UsuarioController extends Controller
         $userIds = Usuario::pluck('idUsuario');
     
         foreach ($userIds as $idUsuario) {
+            $this->notificacionController->notificarUsuario($idUsuario, $mensaje, false);
             $this->enviarCorreosDesdeApi(new Request([
                 'ids_usuarios' => [$idUsuario],
                 'mensaje' => $mensaje
