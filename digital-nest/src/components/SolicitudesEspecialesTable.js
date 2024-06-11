@@ -46,6 +46,12 @@ const columns = [
     minWidth: 170,
     align: "right",
   },
+  {
+    id: "estado",
+    label: "Estado",
+    minWidth: 170,
+    align: "right",
+  }
 ];
 
 function createData(
@@ -55,7 +61,8 @@ function createData(
   horainicialsolicitud,
   horafinalsolicitud,
   motivosolicitud,
-  ambientes
+  ambientes,
+  estado,
 ) {
   return {
     idsolicitud,
@@ -65,6 +72,7 @@ function createData(
     horafinalsolicitud,
     motivosolicitud,
     ambientes,
+    estado,
   };
 }
 
@@ -81,7 +89,10 @@ export default function SolicitudesEspecialesTable({ solicitudes }) {
       solicitud.horainicialsolicitud.split(":").slice(0, 2).join(":"),
       solicitud.horafinalsolicitud.split(":").slice(0, 2).join(":"),
       solicitud.motivosolicitud,
-      solicitud.ambientes
+      solicitud.ambientes,
+      <span style={{ color: solicitud.aceptada ? "green" : "grey" }}>
+      {solicitud.aceptada ? "Aceptada" : "Pendiente"}
+    </span>
     )
   );
 
