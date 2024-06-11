@@ -13,6 +13,7 @@ use App\Http\Controllers\EdificioController;
 use App\Http\Controllers\NotificacionController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\ReglaReservaDeAmbienteController;
+use App\Http\Controllers\UsuarioController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -53,15 +54,18 @@ Route::post('/editarReglaReservaAmbiente', [ReglaReservaDeAmbienteController::cl
 Route::post('/solicitudEspecial', [SolicitudEspecialController::class, 'store'])->name('solicitudEspecial.store');
 Route::get('/solicitudEspecial', [SolicitudEspecialController::class, 'index'])->name('solicitudEspecial.index');
 Route::get('/reservas', [SolicitudEspecialController::class, 'reservas'])->name('reservas');
-Route::post('/eliminarSoli', [SolicitudEspecialController::class, 'eliminar'])->name('solicitudEspecial.eliminar');
+Route::post('/eliminarSoli', [SolicitudEspecialController::class, 'eliminarConCorreo'])->name('solicitudEspecial.eliminar');
 Route::post('/aceptarSoli', [SolicitudEspecialController::class, 'accept'])->name('accept');
 Route::post('/confirmacion',[SolicitudEspecialController::class, 'confirmar'])->name('confirmar');
 Route::post('/fecha', [SolicitudEspecialController::class, 'buscarIDPorFecha']);
 
 //Notificaciones
 Route::get('/notificaciones/usuario/{idUsuario}', [NotificacionController::class, 'obtenerNotificacionesPorUsuario'])->name('notificaciones');
+Route::post('/verNotificaciones',[NotificacionController::class, 'cambiarEstado'])->name('verNotis');
 
 
 //Mail
 Route::post('/enviarCorreos', [SolicitudEspecialController::class, 'enviarCorreosDesdeApi']);
 
+//Usuarios
+Route::post('/users',[UsuarioController::class, 'enviarAviso']);

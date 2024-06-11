@@ -52,7 +52,9 @@ class NotificacionController extends Controller
         return response()->json($notificaciones);
     }
 
-    public function cambiarEstado($idUsuario){
+    public function cambiarEstado(Request $request)
+    {
+        $idUsuario = $request->input('idUsuario');
         $usuario = Usuario::findOrFail($idUsuario);
         $notificaciones = $usuario->notificaciones;
         foreach ($notificaciones as $notificacion) {

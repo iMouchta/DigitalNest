@@ -143,9 +143,36 @@ class SolicitudEspecialController extends Controller
         $solicitud->usuarios()->detach();
         $solicitud->delete();
 
+        return response()->json(['mensaje' => 'La solicitud ha sido eliminada correctamente.']);
+    }
+
+    public function eliminarConCorreo(Request $request)
+    {
+        $request->validate([
+            'idsolicitud' => 'required|integer|exists:solicitud,idsolicitud'
+        ]);
+
+        $solicitud = Solicitud::find($request->idsolicitud);
+
+        if (!$solicitud) {
+            return response()->json(['error' => 'Solicitud no encontrada'], 404);
+        }
+
+        foreach ($solicitud->usuarios as $usuario) {
+            $this->notificacionController->notificarUsuario(
+                $usuario->idusuario,
+                'Tu solicitud especial ha sido eliminada.',
+                false
+            );
+        }
+
+        $solicitud->ambientes()->detach();
+        $solicitud->usuarios()->detach();
+        $solicitud->delete();
+
         $motivo = $request->motivosolicitud;
         $usuariosSolicitud = $request->idusuarios;
-        $mensaje = "Se ha creado una nueva solicitud con el motivo: $motivo";
+        $mensaje = "Se ha rechazado su solicitud con el motivo: $motivo";
         
 
         foreach ($usuariosSolicitud as $idUsuario) {
@@ -222,7 +249,6 @@ class SolicitudEspecialController extends Controller
             'idsolicitud' => 'required|integer|exists:solicitud,idsolicitud'
         ]);
 
-
         $conflictosData = $this->generarConflictos($request);
         $idsSolicitudes = $conflictosData['ids_solicitudes'];
         $horariosInicial = $conflictosData['horario'];
@@ -230,9 +256,6 @@ class SolicitudEspecialController extends Controller
         $solicitud = Solicitud::findOrFail($request->idsolicitud);
         $motivo = $solicitud->motivosolicitud;
         $usuariosSolicitud = $solicitud->usuarios->pluck('idusuario');
-
-        $solicitud->aceptada = true;
-        $solicitud->save();
 
         foreach ($usuariosSolicitud as $idUsuario) {
             $mensaje = "Su solicitud con el motivo: $motivo, ha sido aceptada.";
@@ -275,6 +298,9 @@ class SolicitudEspecialController extends Controller
             $this->eliminar($requestEliminar);
             
         }
+
+        $solicitud->aceptada = true;
+        $solicitud->save();
 
         return response()->json(
             [
@@ -431,5 +457,6 @@ class SolicitudEspecialController extends Controller
         return response()->json(['mensaje' => 'Las fechas han sido actualizadas correctamente.']);
     }
 
+    
 
 }
