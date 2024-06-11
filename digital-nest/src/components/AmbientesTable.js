@@ -225,7 +225,7 @@ export default function AmbientesTable({ ambientes }) {
                               gutterBottom
                               component="div"
                             >
-                              Periodos disponibles
+                              Reglas de reserva
                             </Typography>
                             <Table size="small" aria-label="purchases">
                               <TableHead>

@@ -1,19 +1,24 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import LockedTextFieldAmbiente from "../components/LockedTextFieldAmbiente";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
 import FormSelector from "../components/FormSelector";
 import FormTextField from "../components/FormTextField";
+import FormSelectorTrigger from "../components/FormSelectorTrigger";
 
 export default function EditarAmbientePage() {
   const location = useLocation();
   const { ambiente } = location.state || {};
 
   //* Variables
-  const [textFieldNombreAmbiente, setTextFieldNombreAmbiente] = useState("");
-  const [selectedCapacidad, setSelectedCapacidad] = useState("");
-  const [selectedEdificio, setSelectedEdificio] = useState("");
-  const [selectedPlanta, setSelectedPlanta] = useState("");
+  const [textFieldNombreAmbiente, setTextFieldNombreAmbiente] = useState(
+    ambiente.aula
+  );
+  const [selectedEdificio, setSelectedEdificio] = useState(ambiente.edificio);
+  const [selectedCapacidad, setSelectedCapacidad] = useState(
+    ambiente.capacidad
+  );
+  const [selectedPlanta, setSelectedPlanta] = useState(ambiente.planta);
 
   //* Errors
   const [errorNombreAmbiente, setErrorNombreAmbiente] = useState(false);
@@ -26,6 +31,31 @@ export default function EditarAmbientePage() {
   //* Additional states
   const [edificios, setEdificios] = useState([]);
   const [plantas, setPlantas] = useState([]);
+
+  //* Dialog
+  const [open, setOpen] = useState(false);
+  const [openSuccess, setOpenSuccess] = useState(false);
+  const [dialogMessage, setDialogMessage] = useState("");
+  const [dialogTitle, setDialogTitle] = useState("");
+
+  useEffect(() => {
+    fetch("http://localhost:8000/api/edificio")
+      .then((response) => response.json())
+      .then((data) => {
+        setEdificios(data);
+        const edificioSeleccionado = data.find(
+          (edificio) => edificio.nombreedificio === selectedEdificio
+        );
+        const numeropisos = edificioSeleccionado
+          ? edificioSeleccionado.numeropisos
+          : 0;
+        setPlantas([
+          "Planta baja",
+          ...Array.from({ length: numeropisos - 1 }, (_, i) => i + 1),
+        ]);
+      })
+      .catch((error) => console.error("Error:", error));
+  }, []);
 
   const handleSubmit = () => {
     setErrorNombreAmbiente(!textFieldNombreAmbiente);
@@ -44,7 +74,17 @@ export default function EditarAmbientePage() {
     console.log("Edificio:", selectedEdificio);
     console.log("Planta:", selectedPlanta);
 
+    setOpen(true);
     // guardarCambios();
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleConfirm = () => {
+    guardarCambios();
+    setOpen(false);
   };
 
   const guardarCambios = async () => {
@@ -69,40 +109,56 @@ export default function EditarAmbientePage() {
       })
       .then((data) => {
         console.log(data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  };
-
-  const eliminarAmbiente = async () => {
-    await fetch("http://localhost:8000/api/deleteAmbiente", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        idambiente: ambiente.id,
-      }),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Error en la solicitud POST");
+        if (data.actualizado) {
+          handlePostSuccess(
+            "Cambios guardados",
+            "Los cambios se guardaron correctamente"
+          );
+        } else {
+          handlePostSuccess(
+            "Error",
+            "No se pudo guardar los cambios porque el ambiente ya tiene reservas asociadas"
+          );
         }
-        return response.json();
-      })
-      .then((data) => {
-        console.log(data);
       })
       .catch((error) => {
         console.error("Error:", error);
       });
   };
 
-  const edificiosDisponibles = [
-    { value: "Edificio academico II" },
-    { value: "Multiacademico" },
-  ];
+  const handlePostSuccess = (title, message) => {
+    setDialogTitle(title);
+    setDialogMessage(message);
+    setOpenSuccess(true);
+  };
+
+  const handleCloseSuccess = () => {
+    setOpenSuccess(false);
+  };
+
+  // const eliminarAmbiente = async () => {
+  //   await fetch("http://localhost:8000/api/deleteAmbiente", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       idambiente: ambiente.id,
+  //     }),
+  //   })
+  //     .then((response) => {
+  //       if (!response.ok) {
+  //         throw new Error("Error en la solicitud POST");
+  //       }
+  //       return response.json();
+  //     })
+  //     .then((data) => {
+  //       console.log(data);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error:", error);
+  //     });
+  // };
 
   return (
     <div>
@@ -132,11 +188,12 @@ export default function EditarAmbientePage() {
               borderRadius: "10px",
             }}
           >
-            {/* <LockedTextFieldAmbiente
+            <LockedTextFieldAmbiente
               label="ID del Ambiente"
               defaultValue={ambiente.id}
-            ></LockedTextFieldAmbiente> */}
-            <LockedTextFieldAmbiente
+            ></LockedTextFieldAmbiente>
+
+            {/* <LockedTextFieldAmbiente
               label="Nombre del ambiente"
               defaultValue={ambiente.aula}
             ></LockedTextFieldAmbiente>
@@ -153,31 +210,56 @@ export default function EditarAmbientePage() {
             <LockedTextFieldAmbiente
               label="Capacidad"
               defaultValue={ambiente.capacidad}
-            ></LockedTextFieldAmbiente>
+            ></LockedTextFieldAmbiente> */}
             <FormTextField
-              label="Nombre del ambiente"
+              label="Nombre del ambiente *"
               placeholder="Ingrese el nombre del ambiente"
               onChange={setTextFieldNombreAmbiente}
               error={errorNombreAmbiente}
+              defaultValue={ambiente.aula}
             ></FormTextField>
-            <FormSelector
-              label="Edificio"
-              options={edificiosDisponibles}
-              onChange={setSelectedEdificio}
+            <FormSelectorTrigger
+              label="Edificio *"
+              options={edificios.map((edificio) => ({
+                value: edificio.nombreedificio,
+              }))}
+              onChange={(e) => {
+                setSelectedEdificio(e.target.value);
+                setSelectedPlanta("");
+                const edificioSeleccionado = edificios.find(
+                  (edificio) => edificio.nombreedificio === e.target.value
+                );
+                const numeropisos = edificioSeleccionado
+                  ? edificioSeleccionado.numeropisos
+                  : 0;
+                setPlantas([
+                  "Planta baja",
+                  ...Array.from({ length: numeropisos - 1 }, (_, i) => i + 1),
+                ]);
+              }}
               error={errorEdificio}
               value={selectedEdificio}
-            ></FormSelector>
+            ></FormSelectorTrigger>
             <FormSelector
-              label="Planta"
-              options={plantas}
+              label="Planta *"
+              options={plantas.map((planta) => ({
+                value: planta,
+              }))}
               onChange={setSelectedPlanta}
               error={errorPlanta}
               value={selectedPlanta}
             ></FormSelector>
             <FormSelector
-              label="Capacidad"
+              label="Capacidad *"
               onChange={setSelectedCapacidad}
-              options={[{ value: "200" }, { value: "250" }]}
+              options={[
+                { value: "20" },
+                { value: "30" },
+                { value: "50" },
+                { value: "100" },
+                { value: "200" },
+                { value: "250" },
+              ]}
               error={errorCapacidad}
               value={selectedCapacidad}
             ></FormSelector>
@@ -200,6 +282,45 @@ export default function EditarAmbientePage() {
               >
                 Guardar cambios
               </Button>
+              <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
+                <DialogTitle id="alert-dialog-title">
+                  {"¿Está seguro de guardar los cambios?"}
+                </DialogTitle>
+                <DialogContent>
+                  <Typography align="justify" id="alert-dialog-description">
+                    {"Una vez guardados los cambios se actualizarán en el sistema"}
+                  </Typography>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleClose}>Cancelar</Button>
+                  <Button onClick={handleConfirm} autoFocus>
+                    Confirmar
+                  </Button>
+                </DialogActions>
+              </Dialog>
+              <Dialog
+                open={openSuccess}
+                onClose={handleCloseSuccess}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+              >
+                <DialogTitle id="alert-dialog-title">{dialogTitle}</DialogTitle>
+                <DialogContent>
+                  <Typography align="justify" id="alert-dialog-description">
+                    {dialogMessage}
+                  </Typography>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={handleCloseSuccess} autoFocus>
+                    Aceptar
+                  </Button>
+                </DialogActions>
+              </Dialog>
             </Box>
           </Box>
         </form>

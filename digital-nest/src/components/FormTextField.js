@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { FormHelperText } from "@mui/material";
 
-export default function FormTextField({ label, placeholder, onChange, error, value }) {
+export default function FormTextField({ label, placeholder, onChange, error, value, defaultValue }) {
   const handleChange = (event) => {
     onChange(event.target.value);
   };
@@ -31,6 +31,7 @@ export default function FormTextField({ label, placeholder, onChange, error, val
           onChange={handleChange}
           error={error}
           value={value}
+          defaultValue={defaultValue}
           // inputProps={{ maxLength: 20 }}
           
         />
