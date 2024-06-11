@@ -98,6 +98,7 @@ export default function FormSolicitudEspecial() {
       .then((data) => {
         if (data.subida) {
           toast.success("Solicitud enviada correctamente");
+          window.confirm("Solicitud realizada exitosamente");
           window.location.reload();
         } else {
           toast.error("Error al enviar la solicitud");

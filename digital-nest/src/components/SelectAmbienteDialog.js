@@ -55,6 +55,7 @@ export default function SelectAmbienteDialog({
           toast.success("Se ha realizado la reserva con éxito", {
             duration: 7000,
           });
+          window.confirm("Reserva realizada exitosamente");
           window.location.reload();
         } else {
           toast.error("No se ha podido realizar la reserva");
@@ -75,13 +76,13 @@ export default function SelectAmbienteDialog({
   const handleToggle = (value) => () => {
     const currentIndex = selectedValue.indexOf(value);
     const newChecked = [...selectedValue];
-  
+
     if (currentIndex === -1) {
       newChecked.push(value);
     } else {
       newChecked.splice(currentIndex, 1);
     }
-  
+
     setSelectedValue(newChecked);
   };
 

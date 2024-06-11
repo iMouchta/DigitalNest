@@ -284,30 +284,37 @@ export default function ViewSolicitudEspecial({ solicitudes }) {
                                   </Button>
                                   <Button
                                     onClick={async () => {
-
-                                      await fetch('http://localhost:8000/api/aceptarSoli', {
-                                        method: 'POST',
-                                        headers: {
-                                          'Content-Type': 'application/json'
-                                        },
-                                        body: JSON.stringify({ 
-                                          idsolicitud: row.idsolicitud,
-                                        })
-                                      })
-                                      .then(response => {
-                                        if (!response.ok) {
-                                          throw new Error('Error en la solicitud POST');
+                                      await fetch(
+                                        "http://localhost:8000/api/aceptarSoli",
+                                        {
+                                          method: "POST",
+                                          headers: {
+                                            "Content-Type": "application/json",
+                                          },
+                                          body: JSON.stringify({
+                                            idsolicitud: row.idsolicitud,
+                                          }),
                                         }
-                                        return response.json();
-                                      })
-                                      .then(data => {
-                                        console.log(data);
-                                        setOpen(false);
-                                        window.location.reload();
-                                      })
-                                      .catch(error => {
-                                        console.error('Error:', error);
-                                      });
+                                      )
+                                        .then((response) => {
+                                          if (!response.ok) {
+                                            throw new Error(
+                                              "Error en la solicitud POST"
+                                            );
+                                          }
+                                          return response.json();
+                                        })
+                                        .then((data) => {
+                                          console.log(data);
+                                          setOpen(false);
+                                          window.confirm(
+                                            "Solicitud aceptada correctamente"
+                                          );
+                                          window.location.reload();
+                                        })
+                                        .catch((error) => {
+                                          console.error("Error:", error);
+                                        });
                                       setOpen(false);
                                     }}
                                     color="primary"
