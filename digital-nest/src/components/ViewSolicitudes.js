@@ -7,7 +7,7 @@ export default function ViewSolicitudes() {
   const [solicitudesRapidas, setSolicitudesRapidas] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/reservas")
+    fetch("http://localhost:8000/api/solicitudEspecial")
       .then((response) => response.json())
       .then((data) => setSolicitudesEspeciales(data))
       .catch((error) => console.error("Error:", error));
