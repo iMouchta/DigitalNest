@@ -28,7 +28,7 @@ export default function EnviarNotificacionPage(params) {
   const [errorMessage, setErrorMessage] = useState("");
 
   //* Loading data
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (event) => {
     setMostrarFechas(event.target.checked);
