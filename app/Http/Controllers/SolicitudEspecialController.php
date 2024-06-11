@@ -12,9 +12,11 @@ use Carbon\Carbon;
 
 class SolicitudEspecialController extends Controller
 {
+    //kevin
     protected $notificacionController;
     protected $emailController;
 
+    //kevin
     public function __construct(NotificacionController $notificacionController, EmailController $emailController)
     {
         $this->notificacionController = $notificacionController;
@@ -51,6 +53,19 @@ class SolicitudEspecialController extends Controller
 
         $solicitud->usuarios()->sync($request->idusuarios);
         $solicitud->ambientes()->sync($request->idambientes);
+        $usuariosSolicitud = $request->idusuarios;
+        $motivo = $request->motivosolicitud;
+        $fecha = $request->fechasolicitud;
+        $ambiente = $request->idambientes;
+        $mensaje = "Se ha creado una nueva solicitud con el motivo: $motivo";
+
+        foreach ($usuariosSolicitud as $idUsuario) {
+            $this->notificacionController->notificarUsuario($idUsuario, $mensaje, false);
+            $this->enviarCorreosDesdeApi(new Request([
+                'ids_usuarios' => [$idUsuario],
+                'mensaje' => $mensaje
+            ]));
+        }
 
         return response()->json(['subida' => true]);
     }
@@ -127,6 +142,21 @@ class SolicitudEspecialController extends Controller
         $solicitud->ambientes()->detach();
         $solicitud->usuarios()->detach();
         $solicitud->delete();
+
+        $motivo = $request->motivosolicitud;
+        $usuariosSolicitud = $request->idusuarios;
+        $mensaje = "Se ha creado una nueva solicitud con el motivo: $motivo";
+        
+
+        foreach ($usuariosSolicitud as $idUsuario) {
+            $this->notificacionController->notificarUsuario($idUsuario, $mensaje, false);
+            $this->enviarCorreosDesdeApi(new Request([
+                'ids_usuarios' => [$idUsuario],
+                'mensaje' => $mensaje
+            ]));
+        }
+
+        
 
         return response()->json(['mensaje' => 'La solicitud ha sido eliminada correctamente.']);
     }

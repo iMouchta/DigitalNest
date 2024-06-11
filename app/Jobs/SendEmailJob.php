@@ -36,7 +36,7 @@ class SendEmailJob implements ShouldQueue
     {
         Mail::raw($this->mensaje, function ($message) {
             $message->to($this->correo)
-                    ->subject('Mensaje Personalizado');
+                    ->subject('Sistema de Reserva de Ambientes');
         });
     }
 }
