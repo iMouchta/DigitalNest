@@ -18,6 +18,14 @@ use App\Models\docente;
 
 class PeriodoReservaOcupadoController extends Controller
 {
+    protected $notificacionController;
+    protected $emailController;
+
+    public function __construct(NotificacionController $notificacionController, EmailController $emailController)
+    {
+        $this->notificacionController = $notificacionController;
+        $this->emailController = $emailController;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -129,6 +137,7 @@ class PeriodoReservaOcupadoController extends Controller
 
             return response()->json(
                 [
+                    'listaIdsDocentes' => $listaIdsDocentes,
                     'solicitud' => $solicitudCreada,
                     'asociacioncondocente' => $asociacionDocenteSolicitud,
                     'asociacionconambiente' => $asociacionAmbienteSolicitud,
@@ -153,17 +162,51 @@ class PeriodoReservaOcupadoController extends Controller
     }
 
     private function notificarDocentesSolicitudRapida($listaIdsDocentes, $nombreMateria) {
-        $notificacionController = new NotificacionController();
-        
-        foreach ($listaIdsDocentes as $idDocente) {
-
-            $docente = Usuario::find($idDocente);
-
-           if ($docente) {
-                $mensaje = "Se ha creado una solicitud rápida para el docente: " . $docente->nombreusuario . " en la materia: " . $nombreMateria;
-                $notificacionController->notificarUsuario($idDocente, $mensaje, false);
-            } 
+        foreach ($listaIdsDocentes as $idUsuario) {
+            $mensaje = "Se ha registrado una solicitud de la materia $nombreMateria";
+            $this->notificacionController->notificarUsuario($idUsuario, $mensaje, false);
+            $this->enviarCorreosDesdeApi(new Request([
+                'ids_usuarios' => [$idUsuario],
+                'mensaje' => $mensaje
+            ]));
         }
+    }
+
+    public function enviarCorreos(array $idsUsuarios, string $mensaje)
+    {
+        $correos = Usuario::whereIn('idusuario', $idsUsuarios)->pluck('correousuario')->toArray();
+
+        foreach ($correos as $correo) {
+            $this->emailController->enviarCorreo(new Request([
+                'Correos' => [$correo],
+                'Mensaje' => $mensaje
+            ]));
+        }
+    }
+
+    public function enviarCorreosDesdeApi(Request $request)
+    {
+        $request->validate([
+            'ids_usuarios' => 'required|array',
+            'ids_usuarios.*' => 'required|integer',
+            'mensaje' => 'required|string'
+        ]);
+
+        $idsUsuarios = $request->ids_usuarios;
+        $mensaje = $request->mensaje;
+        $usuariosExistentes = Usuario::whereIn('idusuario', $idsUsuarios)->pluck('idusuario')->toArray();
+        $idsNoEncontradas = array_diff($idsUsuarios, $usuariosExistentes);
+
+        // if (!empty($idsNoEncontradas)) {
+        //     return response()->json([
+        //         'error' => 'Un(os) usuario(s) no fue(ron) encontradp(s)',
+        //         'usuariosEncontrados' => $idsNoEncontradas
+        //     ], 400);
+        // }
+
+        $this->enviarCorreos($usuariosExistentes, $mensaje);
+
+        // return response()->json(['mensaje' => 'Correos enviados correctamente']);
     }
 
     private function getIdMateriaDocentes($nombresDocentes, $nombreMateria)
