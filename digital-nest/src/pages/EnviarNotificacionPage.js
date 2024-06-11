@@ -99,16 +99,17 @@ export default function EnviarNotificacionPage(params) {
             .then((response) => response.json())
             .then((data) => {
               console.log("Success:", data);
-              window.confirm("Se ha enviado la notificación correctamente.");
-              window.location.reload();
             })
             .catch((error) => {
               console.error("Error:", error);
             })
             .finally(() => {
-              setIsLoading(false);
+
             });
         }
+        window.confirm("Se ha enviado la notificación correctamente.");
+        window.location.reload();
+        setIsLoading(false);
         setOpen(false);
       })
       .catch((error) => {
