@@ -255,7 +255,7 @@ export default function ViewSolicitudEspecial({ solicitudes }) {
                                   solicitud?
                                 </DialogTitle>
                                 <DialogContent>
-                                  {solicitudesAfectadas.length === 0 ? (
+                                  {solicitudesAfectadas.length == 0 ? (
                                     <p>
                                       Está acción no afectará a ninguna otra
                                       solicitud

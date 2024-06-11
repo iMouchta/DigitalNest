@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -15,7 +15,14 @@ import Collapse from "@mui/material/Collapse";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@mui/material";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
 
 const columns = [
   { id: "id", label: "ID", minWidth: 170 },
@@ -51,6 +58,35 @@ export default function AmbientesTable({ ambientes }) {
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [expandedRow, setExpandedRow] = React.useState(null);
   const navigate = useNavigate();
+  const [solicitudesAfectadas, setSolicitudesAfectadas] = React.useState([]);
+  const [idParaEliminar, setIdParaEliminar] = React.useState(null);
+
+  const [openEliminarDialog, setOpenEliminarDialog] = useState(false);
+  const handleClickOpenEliminarDialog = (idAmbiente) => {
+    fetch("http://localhost:8000/api/getSolicitudesAsociadasConAmbiente", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ idambiente: idAmbiente }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setIdParaEliminar(idAmbiente);
+        setSolicitudesAfectadas(data);
+        setOpenEliminarDialog(true);
+      })
+      .catch((error) => console.error("Error:", error));
+  };
+
+  const handleCloseEliminarDialog = () => {
+    setOpenEliminarDialog(false);
+  };
+
+  const handleAceptarEliminarDialog = (idAmbienteEliminar) => {
+    setOpenEliminarDialog(false);
+    eliminarAmbiente({ idAmbienteEliminar });
+  };
 
   const rows = ambientes.map((ambiente) =>
     createData(
@@ -81,6 +117,31 @@ export default function AmbientesTable({ ambientes }) {
   const navigateToEditarAmbiente = (ambiente) => {
     const navArguments = { ambiente: ambiente };
     navigate("/docente/editarAmbiente", { state: navArguments });
+  };
+
+  const eliminarAmbiente = async (ambiente) => {
+    console.log("Ambiente a eliminar:", ambiente);
+    await fetch("http://localhost:8000/api/deleteAmbiente", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        idambiente: ambiente.idAmbienteEliminar,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Error en la solicitud POST");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
 
   return (
@@ -203,9 +264,11 @@ export default function AmbientesTable({ ambientes }) {
                               >
                                 Editar información de ambiente
                               </Button>
-                              //TODO cambiar a color rojo
                               <Button
-                                onClick={() => navigateToEditarAmbiente(row)}
+                                onClick={() =>
+                                  handleClickOpenEliminarDialog(row.id)
+                                }
+                                style={{ color: "red" }}
                               >
                                 Eliminar ambiente
                               </Button>
@@ -230,6 +293,38 @@ export default function AmbientesTable({ ambientes }) {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
+      <Dialog open={openEliminarDialog} onClose={handleCloseEliminarDialog}>
+        <DialogTitle>{"Eliminar Ambiente"}</DialogTitle>
+        <DialogContent>
+          {solicitudesAfectadas.length == 0 ? (
+            <p>Está acción no afectará a ninguna otra solicitud</p>
+          ) : (
+            <div>
+              <p>
+                Está acción afectará a las siguientes solicitudes asociadas con
+                los IDs:
+              </p>
+              <ul>
+                {solicitudesAfectadas.map((idSolicitud) => (
+                  <li key={idSolicitud}>{idSolicitud}</li>
+                ))}
+              </ul>
+              <p>Las solicitudes serán reprogramadas automáticamente</p>
+            </div>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseEliminarDialog} autoFocus>
+            Cancelar
+          </Button>
+          <Button
+            onClick={() => handleAceptarEliminarDialog(idParaEliminar)}
+            style={{ color: "red" }}
+          >
+            Aceptar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Paper>
   );
 }

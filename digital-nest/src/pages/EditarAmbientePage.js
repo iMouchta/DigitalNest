@@ -190,9 +190,9 @@ export default function EditarAmbientePage() {
                 marginTop: 2,
               }}
             >
-              <Button style={{ backgroundColor: "#ff6666", color: "white" }}>
+              {/* <Button style={{ backgroundColor: "#ff6666", color: "white" }}>
                 Eliminar ambiente
-              </Button>
+              </Button> */}
               <Button
                 variant="contained"
                 color="primary"
