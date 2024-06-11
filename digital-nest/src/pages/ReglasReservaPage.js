@@ -47,10 +47,27 @@ export default function ReglasReservaPage() {
     { value: "21:45" },
   ];
 
+  useEffect(() => {
+    setSelectedHoraFin("");
+  }, [selectedHoraInicio]);
+
   const horasIniciales = horasDisponibles.slice(0, -1);
 
-  const horasFinales = horasDisponibles.slice(1);
-  
+  const convertirHoraAMinutos = (hora) => {
+    const [horas, minutos] = hora.split(":").map(Number);
+    return horas * 60 + minutos;
+  };
+
+  const filtrarHorasFinales = (selectedHoraInicio) => {
+    const minutosHoraInicial = convertirHoraAMinutos(selectedHoraInicio);
+    return horasDisponibles.filter(hora => {
+      const minutosHora = convertirHoraAMinutos(hora.value);
+      return minutosHora > minutosHoraInicial;
+    });
+  };
+
+  const horasFinales = filtrarHorasFinales(selectedHoraInicio);
+
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -99,6 +116,8 @@ export default function ReglasReservaPage() {
       })
       .then((data) => {
         console.log(data);
+        window.confirm("Regla de reserva creada exitosamente");
+        window.location.href = '/docente/visualizarAmbiente';
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -107,7 +126,7 @@ export default function ReglasReservaPage() {
 
   return (
     <div>
-      <h2>Reglas de reserva</h2>
+      <h1>Crear nueva regla de reserva</h1>
 
       <div
         style={{
@@ -133,11 +152,12 @@ export default function ReglasReservaPage() {
               borderRadius: "10px",
             }}
           >
-            {/* <LockedTextFieldAmbiente
+
+            <h2>Información de ambiente</h2>
+            <LockedTextFieldAmbiente
               label="ID del Ambiente"
               defaultValue={ambiente.id}
-            ></LockedTextFieldAmbiente> */}
-            <h2>Información de ambiente</h2>
+            ></LockedTextFieldAmbiente>
             <LockedTextFieldAmbiente
               label="Nombre del ambiente"
               defaultValue={ambiente.aula}
@@ -156,7 +176,7 @@ export default function ReglasReservaPage() {
               label="Capacidad"
               defaultValue={ambiente.capacidad}
             ></LockedTextFieldAmbiente>
-            <h2>Reglas de reserva</h2>
+            <h2>Nueva regla de reserva</h2>
             <FormDateSelector
               label={"Fecha inicial"}
               onChange={setSelectedFechaInicial}

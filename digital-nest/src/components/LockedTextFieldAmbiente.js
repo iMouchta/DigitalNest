@@ -15,7 +15,7 @@ export default function LockedTextFieldAmbiente({ label = "Error *", defaultValu
         }}
       >
         <TextField
-          sx={{ backgroundColor: "#f5f5f5" }}
+          sx={{ backgroundColor: "#BDBDBD" }}
           label={label}
           defaultValue={defaultValue}
           InputProps={{
