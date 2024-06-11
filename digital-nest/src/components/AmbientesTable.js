@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -88,17 +88,22 @@ export default function AmbientesTable({ ambientes }) {
     eliminarAmbiente({ idAmbienteEliminar });
   };
 
-  const rows = ambientes.map((ambiente) =>
-    createData(
-      ambiente.idambiente,
-      ambiente.edificio,
-      ambiente.nombreambiente,
-      ambiente.planta,
-      ambiente.capacidadambiente,
-      "Activo",
-      ambiente.reglasDeReserva
-    )
-  );
+  const [rows, setRows] = useState([]);
+
+  useEffect(() => {
+    const mappedRows = ambientes.map((ambiente) =>
+      createData(
+        ambiente.idambiente,
+        ambiente.edificio,
+        ambiente.nombreambiente,
+        ambiente.planta,
+        ambiente.capacidadambiente,
+        "Activo",
+        ambiente.reglasDeReserva
+      )
+    );
+    setRows(mappedRows);
+  }, [ambientes]);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -119,15 +124,15 @@ export default function AmbientesTable({ ambientes }) {
     navigate("/docente/editarAmbiente", { state: navArguments });
   };
 
-  const eliminarAmbiente = async (ambiente) => {
-    console.log("Ambiente a eliminar:", ambiente);
+  const eliminarAmbiente = async (ambienteEliminar) => {
+    console.log("Ambiente a eliminar:", ambienteEliminar);
     await fetch("http://localhost:8000/api/deleteAmbiente", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        idambiente: ambiente.idAmbienteEliminar,
+        idambiente: ambienteEliminar.idAmbienteEliminar,
       }),
     })
       .then((response) => {
@@ -138,6 +143,8 @@ export default function AmbientesTable({ ambientes }) {
       })
       .then((data) => {
         console.log(data);
+        window.confirm("Ambiente eliminado correctamente.");
+        window.location.reload();
       })
       .catch((error) => {
         console.error("Error:", error);
