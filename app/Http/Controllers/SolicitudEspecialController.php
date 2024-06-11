@@ -154,31 +154,15 @@ class SolicitudEspecialController extends Controller
             'idsolicitud' => 'required|integer|exists:solicitud,idsolicitud'
         ]);
 
-        $solicitud = Solicitud::find($request->idsolicitud);
+        $solicitud = Solicitud::findOrFail($request->idsolicitud);
+        $motivo = $solicitud->motivosolicitud;
+        $usuariosSolicitud = $solicitud->usuarios->pluck('idusuario');
+        $fecha = $solicitud->fechasolicitud;
 
-        if (!$solicitud) {
-            return response()->json(['error' => 'Solicitud no encontrada'], 404);
-        }
+        
+        $mensaje = "Se ha cancelado su solicitud para el dia: $fecha, con el motivo: $motivo";
 
-        foreach ($solicitud->usuarios as $usuario) {
-            $this->notificacionController->notificarUsuario(
-                $usuario->idusuario,
-                'Tu solicitud especial ha sido eliminada.',
-                false
-            );
-        }
-
-        $solicitud->ambientes()->detach();
-        $solicitud->usuarios()->detach();
-        $solicitud->delete();
-
-        $motivo = $request->motivosolicitud;
-        $usuariosSolicitud = $request->idusuarios;
-        $fecha = $request->fechasolicitud;
-        $mensaje = "Se ha rechazado su solicitud para el dia: $fecha, con el motivo: $motivo";
-
-
-        foreach ($usuariosSolicitud as $idUsuario) {
+                foreach ($usuariosSolicitud as $idUsuario) {
             $this->notificacionController->notificarUsuario($idUsuario, $mensaje, false);
             $this->enviarCorreosDesdeApi(new Request([
                 'ids_usuarios' => [$idUsuario],
@@ -186,9 +170,11 @@ class SolicitudEspecialController extends Controller
             ]));
         }
 
+        $solicitud->ambientes()->detach();
+        $solicitud->usuarios()->detach();
+        $solicitud->delete();
 
-
-        return response()->json(['mensaje' => 'La solicitud ha sido eliminada correctamente.']);
+       
     }
 
     private function generarListaHoras($horaInicial, $horaFinal)
