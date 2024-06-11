@@ -1,14 +1,12 @@
-import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
+import Box from "@mui/material/Box";
+import Checkbox from "@mui/material/Checkbox";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import { useState, useEffect } from "react";
 
-import { useState, useEffect } from 'react';
-
-export default function AmbientesSelector({ onSelect, isEmpty }) { 
-
+export default function AmbientesSelector({ onMultipleSelection, isEmpty }) {
   const [ambientes, setAmbientes] = useState([]);
   const [checked, setChecked] = useState([]);
-  
+
   useEffect(() => {
     isEmpty(!checked.includes(true));
   }, [checked, isEmpty]);
@@ -28,36 +26,67 @@ export default function AmbientesSelector({ onSelect, isEmpty }) {
     newChecked[index] = event.target.checked;
     setChecked(newChecked);
 
-    if (onSelect) {
-      onSelect(ambientes[index]);
+    const selectedAmbientes = ambientes.filter((_, i) => newChecked[i]);
+    if (onMultipleSelection) {
+      onMultipleSelection(selectedAmbientes);
     }
   };
 
-  const ambientesPorEdificio = ambientes.reduce((acc, ambiente) => {
-    if (!acc[ambiente.edificio]) {
-      acc[ambiente.edificio] = [];
-    }
-    acc[ambiente.edificio].push(ambiente);
-    return acc;
-  }, {});
-  
-  return (
-    <Box sx={{ flexDirection: "column" }}>
-      {Object.entries(ambientesPorEdificio).map(([edificio, ambientes], index) => (
-        <Box key={index} sx={{ flexDirection: "row" }}>
-          <Box sx={{ marginRight: 2 }}>{edificio}</Box>
-          <Box sx={{ flexDirection: "column" }}>
-            {ambientes.map((ambiente, index) => (
-              <FormControlLabel
-                key={ambiente.idambiente}
-                control={<Checkbox checked={checked[index]} onChange={handleChange(index)} />}
-                label={ambiente.nombreambiente}
-              />
-            ))}
-          </Box>
-        </Box>
-      ))}
-    </Box>
-  );
+  const handleSelectAll = () => {
+    const newAllChecked = !checked.every(Boolean);
+    const newChecked = new Array(ambientes.length).fill(newAllChecked);
+    setChecked(newChecked);
 
+    if (onMultipleSelection) {
+      if (newAllChecked) {
+        onMultipleSelection(ambientes);
+      } else {
+        onMultipleSelection([]);
+      }
+    }
+  };
+
+  const allChecked = checked.every(Boolean);
+  const indeterminate = checked.some(Boolean) && !allChecked;
+
+  const handleChangeParent = (event) => {
+    const newCheckedState = checked.map(() => event.target.checked);
+    setChecked(newCheckedState);
+    if (onMultipleSelection) {
+      if (event.target.checked) {
+        onMultipleSelection(ambientes);
+      } else {
+        onMultipleSelection([]);
+      }
+    }
+  };
+
+  return (
+    <div>
+      <FormControlLabel
+        label="Todos los Ambientes"
+        control={
+          <Checkbox
+            checked={allChecked}
+            indeterminate={indeterminate}
+            onChange={handleChangeParent}
+          />
+        }
+      />
+      <Box sx={{ display: "flex", flexDirection: "column", ml: 3 }}>
+        {ambientes.map((ambiente, index) => (
+          <FormControlLabel
+            key={ambiente.idambiente}
+            label={ambiente.nombreambiente}
+            control={
+              <Checkbox
+                checked={checked[index]}
+                onChange={handleChange(index)}
+              />
+            }
+          />
+        ))}
+      </Box>
+    </div>
+  );
 }

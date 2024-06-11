@@ -108,11 +108,46 @@ export default function FormSolicitudEspecial() {
         console.error("Error:", error);
       });
   };
-
   const handleSelectAmbiente = (ambiente) => {
-    setSelectedAmbientes((prev) => [...prev, ambiente]);
+    setSelectedAmbientes((prev) => {
+      // Verifica si el ambiente ya está en el arreglo
+      const isAlreadySelected = prev.find(
+        (item) => item.idambiente === ambiente.idambiente
+      );
+      // Si no está, lo agrega
+      if (!isAlreadySelected) {
+        console.log("Ambiente seleccionado:", ambiente);
+        return [...prev, ambiente];
+      }
+      // Si ya está, devuelve el arreglo sin cambios
+      return prev;
+    });
   };
 
+  const handleSelectAmbientes = (ambientes) => {
+    setSelectedAmbientes((prev) => {
+      // Crear una copia del estado anterior para modificar
+      let newSelectedAmbientes = [...prev];
+  
+      // Iterar sobre el arreglo de ambientes proporcionado
+      ambientes.forEach((ambiente) => {
+        // Verifica si el ambiente ya está en el arreglo
+        const isAlreadySelected = newSelectedAmbientes.find(
+          (item) => item.idambiente === ambiente.idambiente
+        );
+  
+        // Si no está, lo agrega
+        if (!isAlreadySelected) {
+          console.log("Ambiente seleccionado:", ambiente);
+          newSelectedAmbientes.push(ambiente);
+        }
+        // Si ya está, no se hacen cambios, por lo que no se agrega de nuevo
+      });
+  
+      // Devuelve el nuevo estado
+      return newSelectedAmbientes;
+    });
+  };
   const horasDisponibles = [
     { value: "6:45" },
     { value: "7:30" },
@@ -185,7 +220,7 @@ export default function FormSolicitudEspecial() {
         /> */}
         <LockedTextField />
         <AmbientesSelector
-          onSelect={handleSelectAmbiente}
+          onMultipleSelection={handleSelectAmbientes}
           isEmpty={setIsAmbientesEmpty}
         />
         {isAmbientesEmpty && (
