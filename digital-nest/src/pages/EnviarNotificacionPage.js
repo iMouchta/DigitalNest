@@ -72,7 +72,7 @@ export default function EnviarNotificacionPage(params) {
   };
 
   const handleEnviarNotificacion = () => {
-    isLoading(true);
+    setIsLoading(true);
     fetch("http://localhost:8000/api/users", {
       method: "POST",
       headers: {
