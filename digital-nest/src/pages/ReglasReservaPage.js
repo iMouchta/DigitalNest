@@ -69,8 +69,10 @@ export default function ReglasReservaPage() {
       return;
     }
 
-    console.log("Fecha inicial: ", selectedFechaInicial);
-    console.log("Fecha final: ", selectedFechaFinal);
+    console.log("Fecha inicial: ", selectedFechaInicial.format("YYYY-MM-DD"));
+    console.log("Fecha final: ", selectedFechaFinal.format("YYYY-MM-DD"));
+    console.log("Hora inicial: ", selectedHoraInicio);
+    console.log("Hora final: ", selectedHoraFin);
 
     crearReglasDeReserva();
   };
@@ -83,8 +85,8 @@ export default function ReglasReservaPage() {
       },
       body: JSON.stringify({
         idambiente: ambiente.id,
-        fechainicialdisponible: selectedFechaInicial,
-        fechafinaldisponible: selectedFechaFinal,
+        fechainicialdisponible: selectedFechaInicial.format("YYYY-MM-DD"),
+        fechafinaldisponible: selectedFechaFinal.format("YYYY-MM-DD"),
         horainicialdisponible: selectedHoraInicio,
         horafinaldisponible: selectedHoraFin,
       }),

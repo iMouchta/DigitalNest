@@ -29,6 +29,25 @@ export default function AppBarComponent() {
           (notification) => notification.vista === 0
         ).length;
         setNumNotification(unreadNotifications);
+        fetch("http://localhost:8000/api/verNotificaciones", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            idUsuario: 1,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      })
+      .catch((error) => {
+        console.error("Error:", error);
       });
   }, []);
 
@@ -74,7 +93,11 @@ export default function AppBarComponent() {
           style: { maxHeight: "50vh", overflow: "auto" },
         }}
       >
-        <Typography variant="h5" component="div" sx={{ marginTop: 2, marginLeft: 2, fontWeight: "bold" }}>
+        <Typography
+          variant="h5"
+          component="div"
+          sx={{ marginTop: 2, marginLeft: 2, fontWeight: "bold" }}
+        >
           Notificaciones
         </Typography>
         <List>
