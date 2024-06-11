@@ -226,7 +226,7 @@ export default function FormRegistrarAmbiente() {
           <DialogContent>
             <Typography align="justify" id="alert-dialog-description">
               {
-                "Al confirmar, el ambiente será habilitado con las reglas por defecto, estará habilitado para reserva hasta el 6 de junio del 2024, de hrs. 6:45 a.m. a 21:45 p.m. (se puede modificar estas reglas posteriormente)."
+                "Al confirmar, el ambiente será registrado como inactivo y será necesario crear reglas de reserva para habilitarlo."
               }
             </Typography>
           </DialogContent>
