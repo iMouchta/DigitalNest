@@ -20,7 +20,7 @@ export default function AppBarComponent() {
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/notificaciones/usuario/2")
+    fetch("http://localhost:8000/api/notificaciones/usuario/1")
       .then((response) => response.json())
       .then((data) => {
         const sortedData = data.sort((a, b) => a.vista - b.vista);

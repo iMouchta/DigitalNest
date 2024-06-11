@@ -99,7 +99,6 @@ export default function FormSolicitudEspecial() {
         if (data.subida) {
           toast.success("Solicitud enviada correctamente");
           window.location.reload();
-
         } else {
           toast.error("Error al enviar la solicitud");
         }
@@ -184,7 +183,6 @@ export default function FormSolicitudEspecial() {
           error={errorNombre}
         /> */}
         <LockedTextField />
-
         <AmbientesSelector
           onSelect={handleSelectAmbiente}
           isEmpty={setIsAmbientesEmpty}

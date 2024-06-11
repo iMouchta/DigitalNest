@@ -78,10 +78,10 @@ export default function AmbientesTable({ ambientes }) {
     navigate("/docente/reglasDeReserva", { state: navArguments });
   };
 
-  const navigateToEditarAmbiente = (ambiente) => { 
+  const navigateToEditarAmbiente = (ambiente) => {
     const navArguments = { ambiente: ambiente };
     navigate("/docente/editarAmbiente", { state: navArguments });
-  }
+  };
 
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
@@ -196,12 +196,18 @@ export default function AmbientesTable({ ambientes }) {
                               <Button
                                 onClick={() => navigateToReglasDeReserva(row)}
                               >
-                                Editar reglas de reserva
+                                Crear regla de reserva
                               </Button>
                               <Button
                                 onClick={() => navigateToEditarAmbiente(row)}
                               >
                                 Editar información de ambiente
+                              </Button>
+                              //TODO cambiar a color rojo
+                              <Button
+                                onClick={() => navigateToEditarAmbiente(row)}
+                              >
+                                Eliminar ambiente
                               </Button>
                             </Box>
                           </Box>
