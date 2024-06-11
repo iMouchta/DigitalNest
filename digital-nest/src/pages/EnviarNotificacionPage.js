@@ -50,11 +50,16 @@ export default function EnviarNotificacionPage(params) {
     }
 
     console.log("Mensaje:", mensaje);
-    console.log("Fecha afectada:", selectedFechaAfectada.format("YYYY-MM-DD"));
-    console.log(
-      "Fecha transferencia:",
-      selectedFechaTransferencia.format("YYYY-MM-DD")
-    );
+    if (mostrarFechas) {
+      console.log(
+        "Fecha afectada:",
+        selectedFechaAfectada.format("YYYY-MM-DD")
+      );
+      console.log(
+        "Fecha transferencia:",
+        selectedFechaTransferencia.format("YYYY-MM-DD")
+      );
+    }
 
     setOpen(true);
   };
