@@ -98,7 +98,7 @@ export default function AmbientesTable({ ambientes }) {
         ambiente.nombreambiente,
         ambiente.planta,
         ambiente.capacidadambiente,
-        "Activo",
+        ambiente.reglasDeReserva.length > 0 ? "Activo" : "Inactivo",
         ambiente.reglasDeReserva
       )
     );
@@ -196,8 +196,12 @@ export default function AmbientesTable({ ambientes }) {
                         const value = row[column.id];
                         return (
                           <TableCell key={column.id} align={column.align}>
-                            {column.id === "estado" && value === "Activo" ? (
-                              <Typography style={{ color: "green" }}>
+                            {column.id === "estado" ? (
+                              <Typography
+                                style={{
+                                  color: value === "Activo" ? "green" : "grey",
+                                }}
+                              >
                                 {value}
                               </Typography>
                             ) : column.format && typeof value === "number" ? (
