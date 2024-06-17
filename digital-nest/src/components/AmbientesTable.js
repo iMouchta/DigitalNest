@@ -23,6 +23,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
+import { URL_API } from '../http/const';
 
 const columns = [
   { id: "id", label: "ID", minWidth: 170 },
@@ -63,7 +64,7 @@ export default function AmbientesTable({ ambientes }) {
 
   const [openEliminarDialog, setOpenEliminarDialog] = useState(false);
   const handleClickOpenEliminarDialog = (idAmbiente) => {
-    fetch("http://localhost:8000/api/getSolicitudesAsociadasConAmbiente", {
+    fetch(`${URL_API}/getSolicitudesAsociadasConAmbiente`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -126,7 +127,7 @@ export default function AmbientesTable({ ambientes }) {
 
   const eliminarAmbiente = async (ambienteEliminar) => {
     console.log("Ambiente a eliminar:", ambienteEliminar);
-    await fetch("http://localhost:8000/api/deleteAmbiente", {
+    await fetch(`${URL_API}/deleteAmbiente`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

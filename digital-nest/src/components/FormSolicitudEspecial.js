@@ -17,6 +17,7 @@ import FormMultipleSelector from "./FormMultipleSelector";
 import AmbientesSelector from "./AmbientesSelector";
 import { set } from "lodash";
 import LockedTextField from "./LockedTextField";
+import { URL_API } from '../http/const';
 
 export default function FormSolicitudEspecial() {
   //* Form fields
@@ -80,7 +81,7 @@ export default function FormSolicitudEspecial() {
     console.log("Hora de fin:", selectedHoraFin);
     console.log("Motivo:", textFieldMotivo);
 
-    fetch("http://localhost:8000/api/solicitudEspecial", {
+    fetch(`${URL_API}/solicitudEspecial`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

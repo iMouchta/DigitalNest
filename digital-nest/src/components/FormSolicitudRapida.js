@@ -7,6 +7,7 @@ import SendFormButton from "./SendFormButton";
 import FormDateSelector from "./FormDateSelector";
 import Grid from "@mui/material/Box";
 import SelectAmbienteDialog from "./SelectAmbienteDialog";
+import { URL_API } from '../http/const';
 
 export default function FormSolicitudRapida() {
   //* Form fields
@@ -88,7 +89,7 @@ export default function FormSolicitudRapida() {
     console.log("Motivo:", selectedMotivo);
 
     // Realizar la solicitud POST
-    fetch("http://localhost:8000/api/ambientesDisponibles", {
+    fetch(`${URL_API}/ambientesDisponibles`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

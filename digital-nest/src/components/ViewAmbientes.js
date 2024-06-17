@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { URL_API } from '../http/const';
 
 import AmbientesTable from "./AmbientesTable";
 
@@ -6,7 +7,7 @@ export default function ViewAmbientes() {
   const [ambientes, setAmbientes] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/ambiente")
+    fetch(`${URL_API}/ambiente`)
       .then((response) => response.json())
       .then((data) => setAmbientes(data))
       .catch((error) => console.error("Error:", error));

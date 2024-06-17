@@ -1,0 +1,393 @@
+git[33mcommit 33330fa96a514da81d934fb645ed8020f8bd6627[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mdev[m[33m)[m
+Author: iMouchta <jonathanperaltaflores@gmail.com>
+Date:   Sun Jun 16 23:50:52 2024 -0400
+
+    Deploy3
+
+[33mcommit 2f60f46a5987c51ab7e3970b0640d866105ee1ba[m
+Author: iMouchta <jonathanperaltaflores@gmail.com>
+Date:   Sun Jun 16 23:45:17 2024 -0400
+
+    Deploy 3
+
+[33mcommit f29316eef258bce5405ee8f5e736e37d84a2c4c7[m
+Author: iMouchta <jonathanperaltaflores@gmail.com>
+Date:   Sun Jun 16 23:29:29 2024 -0400
+
+    Deploy2
+
+[33mcommit 2fd95b258374368de9ed2c2ea60bafdb3b0565a2[m
+Author: iMouchta <jonathanperaltaflores@gmail.com>
+Date:   Sun Jun 16 22:19:42 2024 -0400
+
+    Deploy
+
+[33mcommit 9d6db7bc0a73571db4b24a306507272ec692d28f[m[33m ([m[1;31morigin/dev[m[33m)[m
+Merge: bc809ee b8bc74a
+Author: Anstayker <Christian.rojas.bl@gmail.com>
+Date:   Tue Jun 11 07:00:32 2024 -0400
+
+    Merge branch 'dev' of https://github.com/iMouchta/DigitalNest into dev
+
+[33mcommit bc809eebcbf40877a9b0030ff0eabbb16dee1875[m
+Author: Anstayker <Christian.rojas.bl@gmail.com>
+Date:   Tue Jun 11 07:00:17 2024 -0400
+
+    Cuadraditos
+
+[33mcommit 854316451ccd12ba59c93bd06b825668760c96bc[m
+Author: Anstayker <Christian.rojas.bl@gmail.com>
+Date:   Tue Jun 11 06:21:25 2024 -0400
+
+    extra notification
+
+[33mcommit 636bad4a12e52c2399869beb0e3ef0f257d97cb6[m
+Author: Anstayker <Christian.rojas.bl@gmail.com>
+Date:   Tue Jun 11 06:09:31 2024 -0400
+
+    loading parte 3
+
+[33mcommit b8bc74a5a9d494265b4e9bb77f7347aec12af821[m
+Author: iMouchta <jonathanperaltaflores@gmail.com>
+Date:   Tue Jun 11 06:05:19 2024 -0400
+
+    json eliminar
+
+[33mcommit 860798cb8c0b0a6a3ce31cd7c481c19ce1c3b1aa[m
+Author: Anstayker <Christian.rojas.bl@gmail.com>
+Date:   Tue Jun 11 05:51:56 2024 -0400
+
+    loading bug p2
+
+[33mcommit 1575a1c1fef48fac5a278d6d1ebd0ada780eb12d[m
+Merge: 856f3f7 dc6f048
+Author: Anstayker <Christian.rojas.bl@gmail.com>
+Date:   Tue Jun 11 05:49:49 2024 -0400
+
+    Merge branch 'dev' of https://github.com/iMouchta/DigitalNest into dev
+
+[33mcommit 856f3f7b3f8774f8a5ad3f947632a90e8fa8dd86[m
+Author: Anstayker <Christian.rojas.bl@gmail.com>
+Date:   Tue Jun 11 05:49:40 2024 -0400
+
+    loading bug
+
+[33mcommit dc6f04878c862885555338efe31e9e1b39bb2ca6[m
+Merge: ca833c0 ec27aac
+Author: iMouchta <jonathanperaltaflores@gmail.com>
+Date:   Tue Jun 11 05:40:44 2024 -0400
+
+    Merge branch 'dev' of https://github.com/iMouchta/DigitalNest into dev
+
+[33mcommit ca833c070c2a4c73ea5ae6d36a600e17765e97bc[m
+Author: iMouchta <jonathanperaltaflores@gmail.com>
+Date:   Tue Jun 11 05:40:39 2024 -0400
+
+    notificaciones aaaaaaa
+
+[33mcommit ec27aac3874f16fd0ef24d8f19e09dd879fa16ea[m
+Author: Anstayker <Christian.rojas.bl@gmail.com>
+Date:   Tue Jun 11 05:38:18 2024 -0400
+
+    loading feature
+
+[33mcommit 930063ac8d94d1410240124a8ba37c7f78047d03[m
+Author: Anstayker <Christian.rojas.bl@gmail.com>
+Date:   Tue Jun 11 05:29:14 2024 -0400
+
+    notification fixed
+
+[33mcommit f24e66cd67975d93ae691b332944b24de5e49b80[m
+Author: Anstayker <Christian.rojas.bl@gmail.com>
+Date:   Tue Jun 11 05:11:42 2024 -0400
+
+    send notifications
+
+[33mcommit 86112e5d9532b5495a0612f832fa7d8a2b85fb74[m
+Merge: 7589b2d 4bbf756
+Author: Anstayker <Christian.rojas.bl@gmail.com>
+Date:   Tue Jun 11 04:25:00 2024 -0400
+
+    Merge branch 'dev' of https://github.com/iMouchta/DigitalNest into dev
+
+[33mcommit 7589b2d2f574f4e3551b65656cfe3a85c61e4ed8[m
+Author: Anstayker <Christian.rojas.bl@gmail.com>
+Date:   Tue Jun 11 04:24:49 2024 -0400
+
+    visualizar solicitud
+
+[33mcommit 4bbf756f38e2a309f524c6455462c2a300657fb9[m
+Author: iMouchta <jonathanperaltaflores@gmail.com>
+Date:   Tue Jun 11 04:08:39 2024 -0400
+
+    eliminarCorreo
+
+[33mcommit c1667ede12d081d758e565ab01c0fe586d1b725a[m
+Merge: 9751f5a f4397cf
+Author: Anstayker <Christian.rojas.bl@gmail.com>
+Date:   Tue Jun 11 03:21:26 2024 -0400
+
+    Merge branch 'dev' of https://github.com/iMouchta/DigitalNest into dev
+
+[33mcommit 9751f5aee57618d7c86963d1eea74fcbdc746f0a[m
+Author: Anstayker <Christian.rojas.bl@gmail.com>
+Date:   Tue Jun 11 03:21:21 2024 -0400
+
+    editar ambiente
+
+[33mcommit f4397cfd530d2278c5327957a5084affd0184a6d[m
+Author: iMouchta <jonathanperaltaflores@gmail.com>
+Date:   Tue Jun 11 02:32:14 2024 -0400
+
+    ultimo
+
+[33mcommit 075f403f8953b3e1ae98d3842b232641cc9b7e81[m
+Merge: 1467efe 2123adf
+Author: iMouchta <jonathanperaltaflores@gmail.com>
+Date:   Tue Jun 11 02:31:44 2024 -0400
+
+    ultimo
+
+[33mcommit 1467efec18277c38c82070d6d7dca055889c4279[m
+Author: iMouchta <jonathanperaltaflores@gmail.com>
+Date:   Tue Jun 11 02:31:34 2024 -0400
+
+    ultimo
+
+[33mcommit 7bcd2147222cba4390b58d3e3c20174addfe6780[m
+Author: Anstayker <Christian.rojas.bl@gmail.com>
+Date:   Tue Jun 11 02:02:56 2024 -0400
+
+    orden de notificaciones fixd
+
+[33mcommit b5ec57a9af010d352c3f63545472d3db2d211f1f[m
+Author: Anstayker <Christian.rojas.bl@gmail.com>
+Date:   Tue Jun 11 01:44:38 2024 -0400
+
+    Crear nuevo ambiente
+
+[33mcommit 728313a725f97ded174682d58ce43a877fa3537a[m
+Author: Anstayker <Christian.rojas.bl@gmail.com>
+Date:   Tue Jun 11 01:41:26 2024 -0400
+
+    Crear reglas de reserva
+
+[33mcommit affedcf9e369df82f2fb5fd2715c3b306005cf2d[m
+Author: Anstayker <Christian.rojas.bl@gmail.com>
+Date:   Tue Jun 11 01:25:16 2024 -0400
+
+    visualizar ambientes
+
+[33mcommit b9fe943ba748d4c88f0281305be28cbfbc79720a[m
+Author: Anstayker <Christian.rojas.bl@gmail.com>
+Date:   Tue Jun 11 01:21:42 2024 -0400
+
+    Feature Eliminar ambiente terminado!
+
+[33mcommit e7c282cd3166f2017d2f496cd6704718f026cf38[m
+Author: Anstayker <Christian.rojas.bl@gmail.com>
+Date:   Tue Jun 11 00:50:28 2024 -0400
+
+    eliminar ambiente
+
+[33mcommit 2123adfcbac445de7bc2cb9484ef67d07e13bc1a[m
+Author: Drunok <aguilarkevin825@gmail.com>
+Date:   Tue Jun 11 00:40:55 2024 -0400
+
+    notificacion y envio de correos funcionando en solicitud rapida
+
+[33mcommit e91ef41553354275665e0e27e974e62a8207da4a[m
+Author: Anstayker <Christian.rojas.bl@gmail.com>
+Date:   Tue Jun 11 00:02:39 2024 -0400
+
+    app bar changes
+
+[33mcommit db744ae34e774b8726cfee984e97518c3b097abb[m
+Author: iMouchta <jonathanperaltaflores@gmail.com>
+Date:   Mon Jun 10 23:34:58 2024 -0400
+
+    cambios Notificaciones
+
+[33mcommit 75b6d77a5a41a47bfd9e2ae695307f0fcbb4c852[m
+Merge: c85e068 697cec0
+Author: Anstayker <Christian.rojas.bl@gmail.com>
+Date:   Mon Jun 10 23:10:10 2024 -0400
+
+    Merge branch 'dev' of https://github.com/iMouchta/DigitalNest into dev
+
+[33mcommit c85e068ef4bcc9be6a2d539d3edb0342d57a840d[m
+Author: Anstayker <Christian.rojas.bl@gmail.com>
+Date:   Mon Jun 10 23:10:04 2024 -0400
+
+    Cambios en ambientes
+
+[33mcommit 697cec0669934129a42b5f03d36ac22836b401d3[m
+Author: iMouchta <jonathanperaltaflores@gmail.com>
+Date:   Mon Jun 10 22:17:56 2024 -0400
+
+    Notificaciones y Correos
+
+[33mcommit 2b45cd619f268eef23c0ee79e7e5e9e55f8a0442[m
+Author: Drunok <aguilarkevin825@gmail.com>
+Date:   Sun Jun 9 23:35:25 2024 -0400
+
+    eliminacion de ambiente arreglada, con reasignacion de reservasasociadas
+
+[33mcommit cbfaf5512ad1b5f19989ca785d62e2fc87596324[m
+Author: Anstayker <Christian.rojas.bl@gmail.com>
+Date:   Sun Jun 9 20:28:51 2024 -0400
+
+    editar ambientes page
+
+[33mcommit 9601dd6559107fc295907d8db478e55d17886e93[m
+Author: Anstayker <Christian.rojas.bl@gmail.com>
+Date:   Sun Jun 9 19:28:42 2024 -0400
+
+    registrar reglas de reserva
+
+[33mcommit 605f848ae10c5336e3a66bf90b7646c21c63f0ef[m
+Author: Drunok <aguilarkevin825@gmail.com>
+Date:   Sun Jun 9 12:07:35 2024 -0400
+
+    editar ambientes valida si el ambiente tiene alguna reserva asociada
+
+[33mcommit 1f0fbe27f5bad2f74bf17d3161c80ad0c08a2bc9[m
+Author: Drunok <aguilarkevin825@gmail.com>
+Date:   Fri Jun 7 15:49:51 2024 -0400
+
+    validacion de regla de reserva de ambiente en obtencion de ambientes de solicitud rapida
+
+[33mcommit 87aa653203361ce8c274ef9ec20b260ae2902afb[m
+Author: Anstayker <Christian.rojas.bl@gmail.com>
+Date:   Thu Jun 6 18:06:53 2024 -0400
+
+    notifications display upgrade
+
+[33mcommit bf6c6c65f5934052eff15ceadffce2144a1fa87e[m
+Merge: 19ec565 c7a5af4
+Author: Anstayker <Christian.rojas.bl@gmail.com>
+Date:   Thu Jun 6 17:56:08 2024 -0400
+
+    Merge branch 'dev' of https://github.com/iMouchta/DigitalNest into dev
+
+[33mcommit 19ec5652b5a87e6b527078387aedf7da81133d10[m
+Author: Anstayker <Christian.rojas.bl@gmail.com>
+Date:   Thu Jun 6 17:55:59 2024 -0400
+
+    Notifications working!
+
+[33mcommit 510cf02d08ebb54cdafeb702a45a3b99fb5ff412[m
+Author: Anstayker <Christian.rojas.bl@gmail.com>
+Date:   Wed Jun 5 17:32:33 2024 -0400
+
+    locked text field changes
+
+[33mcommit c7a5af43838b01bbc9a3f04114fd9789c47a9fef[m
+Author: iMouchta <jonathanperaltaflores@gmail.com>
+Date:   Tue Jun 4 06:34:03 2024 -0400
+
+    Correos al aceptar la solicitud
+
+[33mcommit 3fa2685fb63ee3c2d9cb525104708f29f43ee7d9[m
+Author: iMouchta <jonathanperaltaflores@gmail.com>
+Date:   Tue Jun 4 01:11:09 2024 -0400
+
+    Envio de correos personalizados
+
+[33mcommit 4cc12bbd6b0b1aaa4ebeaa9b3a06c2c8e51f1efc[m
+Author: Drunok <aguilarkevin825@gmail.com>
+Date:   Mon Jun 3 17:34:53 2024 -0400
+
+    reglas de reserva de ambiente adjunta a la informacion del ambiente
+
+[33mcommit add5a2cf2b94886c4a5089a7b55dd014b7ed5d9f[m
+Author: Drunok <aguilarkevin825@gmail.com>
+Date:   Sun Jun 2 16:41:12 2024 -0400
+
+    CRUD regla reserva de ambientes y refactorizacion de rutas en api
+
+[33mcommit 15372bac64df3582905bc57a8ab7be7d879349a7[m
+Author: Drunok <aguilarkevin825@gmail.com>
+Date:   Fri May 31 15:49:49 2024 -0400
+
+    recibir informacion del ambiente mediante su id
+
+[33mcommit 4c6608663be45748b28be338e1b02d859cc4ef21[m
+Author: Anstayker <Christian.rojas.bl@gmail.com>
+Date:   Tue May 28 07:36:10 2024 -0400
+
+    funciona
+
+[33mcommit 638f7fa468477e71177ab1693616749470c3ade5[m
+Author: Anstayker <Christian.rojas.bl@gmail.com>
+Date:   Tue May 28 07:28:38 2024 -0400
+
+    changes
+
+[33mcommit a4cdc755bcf7cc5d4bca925ed80042f0b0868e21[m
+Author: Anstayker <Christian.rojas.bl@gmail.com>
+Date:   Tue May 28 07:11:08 2024 -0400
+
+    responder solicitud
+
+[33mcommit 4693add71c5b97ad6dd612c18ddc581bc38ef279[m
+Author: Anstayker <Christian.rojas.bl@gmail.com>
+Date:   Tue May 28 06:23:44 2024 -0400
+
+    solicitud especial
+
+[33mcommit f28b2c23e894fb1d794dc5c02d53d46945e9df2e[m
+Author: Anstayker <Christian.rojas.bl@gmail.com>
+Date:   Tue May 28 05:24:22 2024 -0400
+
+    visualizar solicitudes
+
+[33mcommit 5cfd319c844a6949213e33b6aa4bc2069ed0d399[m
+Author: Anstayker <Christian.rojas.bl@gmail.com>
+Date:   Tue May 28 05:07:42 2024 -0400
+
+    view solicitud especial
+
+[33mcommit a8aaad4dd31b39190adefebcfde38cb215952b6d[m
+Merge: 246435d 6e9dad9
+Author: Anstayker <Christian.rojas.bl@gmail.com>
+Date:   Tue May 28 04:46:32 2024 -0400
+
+    Merge branch 'dev' of https://github.com/iMouchta/DigitalNest into dev
+
+[33mcommit 246435da2fd4a5a99185deaaa288ba99ba962669[m
+Author: Anstayker <Christian.rojas.bl@gmail.com>
+Date:   Tue May 28 04:46:22 2024 -0400
+
+    view solicitud especial
+
+[33mcommit 6e9dad94915111832c7e50f057c8dc77924d428f[m
+Author: Drunok <aguilarkevin825@gmail.com>
+Date:   Tue May 28 04:41:28 2024 -0400
+
+    solicitud rapida sube notificacion a docentes incluidos
+
+[33mcommit 3efda3ffa91c5d24bdf9909efb773fb6ad2d9976[m
+Author: iMouchta <jonathanperaltaflores@gmail.com>
+Date:   Tue May 28 04:21:50 2024 -0400
+
+    solicitudesEliminar
+
+[33mcommit 0a8134d7c4642396f7d53e4b2bfb2c21d6a93345[m
+Author: iMouchta <jonathanperaltaflores@gmail.com>
+Date:   Tue May 28 04:18:20 2024 -0400
+
+    confirmacion
+
+[33mcommit dd3c2ca6d2b94a19b9443c27cde2490a0222ca03[m
+Merge: 01e9582 472abb2
+Author: iMouchta <jonathanperaltaflores@gmail.com>
+Date:   Tue May 28 03:54:10 2024 -0400
+
+    6Merge branch 'dev' of https://github.com/iMouchta/DigitalNest into dev
+
+[33mcommit 01e95820fe96f4f97294de067976f887bced5c5a[m
+Author: iMouchta <jonathanperaltaflores@gmail.com>
+Date:   Tue May 28 03:54:00 2024 -0400
+
+    IntentoAviso

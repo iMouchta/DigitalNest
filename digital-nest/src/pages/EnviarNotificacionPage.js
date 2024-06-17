@@ -11,6 +11,7 @@ import {
 import { Dialog, DialogTitle, DialogContentText } from "@mui/material";
 import { DialogActions } from "@mui/material";
 import FormDateSelector from "../components/FormDateSelector";
+import { URL_API } from '../http/const';
 
 export default function EnviarNotificacionPage(params) {
   const [mostrarFechas, setMostrarFechas] = useState(false);
@@ -73,7 +74,7 @@ export default function EnviarNotificacionPage(params) {
 
   const handleEnviarNotificacion = () => {
     setIsLoading(true);
-    fetch("http://localhost:8000/api/users", {
+    fetch(`${URL_API}/users`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -86,7 +87,7 @@ export default function EnviarNotificacionPage(params) {
       .then((data) => {
         console.log("Success:", data);
         if (mostrarFechas) {
-          fetch("http://localhost:8000/api/editar", {
+          fetch(`${URL_API}/editar`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

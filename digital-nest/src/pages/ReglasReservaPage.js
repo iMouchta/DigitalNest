@@ -4,6 +4,7 @@ import LockedTextFieldAmbiente from "../components/LockedTextFieldAmbiente";
 import { Box, Button } from "@mui/material";
 import FormDateSelector from "../components/FormDateSelector";
 import FormSelector from "../components/FormSelector";
+import { URL_API } from '../http/const';
 
 export default function ReglasReservaPage() {
   const location = useLocation();
@@ -95,7 +96,7 @@ export default function ReglasReservaPage() {
   };
 
   const crearReglasDeReserva = async () => {
-    await fetch("http://localhost:8000/api/registrarReglaReservaAmbiente", {
+    await fetch(`${URL_API}/registrarReglaReservaAmbiente`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

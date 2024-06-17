@@ -2,6 +2,7 @@ import Box from "@mui/material/Box";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { useState, useEffect } from "react";
+import { URL_API } from '../http/const';
 
 export default function AmbientesSelector({ onMultipleSelection, isEmpty }) {
   const [ambientes, setAmbientes] = useState([]);
@@ -12,7 +13,7 @@ export default function AmbientesSelector({ onMultipleSelection, isEmpty }) {
   }, [checked, isEmpty]);
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/ambiente")
+    fetch(`${URL_API}/ambiente`)
       .then((response) => response.json())
       .then((data) => {
         setAmbientes(data);

@@ -20,6 +20,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
+import { URL_API } from '../http/const';
 
 const columns = [
   {
@@ -94,7 +95,7 @@ export default function ViewSolicitudEspecial({ solicitudes }) {
   );
 
   const handleClick = (solicitudId) => {
-    const response = fetch("http://localhost:8000/api/confirmacion", {
+    const response = fetch(`${URL_API}/confirmacion`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

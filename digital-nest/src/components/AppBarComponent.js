@@ -13,6 +13,7 @@ import {
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { useState, useEffect } from "react";
 import NotificationDisplay from "./NotificationDisplay";
+import { URL_API } from '../http/const';
 
 export default function AppBarComponent() {
   const [numNotification, setNumNotification] = useState(0);
@@ -20,7 +21,7 @@ export default function AppBarComponent() {
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/notificaciones/usuario/1")
+    fetch(`${URL_API}/notificaciones/usuario/1`)
       .then((response) => response.json())
       .then((data) => {
         const sortedData = data.sort((a, b) => {
@@ -39,7 +40,7 @@ export default function AppBarComponent() {
         ).length;
         
         setNumNotification(unreadNotifications);
-        fetch("http://localhost:8000/api/verNotificaciones", {
+        fetch(`${URL_API}/verNotificaciones`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import ViewSolicitudEspecial from "../components/ViewSolicitudEspecial";
+import { URL_API } from '../http/const';
 
 export default function ResponderSolicitudPage() {
   const [solicitudesEspeciales, setSolicitudesEspeciales] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/solicitudEspecial")
+    fetch(`${URL_API}/solicitudEspecial`)
       .then((response) => response.json())
       .then((data) => {
         const solicitudesNoAceptadas = data.filter(solicitud => !solicitud.aceptada);

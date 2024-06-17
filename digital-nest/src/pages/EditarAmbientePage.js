@@ -5,6 +5,7 @@ import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typogra
 import FormSelector from "../components/FormSelector";
 import FormTextField from "../components/FormTextField";
 import FormSelectorTrigger from "../components/FormSelectorTrigger";
+import { URL_API } from '../http/const';
 
 export default function EditarAmbientePage() {
   const location = useLocation();
@@ -39,7 +40,7 @@ export default function EditarAmbientePage() {
   const [dialogTitle, setDialogTitle] = useState("");
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/edificio")
+    fetch(`${URL_API}/edificio`)
       .then((response) => response.json())
       .then((data) => {
         setEdificios(data);
@@ -88,7 +89,7 @@ export default function EditarAmbientePage() {
   };
 
   const guardarCambios = async () => {
-    await fetch("http://localhost:8000/api/editAmbiente", {
+    await fetch(`${URL_API}/editAmbiente`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -137,7 +138,7 @@ export default function EditarAmbientePage() {
   };
 
   // const eliminarAmbiente = async () => {
-  //   await fetch("http://localhost:8000/api/deleteAmbiente", {
+  //   await fetch(`${URL_API}/deleteAmbiente", {
   //     method: "POST",
   //     headers: {
   //       "Content-Type": "application/json",

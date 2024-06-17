@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from "react";
 import SolicitudesEspecialesTable from "./SolicitudesEspecialesTable";
 import SolicitudRapidaTable from "./SolicitudRapidaTable";
+import { URL_API } from '../http/const';
 
 export default function ViewSolicitudes() {
   const [solicitudesEspeciales, setSolicitudesEspeciales] = useState([]);
   const [solicitudesRapidas, setSolicitudesRapidas] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/solicitudEspecial")
+    fetch(`${URL_API}/solicitudEspecial`)
       .then((response) => response.json())
       .then((data) => setSolicitudesEspeciales(data))
       .catch((error) => console.error("Error:", error));
   }, []);
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/getSolicitudesRapidas")
+    fetch(`${URL_API}/getSolicitudesRapidas`)
       .then((response) => response.json())
       .then((data) => setSolicitudesRapidas(data))
       .catch((error) => console.error("Error:", error));

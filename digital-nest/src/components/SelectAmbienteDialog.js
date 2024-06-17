@@ -11,6 +11,7 @@ import Box from "@mui/system/Box";
 import { toast, Toaster } from "react-hot-toast";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
+import { URL_API } from '../http/const';
 
 export default function SelectAmbienteDialog({
   open,
@@ -25,7 +26,7 @@ export default function SelectAmbienteDialog({
     setIsButtonDisabled(true);
 
     const response = await fetch(
-      "http://localhost:8000/api/registrarSolicitudRapida",
+      `${URL_API}/registrarSolicitudRapida`,
       {
         method: "POST",
         headers: {

@@ -12,6 +12,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
+import { URL_API } from '../http/const';
 
 export default function FormRegistrarAmbiente() {
   //* Form fields
@@ -68,7 +69,7 @@ export default function FormRegistrarAmbiente() {
   };
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/edificio")
+    fetch(`${URL_API}/edificio`)
       .then((response) => response.json())
       .then((data) => {
         setEdificios(data);
@@ -99,7 +100,7 @@ export default function FormRegistrarAmbiente() {
     console.log("Edificio:", selectedEdificio);
     console.log("Planta:", selectedPlanta);
 
-    fetch("http://localhost:8000/api/ambiente", {
+    fetch(`${URL_API}/ambiente`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
