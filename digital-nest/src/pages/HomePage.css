@@ -1,0 +1,46 @@
+.home-container {
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+}
+
+.home-page {
+    text-align: center;
+    padding: 50px;
+    color: white;
+    background-image: url('umssimagen.jpg');
+    background-size: cover;
+    background-position: center;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .home-page::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+  }
+  
+  .home-page > * {
+    position: relative;
+    z-index: 2;
+  }
+  
+  .navigation-button {
+    margin-top: 20px;
+  }
+  
+  .navigation-button a {
+    text-decoration: none;
+    color: white;
+    background-color: #005b96;
+    padding: 10px 20px;
+    border-radius: 5px;
+  }

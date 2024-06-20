@@ -75,7 +75,7 @@ export default function AppBarComponent() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" sx={{ backgroundColor: "rgb(0, 123, 255)" }}>
+      <AppBar position="fixed" sx={{ backgroundColor: "rgb(0, 91, 150)" }}>
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Digital Nest

@@ -23,7 +23,7 @@ import {
   DialogContentText,
   DialogTitle,
 } from "@mui/material";
-import { URL_API } from '../http/const';
+import { URL_API } from "../http/const";
 
 const columns = [
   { id: "id", label: "ID", minWidth: 170 },
@@ -54,7 +54,7 @@ function createData(
   };
 }
 
-export default function AmbientesTable({ ambientes }) {
+export default function AmbientesTableEliminar({ ambientes }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [expandedRow, setExpandedRow] = React.useState(null);
@@ -258,7 +258,7 @@ export default function AmbientesTable({ ambientes }) {
                                 ))}
                               </TableBody>
                             </Table>
-                            {/* <Box
+                            <Box
                               sx={{
                                 display: "flex",
                                 justifyContent: "space-between",
@@ -267,16 +267,6 @@ export default function AmbientesTable({ ambientes }) {
                               }}
                             >
                               <Button
-                                onClick={() => navigateToReglasDeReserva(row)}
-                              >
-                                Crear regla de reserva
-                              </Button>
-                              <Button
-                                onClick={() => navigateToEditarAmbiente(row)}
-                              >
-                                Editar información de ambiente
-                              </Button>
-                              <Button
                                 onClick={() =>
                                   handleClickOpenEliminarDialog(row.id)
                                 }
@@ -284,7 +274,7 @@ export default function AmbientesTable({ ambientes }) {
                               >
                                 Eliminar ambiente
                               </Button>
-                            </Box> */}
+                            </Box>
                           </Box>
                         </Collapse>
                       </TableCell>

@@ -54,7 +54,7 @@ function createData(
   };
 }
 
-export default function AmbientesTable({ ambientes }) {
+export default function AmbientesTableReglas({ ambientes }) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [expandedRow, setExpandedRow] = React.useState(null);
@@ -258,7 +258,7 @@ export default function AmbientesTable({ ambientes }) {
                                 ))}
                               </TableBody>
                             </Table>
-                            {/* <Box
+                            <Box
                               sx={{
                                 display: "flex",
                                 justifyContent: "space-between",
@@ -271,20 +271,8 @@ export default function AmbientesTable({ ambientes }) {
                               >
                                 Crear regla de reserva
                               </Button>
-                              <Button
-                                onClick={() => navigateToEditarAmbiente(row)}
-                              >
-                                Editar información de ambiente
-                              </Button>
-                              <Button
-                                onClick={() =>
-                                  handleClickOpenEliminarDialog(row.id)
-                                }
-                                style={{ color: "red" }}
-                              >
-                                Eliminar ambiente
-                              </Button>
-                            </Box> */}
+
+                            </Box>
                           </Box>
                         </Collapse>
                       </TableCell>

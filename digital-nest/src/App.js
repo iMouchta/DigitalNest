@@ -17,6 +17,9 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import { Link as RouterLink } from "react-router-dom";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
 import PrimarySearchAppBar from "./components/AppBar";
 import HomePage from "./pages/HomePage.js";
@@ -30,62 +33,78 @@ import VisualizarAmbientePage from "./pages/VisualizarAmbientePage.js";
 import AppBarComponent from "./components/AppBarComponent.js";
 import ReglasReservaPage from "./pages/ReglasReservaPage.js";
 import EditarAmbientePage from "./pages/EditarAmbientePage.js";
+import AmbienteEditarPage from "./pages/AmbienteEditarPage.js";
+import AmbienteEliminarPage from "./pages/AmbienteEliminarPage.js";
+import AmbienteReglasPage from "./pages/AmbienteReglasPage.js";
 
 function App() {
   return (
     <div className="App">
       {/* <PrimarySearchAppBar /> */}
       <AppBarComponent />
-      <Router>
-        <Routes>
-          {/* Remplazar la ruta inicial */}
-          <Route path="/" element={<HomePage />} />
-          <Route path="*" element={<h1>Not Found</h1>} />
-          {/* Reservador para la pagina de login */}
-          {/* <Route path="/login" element={<LoginPage />} /> */}
-          <Route path="/docente" element={<AppLayout />}>
+      <div style={{ marginTop: 64 }}>
+        <Router>
+          <Routes>
+            {/* Remplazar la ruta inicial */}
+            <Route path="/" element={<HomePage />} />
             <Route path="*" element={<h1>Not Found</h1>} />
-            <Route path="home" element={<HomePage />} />
-            <Route path="solicitudRapida" element={<SolicitudRapidaPage />} />
-            <Route
-              path="solicitudEspecial"
-              element={<SolicitudEspecialPage />}
-            />
-            <Route
-              path="responderSolicitud"
-              element={<ResponderSolicitudPage />}
-            />
-            <Route
-              path="visualizarSolicitud"
-              element={<VisualizarSolicitudPage />}
-            />
-            <Route
-              path="enviarNotificacion"
-              element={<EnviarNotificacionPage />}
-            />
-            <Route
-              path="registrarAmbiente"
-              element={<RegistrarAmbientePage />}
-            />
-            <Route
-              path="visualizarAmbiente"
-              element={<VisualizarAmbientePage />}
-            />
-            <Route path="reglasDeReserva" element={<ReglasReservaPage />} />
-            <Route path="editarAmbiente" element={<EditarAmbientePage />} />
+            {/* Reservador para la pagina de login */}
+            {/* <Route path="/login" element={<LoginPage />} /> */}
+            <Route path="/docente" element={<AppLayout />}>
+              <Route path="*" element={<h1>Not Found</h1>} />
+              <Route path="home" element={<HomePage />} />
+              <Route path="solicitudRapida" element={<SolicitudRapidaPage />} />
+              <Route
+                path="solicitudEspecial"
+                element={<SolicitudEspecialPage />}
+              />
+              <Route
+                path="responderSolicitud"
+                element={<ResponderSolicitudPage />}
+              />
+              <Route
+                path="visualizarSolicitud"
+                element={<VisualizarSolicitudPage />}
+              />
+              <Route
+                path="enviarNotificacion"
+                element={<EnviarNotificacionPage />}
+              />
+              <Route
+                path="registrarAmbiente"
+                element={<RegistrarAmbientePage />}
+              />
+              <Route
+                path="visualizarAmbiente"
+                element={<VisualizarAmbientePage />}
+              />
+              <Route path="reglasDeReserva" element={<ReglasReservaPage />} />
+              <Route path="editarAmbiente" element={<EditarAmbientePage />} />
+              <Route
+                path="editarAmbientePage"
+                element={<AmbienteEditarPage />}
+              />
+              <Route
+                path="eliminarAmbientePage"
+                element={<AmbienteEliminarPage />}
+              />
+              <Route
+                path="reglasAmbientePage"
+                element={<AmbienteReglasPage />}
+              />
+            </Route>
 
-          </Route>
-
-          <Route path="/administrador" element={<HomePage />}>
-            <Route path="*" element={<h1>Not Found</h1>} />
-            <Route path="home" element={<HomePage />} />
-            <Route
-              path="responderSolicitud"
-              element={<ResponderSolicitudPage />}
-            />
-          </Route>
-        </Routes>
-      </Router>
+            <Route path="/administrador" element={<HomePage />}>
+              <Route path="*" element={<h1>Not Found</h1>} />
+              <Route path="home" element={<HomePage />} />
+              <Route
+                path="responderSolicitud"
+                element={<ResponderSolicitudPage />}
+              />
+            </Route>
+          </Routes>
+        </Router>
+      </div>
     </div>
   );
 }
@@ -174,6 +193,36 @@ function AppLayout() {
                 </ListItemIcon>
                 <ListItemText primary="Visualizar Ambientes" />
               </ListItem>
+              <ListItem
+                button
+                component={RouterLink}
+                to="/docente/reglasAmbientePage"
+              >
+                <ListItemIcon>
+                  <CalendarTodayIcon />
+                </ListItemIcon>
+                <ListItemText primary="Reglas de reserva" />
+              </ListItem>
+              <ListItem
+                button
+                component={RouterLink}
+                to="/docente/editarAmbientePage"
+              >
+                <ListItemIcon>
+                  <EditIcon />
+                </ListItemIcon>
+                <ListItemText primary="Editar Ambientes" />
+              </ListItem>
+              <ListItem
+                button
+                component={RouterLink}
+                to="/docente/eliminarAmbientePage"
+              >
+                <ListItemIcon>
+                  <DeleteIcon />
+                </ListItemIcon>
+                <ListItemText primary="Eliminar Ambientes" />
+              </ListItem>
             </List>
           </nav>
         </div>
@@ -181,8 +230,9 @@ function AppLayout() {
           <Outlet />
         </div>
       </div>
-      <div className="barra-inferior">
-        <h1></h1>
+      <div className="barra-inferior" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+        <h2>Digital Nest S.R.L.</h2>
+        <h6>digital.nest.dev@gmail.com</h6>
       </div>
     </div>
   );
