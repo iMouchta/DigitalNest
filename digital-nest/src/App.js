@@ -19,7 +19,7 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 
 import PrimarySearchAppBar from "./components/AppBar";
 import HomePage from "./pages/HomePage.js";
@@ -36,6 +36,7 @@ import EditarAmbientePage from "./pages/EditarAmbientePage.js";
 import AmbienteEditarPage from "./pages/AmbienteEditarPage.js";
 import AmbienteEliminarPage from "./pages/AmbienteEliminarPage.js";
 import AmbienteReglasPage from "./pages/AmbienteReglasPage.js";
+import UserHomePage from "./pages/UserHomePage.js";
 
 function App() {
   return (
@@ -92,6 +93,7 @@ function App() {
                 path="reglasAmbientePage"
                 element={<AmbienteReglasPage />}
               />
+              <Route path="userHome" element={<UserHomePage />} />
             </Route>
 
             <Route path="/administrador" element={<HomePage />}>
@@ -117,7 +119,7 @@ function AppLayout() {
           <h1>Sistema de Reserva de Ambientes</h1>
           <nav>
             <List component="nav">
-              <ListItem button component={RouterLink} to="/">
+              <ListItem button component={RouterLink} to="/docente/userHome">
                 <ListItemIcon>
                   <HomeIcon />
                 </ListItemIcon>
@@ -230,7 +232,15 @@ function AppLayout() {
           <Outlet />
         </div>
       </div>
-      <div className="barra-inferior" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+      <div
+        className="barra-inferior"
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         <h2>Digital Nest S.R.L.</h2>
         <h6>digital.nest.dev@gmail.com</h6>
       </div>

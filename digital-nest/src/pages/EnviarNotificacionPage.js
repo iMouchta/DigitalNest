@@ -108,7 +108,7 @@ export default function EnviarNotificacionPage(params) {
 
             });
         }
-        window.confirm("Se ha enviado la notificación correctamente.");
+        window.alert("Se ha enviado la notificación correctamente.");
         window.location.reload();
         setIsLoading(false);
         setOpen(false);

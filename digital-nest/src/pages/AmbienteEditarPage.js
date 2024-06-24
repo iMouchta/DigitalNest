@@ -4,7 +4,7 @@ import ViewAmbientesEditar from "../components/ViewAmbientesEditar";
 export default function AmbienteEditarPage(params) {
   return (
     <div >
-      <h1>Visualizar Ambiente</h1>
+      <h1>Editar Ambientes</h1>
       <ViewAmbientesEditar />
     </div>
   );

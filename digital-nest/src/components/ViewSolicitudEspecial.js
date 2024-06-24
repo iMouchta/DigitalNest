@@ -308,7 +308,7 @@ export default function ViewSolicitudEspecial({ solicitudes }) {
                                         .then((data) => {
                                           console.log(data);
                                           setOpen(false);
-                                          window.confirm(
+                                          window.alert(
                                             "Solicitud aceptada correctamente"
                                           );
                                           window.location.reload();

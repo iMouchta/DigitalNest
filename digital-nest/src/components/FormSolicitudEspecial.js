@@ -99,7 +99,7 @@ export default function FormSolicitudEspecial() {
       .then((data) => {
         if (data.subida) {
           toast.success("Solicitud enviada correctamente");
-          window.confirm("Solicitud realizada exitosamente");
+          window.alert("Solicitud realizada exitosamente");
           window.location.reload();
         } else {
           toast.error("Error al enviar la solicitud");
@@ -184,7 +184,7 @@ export default function FormSolicitudEspecial() {
       );
       const nuevasHorasFinales = horasDisponibles.slice(
         indiceHoraInicial + 1,
-        indiceHoraInicial + 5
+        indiceHoraInicial + 21
       );
       setHorasFin(nuevasHorasFinales);
 

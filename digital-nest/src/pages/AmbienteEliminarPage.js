@@ -4,7 +4,7 @@ import ViewAmbientesEliminar from "../components/ViewAmbientesEliminar";
 export default function AmbienteEliminarPage(params) {
   return (
     <div >
-      <h1>Visualizar Ambiente</h1>
+      <h1>Eliminar Ambientes</h1>
       <ViewAmbientesEliminar />
     </div>
   );

@@ -117,7 +117,7 @@ export default function ReglasReservaPage() {
       })
       .then((data) => {
         console.log(data);
-        window.confirm("Regla de reserva creada exitosamente");
+        window.alert("Regla de reserva creada exitosamente");
         window.location.href = '/docente/visualizarAmbiente';
       })
       .catch((error) => {

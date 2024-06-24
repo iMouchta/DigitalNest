@@ -12,7 +12,7 @@ function HomePage() {
           eficiente y sencilla. Haz clic en el botón de abajo para comenzar.
         </p>
         <div className="navigation-button">
-          <Link to="/docente/solicitudRapida">Ingresar al Sistema</Link>
+          <Link to="/docente/userHome">Ingresar al Sistema</Link>
         </div>
       </div>
     </div>

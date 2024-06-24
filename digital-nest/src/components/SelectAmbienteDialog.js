@@ -56,7 +56,7 @@ export default function SelectAmbienteDialog({
           toast.success("Se ha realizado la reserva con éxito", {
             duration: 7000,
           });
-          window.confirm("Reserva realizada exitosamente");
+          window.alert("Reserva realizada exitosamente");
           window.location.reload();
         } else {
           toast.error("No se ha podido realizar la reserva");
@@ -134,7 +134,7 @@ export default function SelectAmbienteDialog({
             onClick={handleAccept}
             color="primary"
             autoFocus
-            disabled={isButtonDisabled}
+            disabled={isButtonDisabled || selectedValue.length === 0 || Object.keys(ambientes).length === 0}
           >
             SOLICITAR
           </Button>

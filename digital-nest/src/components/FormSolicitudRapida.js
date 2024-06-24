@@ -7,7 +7,7 @@ import SendFormButton from "./SendFormButton";
 import FormDateSelector from "./FormDateSelector";
 import Grid from "@mui/material/Box";
 import SelectAmbienteDialog from "./SelectAmbienteDialog";
-import { URL_API } from '../http/const';
+import { URL_API } from "../http/const";
 
 export default function FormSolicitudRapida() {
   //* Form fields
@@ -186,12 +186,17 @@ export default function FormSolicitudRapida() {
 
   useEffect(() => {
     if (selectedHoraInicio) {
-      const indiceHoraInicial = horasDisponibles.findIndex(hora => hora.value === selectedHoraInicio);
-      const nuevasHorasFinales = horasDisponibles.slice(indiceHoraInicial + 1, indiceHoraInicial + 5);
+      const indiceHoraInicial = horasDisponibles.findIndex(
+        (hora) => hora.value === selectedHoraInicio
+      );
+      const nuevasHorasFinales = horasDisponibles.slice(
+        indiceHoraInicial + 1,
+        indiceHoraInicial + 5
+      );
       setHorasFinales(nuevasHorasFinales);
-  
+
       // Verificar si la hora final seleccionada está en el nuevo rango de horas finales
-      if (!nuevasHorasFinales.some(hora => hora.value === selectedHoraFin)) {
+      if (!nuevasHorasFinales.some((hora) => hora.value === selectedHoraFin)) {
         setSelectedHoraFin(""); // Restablecer la hora final si no está en el rango
       }
     } else {
@@ -199,7 +204,6 @@ export default function FormSolicitudRapida() {
       setSelectedHoraFin(""); // Restablecer la hora final si la hora de inicio no está seleccionada
     }
   }, [selectedHoraInicio]);
-
 
   const motivos = [
     { value: "Primer Parcial" },
@@ -234,6 +238,13 @@ export default function FormSolicitudRapida() {
               error={errorNombreDocente}
               value={selectedNombreDocente}
             />
+            <FormSelector
+              label="Materia *"
+              options={materias}
+              onChange={setSelectedMateria}
+              error={errorMateria}
+              value={selectedMateria}
+            />
             <FormMultipleSelector
               label="Docentes adicionales"
               options={[
@@ -243,13 +254,7 @@ export default function FormSolicitudRapida() {
               ]}
               onChange={setSelectedNombres}
             />
-            <FormSelector
-              label="Materia *"
-              options={materias}
-              onChange={setSelectedMateria}
-              error={errorMateria}
-              value={selectedMateria}
-            />
+
             <FormSelector
               label="Capacidad *"
               options={capacidades}

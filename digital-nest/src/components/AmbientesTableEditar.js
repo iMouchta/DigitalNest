@@ -144,7 +144,7 @@ export default function AmbientesTableEditar({ ambientes }) {
       })
       .then((data) => {
         console.log(data);
-        window.confirm("Ambiente eliminado correctamente.");
+        window.alert("Ambiente eliminado correctamente.");
         window.location.reload();
       })
       .catch((error) => {
