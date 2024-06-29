@@ -286,7 +286,7 @@ export default function ViewSolicitudEspecial({ solicitudes }) {
                                   <Button
                                     onClick={async () => {
                                       await fetch(
-                                        "http://localhost:8000/api/aceptarSoli",
+                                        `${URL_API}/aceptarSoli`,
                                         {
                                           method: "POST",
                                           headers: {

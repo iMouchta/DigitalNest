@@ -76,11 +76,11 @@ export default function FormSolicitudRapida() {
       return;
     }
 
-    var docentesForPost = selectedNombres;
-    selectedNombres.push(selectedNombreDocente);
+    var docentesForPost = [selectedNombreDocente, ...selectedNombres];
+    // selectedNombres.push(selectedNombreDocente);
 
     console.log("Nombre del docente:", [selectedNombreDocente]);
-    console.log("Nombres:", selectedNombres);
+    console.log("Nombres:", docentesForPost);
     console.log("Materia:", selectedMateria);
     console.log("Capacidad:", selectedCapacidad);
     console.log("Fecha:", selectedFecha.format("YYYY-MM-DD"));
