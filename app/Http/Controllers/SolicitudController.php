@@ -55,9 +55,7 @@ class SolicitudController extends Controller
         $ambientesDisponibles = [];
 
         foreach ($nombresDocentes as $nombreDocente) {
-            $docente = Usuario::where('nombreusuario', $nombreDocente)
-                ->where('administrador', false)
-                ->first();
+            $docente = Usuario::where('nombreusuario', $nombreDocente)->first();
 
             if ($docente) {
                 $idDocente = $docente->idusuario;

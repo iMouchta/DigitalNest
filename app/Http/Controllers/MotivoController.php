@@ -43,7 +43,7 @@ class MotivoController extends Controller
         $motivosDisponibles = [];
 
         foreach ($nombresDocentes as $nombreDocente) {
-            $docente = Usuario::where('nombreusuario', $nombreDocente)->where('administrador', false)->first();
+            $docente = Usuario::where('nombreusuario', $nombreDocente)->first();
             if ($docente) {
                 $idDocente = $docente->idusuario;
                 $materia = Materia::where('idusuario', $idDocente)->where('nombremateria', $nombreMateria)->first();
