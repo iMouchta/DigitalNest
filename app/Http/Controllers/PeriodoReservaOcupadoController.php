@@ -212,7 +212,6 @@ class PeriodoReservaOcupadoController extends Controller
         $listaIdMaterias = [];
         foreach ($nombresDocentes as $nombreDocente) {
             $docente = Usuario::where('nombreusuario', $nombreDocente)
-                    ->where('administrador', false)
                     ->first();
             if ($docente) {
                 $idDocente = $docente->idusuario;
@@ -289,7 +288,6 @@ class PeriodoReservaOcupadoController extends Controller
     private function getIdDocente($nombreDocente)
     {
         $docente = Usuario::where('nombreusuario', $nombreDocente)
-                    ->where('administrador', false)
                     ->first();
         if ($docente) {
             return $docente->idusuario;
